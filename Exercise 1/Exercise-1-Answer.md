@@ -13,8 +13,8 @@ year.
 
 ![](Exercise-1-Answer_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
-This plot shows the destination airports for all flights departing from
-Austin, where large sizes indicate more flights.
+This plot shows the destination airports for all Austin departure
+flights, where large sizes indicate more flights.
 ![](Exercise-1-Answer_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 ## 2) Wrangling the Olympics
@@ -22,7 +22,7 @@ Austin, where large sizes indicate more flights.
 ### A)
 
 95th percentile of heights for female competitors across all Athletics
-events
+events:
 
     ##   quantile(height, 0.95)
     ## 1                    183
@@ -30,7 +30,7 @@ events
 ### B)
 
 The women’s event that had the greatest variability in competitor’s
-heights, as measured by the standard deviation
+heights, as measured by the standard deviation:
 
     ## # A tibble: 1 × 2
     ##   event                      sd_height
@@ -39,7 +39,7 @@ heights, as measured by the standard deviation
 
 ### C)
 
-Average age of male and female swimmers over time.
+Average age of male and female swimmers over time:
 
     ## `summarise()` has grouped output by 'year'. You can override using the
     ## `.groups` argument.

@@ -44,7 +44,7 @@ abia |> na.omit() |> filter(Origin == "AUS") |>
   geom_boxplot()
 ```
 
-This plot shows the destination airports for all flights departing from Austin, where large sizes indicate more flights.
+This plot shows the destination airports for all Austin departure flights, where large sizes indicate more flights.
 ```{r}
 airport <- read.csv("airport.csv")
 
@@ -63,7 +63,7 @@ top20 <- read.csv("olympics_top20.csv")
 ```
 
 ### A)
-95th percentile of heights for female competitors across all Athletics events
+95th percentile of heights for female competitors across all Athletics events:
 ```{r}
 top20 |>
   filter(sex == "F", sport == "Athletics") |> 
@@ -71,7 +71,7 @@ top20 |>
 ```
 
 ### B)
-The women's event that had the greatest variability in competitor's heights, as measured by the standard deviation
+The women's event that had the greatest variability in competitor's heights, as measured by the standard deviation:
 ```{r}
 top20 |>
   filter(sex == "F") |>
@@ -80,7 +80,7 @@ top20 |>
 ```
 
 ### C)
-Average age of male and female swimmers over time.
+Average age of male and female swimmers over time:
 ```{r}
 avg_swim_age <- top20 |> filter(sport == "Swimming") |> group_by(year, sex) |> summarize(avg_age = mean(age))
 head(avg_swim_age)
