@@ -2,8 +2,8 @@
 
 To analyze the delay for all Austin departure flights, I categorize the
 departure time into 24 hours. The delay is shorter in the morning
-(5:00-9:00) and relatively steady afterwards. The gets longer at night
-(after 21:00).  
+(5:00-9:00) and relatively steady afterwards. The delay gets longer at
+night (after 21:00).  
 The delay is quite even for every day in a week and every month in a
 year.
 
@@ -13,16 +13,24 @@ year.
 
 ![](Exercise-1-Answer_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
+This plot shows the destination airports for all flights departing from
+Austin, where large sizes indicate more flights.
 ![](Exercise-1-Answer_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
 ## 2) Wrangling the Olympics
 
 ### A)
 
+95th percentile of heights for female competitors across all Athletics
+events
+
     ##   quantile(height, 0.95)
     ## 1                    183
 
 ### B)
+
+The women’s event that had the greatest variability in competitor’s
+heights, as measured by the standard deviation
 
     ## # A tibble: 1 × 2
     ##   event                      sd_height

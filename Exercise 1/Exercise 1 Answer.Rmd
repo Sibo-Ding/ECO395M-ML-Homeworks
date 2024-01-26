@@ -15,7 +15,7 @@ library(caret)
 ```
 
 ## 1) Data visualization: flights at ABIA
-To analyze the delay for all Austin departure flights, I categorize the departure time into 24 hours. The delay is shorter in the morning (5:00-9:00) and relatively steady afterwards. The gets longer at night (after 21:00).  
+To analyze the delay for all Austin departure flights, I categorize the departure time into 24 hours. The delay is shorter in the morning (5:00-9:00) and relatively steady afterwards. The delay gets longer at night (after 21:00).  
 The delay is quite even for every day in a week and every month in a year.
 
 ```{r}
@@ -44,6 +44,7 @@ abia |> na.omit() |> filter(Origin == "AUS") |>
   geom_boxplot()
 ```
 
+This plot shows the destination airports for all flights departing from Austin, where large sizes indicate more flights.
 ```{r}
 airport <- read.csv("airport.csv")
 
@@ -62,6 +63,7 @@ top20 <- read.csv("olympics_top20.csv")
 ```
 
 ### A)
+95th percentile of heights for female competitors across all Athletics events
 ```{r}
 top20 |>
   filter(sex == "F", sport == "Athletics") |> 
@@ -69,6 +71,7 @@ top20 |>
 ```
 
 ### B)
+The women's event that had the greatest variability in competitor's heights, as measured by the standard deviation
 ```{r}
 top20 |>
   filter(sex == "F") |>
