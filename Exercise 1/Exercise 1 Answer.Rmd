@@ -21,7 +21,9 @@ The delay is quite even for every day in a week and every month in a year.
 ```{r}
 abia <- read.csv("ABIA.csv")
 
-abia <- abia |> mutate(DepHour = floor(DepTime / 100)) |> mutate(DepHour = factor(DepHour))
+abia <- abia |>
+  mutate(DepHour = floor(DepTime / 100)) |>
+  mutate(DepHour = factor(DepHour))
 
 abia |> na.omit() |> filter(Origin == "AUS") |>
   ggplot(aes(DepHour, DepDelay)) +
@@ -82,7 +84,11 @@ top20 |>
 ### C)
 Average age of male and female swimmers over time:
 ```{r}
-avg_swim_age <- top20 |> filter(sport == "Swimming") |> group_by(year, sex) |> summarize(avg_age = mean(age))
+avg_swim_age <-
+  top20 |>
+  filter(sport == "Swimming") |>
+  group_by(year, sex) |>
+  summarize(avg_age = mean(age))
 head(avg_swim_age)
 ```
 
