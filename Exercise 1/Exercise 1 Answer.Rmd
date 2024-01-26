@@ -1,0 +1,163 @@
+---
+title: "ECO395M DM&SL Exercise 1"
+author: "Sibo Ding"
+date: "Spring 2024"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+library(dplyr)
+library(ggplot2)
+library(caret)
+```
+
+## 1) Data visualization: flights at ABIA
+To analyze the delay for all Austin departure flights, I categorize the departure time into 24 hours. The delay is shorter in the morning (5:00-9:00) and relatively steady afterwards. The gets longer at night (after 21:00).  
+The delay is quite even for every day in a week and every month in a year.
+
+```{r}
+abia <- read.csv("ABIA.csv")
+
+abia <- abia |> mutate(DepHour = floor(DepTime / 100)) |> mutate(DepHour = factor(DepHour))
+
+abia |> na.omit() |> filter(Origin == "AUS") |>
+  ggplot(aes(DepHour, DepDelay)) +
+  geom_boxplot()
+```
+
+```{r}
+abia <- abia |> mutate(DayOfWeek = factor(DayOfWeek))
+
+abia |> na.omit() |> filter(Origin == "AUS") |>
+  ggplot(aes(DayOfWeek, DepDelay)) +
+  geom_boxplot()
+```
+
+```{r}
+abia <- abia |> mutate(Month = factor(Month))
+
+abia |> na.omit() |> filter(Origin == "AUS") |>
+  ggplot(aes(Month, DepDelay)) +
+  geom_boxplot()
+```
+
+```{r}
+airport <- read.csv("airport.csv")
+
+abia |>
+  filter(Origin == "AUS") |>
+  count(Dest) |>
+  arrange(desc(n)) |>
+  inner_join(airport, by = c("Dest" = "iata")) |>
+  ggplot() +
+  geom_point(aes(lon, lat, size = Dest))
+```
+
+## 2) Wrangling the Olympics
+```{r}
+top20 <- read.csv("olympics_top20.csv")
+```
+
+### A)
+```{r}
+top20 |>
+  filter(sex == "F", sport == "Athletics") |> 
+  summarize(quantile(height, 0.95))
+```
+
+### B)
+```{r}
+top20 |>
+  filter(sex == "F") |>
+  group_by(event) |> summarize(sd_height = sd(height)) |>
+  top_n(1, sd_height)
+```
+
+### C)
+Average age of male and female swimmers over time.
+```{r}
+avg_swim_age <- top20 |> filter(sport == "Swimming") |> group_by(year, sex) |> summarize(avg_age = mean(age))
+head(avg_swim_age)
+```
+
+```{r}
+ggplot(avg_swim_age) +
+  geom_line(aes(year, avg_age, color = sex)) +
+  labs(caption = "The average age of male and female swimmers over time")
+```
+
+The average age of male swimmers went up significantly 1900-1924, then went down significantly to the level in 1900. After that, it increased steadily.  
+The trend looks similar for male swimmers relatively to female swimmers.
+
+## 3) K-nearest neighbors: cars
+K-nearest-neighbors  
+x-axis is different different values of K  
+y-axis is out-of-sample root mean squared error (RMSE)  
+There are two plots for two trim levels: 350 and 65 AMG
+```{r}
+sclass <- read.csv("sclass.csv")
+
+# Create two separate data sets
+t350 <- sclass |> filter(trim == "350")
+t65AMG <- sclass |> filter(trim == "65 AMG")
+
+# Train-test split
+set.seed(167)
+train_index <- createDataPartition(t350$price, p = 0.8, list = FALSE)
+train_350 <- t350[train_index, ]
+test_350 <- t350[-train_index, ]
+
+train_index <- createDataPartition(t65AMG$price, p = 0.8, list = FALSE)
+train_65AMG <- t65AMG[train_index, ]
+test_65AMG <- t65AMG[-train_index, ]
+
+knn_plot <- function(train_set, test_set, trim_level){
+  # Specify k (the number of neighbors)
+  k_list <- c(2, 5, 8, 9, 10, 11, 15, 25, 50)
+  rmse_list <- NULL
+
+  for (i in k_list){
+    # Fit knn model
+    model <- knnreg(price ~ mileage, data = train_set, k = i)
+    # Predict
+    pred <- predict(model, newdata = test_set)
+    # Calculate RMSE and add to a list
+    rmse_list <- c(rmse_list, RMSE(pred, test_set$price))
+  }
+  
+  # Create a data frame and plot
+  results <- data.frame(k = k_list, RMSE = rmse_list)
+  plot <- ggplot(results, aes(k, RMSE)) +
+    geom_line() +
+    ggtitle("Trim Level = ", trim_level)
+  return(plot)
+}
+
+knn_plot(train_350, test_350, "350")
+knn_plot(train_65AMG, test_65AMG, "65 AMG")
+```
+
+For trim level 350, the optimal K = 9. A plot of the fitted model (i.e. predictions vs. x):
+```{r}
+model <- knnreg(price ~ mileage, data = train_350, k = 9)
+pred <- predict(model, newdata = test_350)
+
+data.frame(x = test_350$mileage, pred = pred) |> 
+  ggplot(aes(x, pred)) +
+  geom_point()
+```
+
+For trim level 65 AMG, the optimal K = 10. A plot of the fitted model (i.e. predictions vs. x):
+```{r}
+model <- knnreg(price ~ mileage, data = train_65AMG, k = 10)
+pred <- predict(model, newdata = test_65AMG)
+
+data.frame(x = test_65AMG$mileage, pred = pred) |> 
+  ggplot(aes(x, pred)) +
+  geom_point()
+```
+
+65 AMG yields a larger optimal value of K. From the plots of fitted models, 65 AMG is more clustered, so the number of nearest neighbors can be larger.
