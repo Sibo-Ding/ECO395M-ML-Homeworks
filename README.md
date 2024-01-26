@@ -1,3 +1,3 @@
 # ECO395M-Machine-Learning
- UT Data Mining and Statistical Learning  
- Spring 2024
+ ECO395M Data Mining and Statistical Learning  
+ UT, Spring 2024
