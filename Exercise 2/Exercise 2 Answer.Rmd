@@ -31,7 +31,7 @@ SaratogaStd <- SaratogaHouses
 SaratogaStd[numerical_vars] <- scale(SaratogaHouses[numerical_vars])
 ```
 
-I use two models to predict the house price in Saratoga: linear regression and KNN regression. I use 10-fold cross validation and out-of-sample RMSE to measure the model performance. I standardize variables to improve model performance.  
+I use two models and several features to predict the house price in Saratoga: linear regression and KNN regression. I use 10-fold cross validation and out-of-sample RMSE to measure the model performance. I standardize variables to improve model performance.  
 
 Below is the results of linear regression:
 ```{r}
@@ -50,8 +50,30 @@ train(price ~ . - fireplaces - fuel,
 The linear regression model has better prediction performance, with a lower RMSE.
 
 ## Classification and retrospective sampling
+```{r}
+loan <- read.csv("german_credit.csv")
+```
 
+Bar plot of default probability by credit history:
+```{r}
+loan |>
+  group_by(history) |> summarize(default_prob = mean(Default)) |>
+  ggplot(aes(history, default_prob)) +
+  geom_col() + 
+  labs(x = "Credit History", y = "Default Probability")
+```
 
+Logistic regression results:
+```{r}
+# Logistic regression
+loan_glm <- glm(Default ~ duration + amount + installment + age + history + purpose + foreign, family = binomial, data = loan)
+summary(loan_glm)
+```
+In the `history` variable: compared to `good` category, `poor` category decreases the default probability, and `terrible` category decreases the default probability even more. This is reasonable as low credit level means low payback ability, thus more likely to default.  
+
+The sampling process (*It then attempted to match each default with similar sets of loans that had not defaulted*) is not appropriate for predicting defaults. Features used in prediction are similar between defaulted and not defaulted cases. Thus, the outcome variable `Default` has high variance and low robustness.
+
+# would you recommend any changes to the bank's sampling scheme?
 
 
 
@@ -60,6 +82,10 @@ The linear regression model has better prediction performance, with a lower RMSE
 
 
 ## Children and hotel reservations
+```{r}
+hotels_dev <- read.csv("hotels_dev.csv")
+hotels_val <- read.csv("hotels_val.csv")
+```
 
 
 
@@ -91,6 +117,9 @@ The linear regression model has better prediction performance, with a lower RMSE
 
 
 ## Mushroom classification
+```{r}
+mush <- read.csv("mushrooms.csv")
+```
 
 
 

@@ -1,9 +1,9 @@
 ## Saratoga house prices
 
-I use two models to predict the house price in Saratoga: linear
-regression and KNN regression. I use 10-fold cross validation and
-out-of-sample RMSE to measure the model performance. I standardize
-variables to improve model performance.
+I use two models and several features to predict the house price in
+Saratoga: linear regression and KNN regression. I use 10-fold cross
+validation and out-of-sample RMSE to measure the model performance. I
+standardize variables to improve model performance.
 
 Below is the results of linear regression:
 
@@ -14,11 +14,11 @@ Below is the results of linear regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1556, 1555, 1556, 1553, ... 
+    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1556, ... 
     ## Resampling results:
     ## 
-    ##   RMSE       Rsquared   MAE      
-    ##   0.5920207  0.6533476  0.4230834
+    ##   RMSE       Rsquared  MAE      
+    ##   0.5942795  0.641555  0.4217796
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
@@ -31,13 +31,13 @@ Below is the results of KNN regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1556, 1555, 1555, 1554, 1556, ... 
+    ## Summary of sample sizes: 1556, 1555, 1555, 1555, 1555, 1555, ... 
     ## Resampling results across tuning parameters:
     ## 
     ##   k  RMSE       Rsquared   MAE      
-    ##   5  0.6279333  0.6095152  0.4345010
-    ##   7  0.6168284  0.6211978  0.4316882
-    ##   9  0.6101807  0.6300309  0.4223517
+    ##   5  0.6270857  0.6019157  0.4345636
+    ##   7  0.6195049  0.6118954  0.4291997
+    ##   9  0.6170886  0.6154058  0.4255364
     ## 
     ## RMSE was used to select the optimal model using the smallest value.
     ## The final value used for the model was k = 9.
@@ -46,6 +46,54 @@ The linear regression model has better prediction performance, with a
 lower RMSE.
 
 ## Classification and retrospective sampling
+
+Bar plot of default probability by credit history:
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-5-1.png)
+
+Logistic regression results:
+
+    ## 
+    ## Call:
+    ## glm(formula = Default ~ duration + amount + installment + age + 
+    ##     history + purpose + foreign, family = binomial, data = loan)
+    ## 
+    ## Coefficients:
+    ##                       Estimate Std. Error z value Pr(>|z|)    
+    ## (Intercept)         -7.075e-01  4.726e-01  -1.497  0.13435    
+    ## duration             2.526e-02  8.100e-03   3.118  0.00182 ** 
+    ## amount               9.596e-05  3.650e-05   2.629  0.00856 ** 
+    ## installment          2.216e-01  7.626e-02   2.906  0.00366 ** 
+    ## age                 -2.018e-02  7.224e-03  -2.794  0.00521 ** 
+    ## historypoor         -1.108e+00  2.473e-01  -4.479 7.51e-06 ***
+    ## historyterrible     -1.885e+00  2.822e-01  -6.679 2.41e-11 ***
+    ## purposeedu           7.248e-01  3.707e-01   1.955  0.05058 .  
+    ## purposegoods/repair  1.049e-01  2.573e-01   0.408  0.68346    
+    ## purposenewcar        8.545e-01  2.773e-01   3.081  0.00206 ** 
+    ## purposeusedcar      -7.959e-01  3.598e-01  -2.212  0.02694 *  
+    ## foreigngerman       -1.265e+00  5.773e-01  -2.191  0.02849 *  
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## (Dispersion parameter for binomial family taken to be 1)
+    ## 
+    ##     Null deviance: 1221.7  on 999  degrees of freedom
+    ## Residual deviance: 1070.0  on 988  degrees of freedom
+    ## AIC: 1094
+    ## 
+    ## Number of Fisher Scoring iterations: 4
+
+In the `history` variable: compared to `good` category, `poor` category
+decreases the default probability, and `terrible` category decreases the
+default probability even more. This is reasonable as low credit level
+means low payback ability, thus more likely to default.
+
+The sampling process (*It then attempted to match each default with
+similar sets of loans that had not defaulted*) is not appropriate for
+predicting defaults. Features used in prediction are similar between
+defaulted and not defaulted cases. Thus, the outcome variable `Default`
+has high variance and low robustness.
+
+# would you recommend any changes to the bank’s sampling scheme?
 
 ## Children and hotel reservations
 
