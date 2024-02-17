@@ -1,0 +1,98 @@
+---
+title: "ECO395M DM&SL Exercise 2"
+author: "Sibo Ding"
+date: "Spring 2024"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+library(dplyr)
+library(ggplot2)
+library(caret)
+```
+
+## Saratoga house prices
+```{r}
+library(mosaic)
+data(SaratogaHouses)
+unloadNamespace("mosaic")
+
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
+
+# Identify numerical variables
+numerical_vars <- sapply(SaratogaHouses, is.numeric)
+# Standardize numerical variables
+SaratogaStd <- SaratogaHouses
+SaratogaStd[numerical_vars] <- scale(SaratogaHouses[numerical_vars])
+```
+
+I use two models to predict the house price in Saratoga: linear regression and KNN regression. I use 10-fold cross validation and out-of-sample RMSE to measure the model performance. I standardize variables to improve model performance.  
+
+Below is the results of linear regression:
+```{r}
+# Linear
+train(price ~ ., 
+      data = SaratogaStd, method = "lm", trControl = ctrl)
+```
+
+Below is the results of KNN regression:
+```{r}
+# KNN
+train(price ~ . - fireplaces - fuel,
+      data = SaratogaStd, method = "knn", trControl = ctrl)
+```
+
+The linear regression model has better prediction performance, with a lower RMSE.
+
+## Classification and retrospective sampling
+
+
+
+
+
+
+
+
+
+## Children and hotel reservations
+
+
+
+
+
+
+
+### Model building
+
+
+
+
+
+
+
+### Model validation: step 1
+
+
+
+
+
+
+### Model validation: step 2
+
+
+
+
+
+
+
+## Mushroom classification
+
+
+
+
+
