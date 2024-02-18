@@ -73,7 +73,7 @@ summary(loan_glm)
 ```
 In the `history` variable: compared to `good` category, `poor` category decreases the default probability, and `terrible` category decreases the default probability even more. This is reasonable as low credit level means low payback ability, thus more likely to default.  
 
-The sampling process (*It then attempted to match each default with similar sets of loans that had not defaulted*) is not appropriate for predicting defaults. Features used in prediction are similar between defaulted and not defaulted cases. Thus, the outcome variable `Default` has high variance and low robustness.
+The sampling process (*"It then attempted to match each default with similar sets of loans that had not defaulted"*) is not appropriate for predicting defaults. Features used in prediction are similar between defaulted and not defaulted cases. Thus, the outcome variable `Default` has high variance and low robustness.
 
 # would you recommend any changes to the bank's sampling scheme?
 
@@ -99,7 +99,7 @@ train <- hotels_dev[index, ]
 test <- hotels_dev[-index, ]
 ```
 
-Baseline model 1. I choose the threshold = 0.1 mainly considering a balance between true positive rate and false positive rate.
+Baseline model 1. I choose the threshold = 0.1 mainly considering a balance between true positive rate (sensitivity) and false positive rate (1 - specificity).
 ```{r}
 # Fit logistic regression model
 hotels_glm_1 <- glm(children ~ market_segment + adults + customer_type + is_repeated_guest,
@@ -121,6 +121,10 @@ hotels_pred_2 <- as.numeric(hotels_prob_2 > 0.1)
 confusionMatrix(factor(hotels_pred_2), factor(test$children))
 ```
 
+
+
+
+
 Best linear model at threshold = 0.1:
 ```{r}
 hotels_glm_3 <- glm(children ~ . - arrival_date,
@@ -129,15 +133,6 @@ hotels_prob_3 <- predict(hotels_glm_3, test, type = "response")
 hotels_pred_3 <- as.numeric(hotels_prob_3 > 0.1)
 confusionMatrix(factor(hotels_pred_3), factor(test$children))
 ```
-
-
-
-
-
-
-
-
-
 
 ### Model validation: step 1
 ROC curve for the best model:
@@ -148,6 +143,38 @@ plot(roc(hotels_val$children ~ hotels_prob_val))
 ```
 
 ### Model validation: step 2
+I split the validation data set into 20 folds, where each fold has about 250 bookings.  
+In each fold, I calculate the expected number of bookings with children versus the actual number of bookings with children.  
+```{r}
+# Create a shuffled column "fold_id"
+set.seed(424)
+hotels_val <- hotels_val |> mutate(fold_id =
+  rep(1:20, length = nrow(hotels_val)) |> sample())
+
+# Create an empty data frame
+pred_actual <- data.frame()
+
+# For each fold
+for(fold in 1:20){
+  # Create a temp data frame saving i-th fold
+  temp <- hotels_val |> filter(fold_id == fold)
+  # Sum predicted probabilities
+  expected_children <- sum(
+    predict(hotels_glm_3, temp, type = "response"))
+  # Sum actual children
+  actual_children <- sum(temp$children)
+  # Add to existing data frame
+  pred_actual <- pred_actual |>
+    rbind(data.frame(fold, expected_children, actual_children))
+}
+
+pred_actual
+
+pred_actual |> ggplot(aes(x = fold)) +
+  geom_point(aes(y = expected_children, col = "Expected")) +
+  geom_point(aes(y = actual_children, col = "Actual")) +
+  labs(x = "Fold", y = "Number of children", col = "")
+```
 
 
 

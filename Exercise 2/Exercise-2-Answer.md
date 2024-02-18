@@ -14,11 +14,11 @@ Below is the results of linear regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1556, 1556, 1555, 1555, 1555, ... 
+    ## Summary of sample sizes: 1554, 1555, 1554, 1555, 1556, 1555, ... 
     ## Resampling results:
     ## 
-    ##   RMSE       Rsquared   MAE      
-    ##   0.5928644  0.6448426  0.4227413
+    ##   RMSE      Rsquared   MAE      
+    ##   0.592952  0.6473497  0.4225266
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
@@ -31,16 +31,16 @@ Below is the results of KNN regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1555, 1555, 1555, 1555, ... 
+    ## Summary of sample sizes: 1555, 1555, 1554, 1555, 1555, 1555, ... 
     ## Resampling results across tuning parameters:
     ## 
     ##   k  RMSE       Rsquared   MAE      
-    ##   5  0.6267375  0.6126267  0.4352020
-    ##   7  0.6169284  0.6231567  0.4293373
-    ##   9  0.6175535  0.6229579  0.4258582
+    ##   5  0.6174166  0.6193197  0.4286015
+    ##   7  0.6072143  0.6326017  0.4252309
+    ##   9  0.6056296  0.6337029  0.4212659
     ## 
     ## RMSE was used to select the optimal model using the smallest value.
-    ## The final value used for the model was k = 7.
+    ## The final value used for the model was k = 9.
 
 The linear regression model has better prediction performance, with a
 lower RMSE.
@@ -87,8 +87,8 @@ decreases the default probability, and `terrible` category decreases the
 default probability even more. This is reasonable as low credit level
 means low payback ability, thus more likely to default.
 
-The sampling process (*It then attempted to match each default with
-similar sets of loans that had not defaulted*) is not appropriate for
+The sampling process (*“It then attempted to match each default with
+similar sets of loans that had not defaulted”*) is not appropriate for
 predicting defaults. Features used in prediction are similar between
 defaulted and not defaulted cases. Thus, the outcome variable `Default`
 has high variance and low robustness.
@@ -100,7 +100,8 @@ has high variance and low robustness.
 ### Model building
 
 Baseline model 1. I choose the threshold = 0.1 mainly considering a
-balance between true positive rate and false positive rate.
+balance between true positive rate (sensitivity) and false positive rate
+(1 - specificity).
 
     ## Confusion Matrix and Statistics
     ## 
@@ -196,5 +197,34 @@ ROC curve for the best model:
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 ### Model validation: step 2
+
+I split the validation data set into 20 folds, where each fold has about
+250 bookings.  
+In each fold, I calculate the expected number of bookings with children
+versus the actual number of bookings with children.
+
+    ##    fold expected_children actual_children
+    ## 1     1          21.36255              22
+    ## 2     2          22.38709              25
+    ## 3     3          21.67960              18
+    ## 4     4          24.84926              25
+    ## 5     5          21.20369              23
+    ## 6     6          20.51205              23
+    ## 7     7          23.25109              21
+    ## 8     8          18.05322              24
+    ## 9     9          20.02743              13
+    ## 10   10          27.16261              24
+    ## 11   11          18.54008              15
+    ## 12   12          21.12504              17
+    ## 13   13          17.61870              15
+    ## 14   14          19.68738              16
+    ## 15   15          19.62167              18
+    ## 16   16          20.68738              19
+    ## 17   17          23.39385              21
+    ## 18   18          21.09860              23
+    ## 19   19          17.38282              16
+    ## 20   20          23.11533              24
+
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
 ## Mushroom classification
