@@ -14,11 +14,11 @@ Below is the results of linear regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1556, ... 
+    ## Summary of sample sizes: 1555, 1556, 1556, 1555, 1555, 1555, ... 
     ## Resampling results:
     ## 
-    ##   RMSE       Rsquared  MAE      
-    ##   0.5942795  0.641555  0.4217796
+    ##   RMSE       Rsquared   MAE      
+    ##   0.5928644  0.6448426  0.4227413
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
@@ -31,16 +31,16 @@ Below is the results of KNN regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1556, 1555, 1555, 1555, 1555, 1555, ... 
+    ## Summary of sample sizes: 1555, 1555, 1555, 1555, 1555, 1555, ... 
     ## Resampling results across tuning parameters:
     ## 
     ##   k  RMSE       Rsquared   MAE      
-    ##   5  0.6270857  0.6019157  0.4345636
-    ##   7  0.6195049  0.6118954  0.4291997
-    ##   9  0.6170886  0.6154058  0.4255364
+    ##   5  0.6267375  0.6126267  0.4352020
+    ##   7  0.6169284  0.6231567  0.4293373
+    ##   9  0.6175535  0.6229579  0.4258582
     ## 
     ## RMSE was used to select the optimal model using the smallest value.
-    ## The final value used for the model was k = 9.
+    ## The final value used for the model was k = 7.
 
 The linear regression model has better prediction performance, with a
 lower RMSE.
@@ -55,7 +55,7 @@ Logistic regression results:
     ## 
     ## Call:
     ## glm(formula = Default ~ duration + amount + installment + age + 
-    ##     history + purpose + foreign, family = binomial, data = loan)
+    ##     history + purpose + foreign, family = "binomial", data = loan)
     ## 
     ## Coefficients:
     ##                       Estimate Std. Error z value Pr(>|z|)    
@@ -99,7 +99,101 @@ has high variance and low robustness.
 
 ### Model building
 
+Baseline model 1. I choose the threshold = 0.1 mainly considering a
+balance between true positive rate and false positive rate.
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction    0    1
+    ##          0 4491  189
+    ##          1 3778  542
+    ##                                           
+    ##                Accuracy : 0.5592          
+    ##                  95% CI : (0.5489, 0.5695)
+    ##     No Information Rate : 0.9188          
+    ##     P-Value [Acc > NIR] : 1               
+    ##                                           
+    ##                   Kappa : 0.0879          
+    ##                                           
+    ##  Mcnemar's Test P-Value : <2e-16          
+    ##                                           
+    ##             Sensitivity : 0.5431          
+    ##             Specificity : 0.7415          
+    ##          Pos Pred Value : 0.9596          
+    ##          Neg Pred Value : 0.1255          
+    ##              Prevalence : 0.9188          
+    ##          Detection Rate : 0.4990          
+    ##    Detection Prevalence : 0.5200          
+    ##       Balanced Accuracy : 0.6423          
+    ##                                           
+    ##        'Positive' Class : 0               
+    ## 
+
+Baseline model 2 at threshold = 0.1:
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction    0    1
+    ##          0 7257  218
+    ##          1 1012  513
+    ##                                           
+    ##                Accuracy : 0.8633          
+    ##                  95% CI : (0.8561, 0.8704)
+    ##     No Information Rate : 0.9188          
+    ##     P-Value [Acc > NIR] : 1               
+    ##                                           
+    ##                   Kappa : 0.3875          
+    ##                                           
+    ##  Mcnemar's Test P-Value : <2e-16          
+    ##                                           
+    ##             Sensitivity : 0.8776          
+    ##             Specificity : 0.7018          
+    ##          Pos Pred Value : 0.9708          
+    ##          Neg Pred Value : 0.3364          
+    ##              Prevalence : 0.9188          
+    ##          Detection Rate : 0.8063          
+    ##    Detection Prevalence : 0.8306          
+    ##       Balanced Accuracy : 0.7897          
+    ##                                           
+    ##        'Positive' Class : 0               
+    ## 
+
+Best linear model at threshold = 0.1:
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction    0    1
+    ##          0 7257  218
+    ##          1 1012  513
+    ##                                           
+    ##                Accuracy : 0.8633          
+    ##                  95% CI : (0.8561, 0.8704)
+    ##     No Information Rate : 0.9188          
+    ##     P-Value [Acc > NIR] : 1               
+    ##                                           
+    ##                   Kappa : 0.3875          
+    ##                                           
+    ##  Mcnemar's Test P-Value : <2e-16          
+    ##                                           
+    ##             Sensitivity : 0.8776          
+    ##             Specificity : 0.7018          
+    ##          Pos Pred Value : 0.9708          
+    ##          Neg Pred Value : 0.3364          
+    ##              Prevalence : 0.9188          
+    ##          Detection Rate : 0.8063          
+    ##    Detection Prevalence : 0.8306          
+    ##       Balanced Accuracy : 0.7897          
+    ##                                           
+    ##        'Positive' Class : 0               
+    ## 
+
 ### Model validation: step 1
+
+ROC curve for the best model:
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 ### Model validation: step 2
 

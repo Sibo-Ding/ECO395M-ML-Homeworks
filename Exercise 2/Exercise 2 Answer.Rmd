@@ -13,22 +13,24 @@ knitr::opts_chunk$set(message = FALSE)
 library(dplyr)
 library(ggplot2)
 library(caret)
+library(pROC)
 ```
 
 ## Saratoga house prices
 ```{r}
+# Load data
 library(mosaic)
 data(SaratogaHouses)
 unloadNamespace("mosaic")
-
-# 10-fold cross validation
-ctrl <- trainControl(method = "cv", number = 10)
 
 # Identify numerical variables
 numerical_vars <- sapply(SaratogaHouses, is.numeric)
 # Standardize numerical variables
 SaratogaStd <- SaratogaHouses
 SaratogaStd[numerical_vars] <- scale(SaratogaHouses[numerical_vars])
+
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
 ```
 
 I use two models and several features to predict the house price in Saratoga: linear regression and KNN regression. I use 10-fold cross validation and out-of-sample RMSE to measure the model performance. I standardize variables to improve model performance.  
@@ -66,7 +68,7 @@ loan |>
 Logistic regression results:
 ```{r}
 # Logistic regression
-loan_glm <- glm(Default ~ duration + amount + installment + age + history + purpose + foreign, family = binomial, data = loan)
+loan_glm <- glm(Default ~ duration + amount + installment + age + history + purpose + foreign, family = "binomial", data = loan)
 summary(loan_glm)
 ```
 In the `history` variable: compared to `good` category, `poor` category decreases the default probability, and `terrible` category decreases the default probability even more. This is reasonable as low credit level means low payback ability, thus more likely to default.  
@@ -87,13 +89,49 @@ hotels_dev <- read.csv("hotels_dev.csv")
 hotels_val <- read.csv("hotels_val.csv")
 ```
 
-
-
-
-
-
-
 ### Model building
+```{r}
+# Train-test split
+set.seed(123)
+index <- createDataPartition(hotels_dev$children,
+                             p = 0.8, list = FALSE)
+train <- hotels_dev[index, ]
+test <- hotels_dev[-index, ]
+```
+
+Baseline model 1. I choose the threshold = 0.1 mainly considering a balance between true positive rate and false positive rate.
+```{r}
+# Fit logistic regression model
+hotels_glm_1 <- glm(children ~ market_segment + adults + customer_type + is_repeated_guest,
+                    family = "binomial", data = train)
+# Predict probability
+hotels_prob_1 <- predict(hotels_glm_1, test, type = "response")
+# Determine 1 or 0 based on a threshold
+hotels_pred_1 <- as.numeric(hotels_prob_1 > 0.1)
+# Confusion matrix
+confusionMatrix(factor(hotels_pred_1), factor(test$children))
+```
+
+Baseline model 2 at threshold = 0.1:
+```{r}
+hotels_glm_2 <- glm(children ~ . - arrival_date,
+                    family = "binomial", data = train)
+hotels_prob_2 <- predict(hotels_glm_2, test, type = "response")
+hotels_pred_2 <- as.numeric(hotels_prob_2 > 0.1)
+confusionMatrix(factor(hotels_pred_2), factor(test$children))
+```
+
+Best linear model at threshold = 0.1:
+```{r}
+hotels_glm_3 <- glm(children ~ . - arrival_date,
+                    family = "binomial", data = train)
+hotels_prob_3 <- predict(hotels_glm_3, test, type = "response")
+hotels_pred_3 <- as.numeric(hotels_prob_3 > 0.1)
+confusionMatrix(factor(hotels_pred_3), factor(test$children))
+```
+
+
+
 
 
 
@@ -102,11 +140,12 @@ hotels_val <- read.csv("hotels_val.csv")
 
 
 ### Model validation: step 1
-
-
-
-
-
+ROC curve for the best model:
+```{r}
+hotels_prob_val <- predict(hotels_glm_3, hotels_val, type = "response")
+# ROC curve
+plot(roc(hotels_val$children ~ hotels_prob_val))
+```
 
 ### Model validation: step 2
 
