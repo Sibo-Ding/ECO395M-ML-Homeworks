@@ -127,6 +127,8 @@ confusionMatrix(factor(hotels_pred_2), factor(test$children))
 
 
 
+# the best linear model you can build, including any engineered features that you can think of that improve the performance (interactions, features derived from time stamps, etc).
+
 
 
 
@@ -211,7 +213,7 @@ best_lambda <- lasso_cv$lambda.min
 best_lambda
 ```
 
-I use this optimal lambda to predict the probability that a mushroom is poisonous.  
+I use this optimal lambda to predict the out-of-sample probability that a mushroom is poisonous. ROC curve:  
 ```{r}
 lasso_pred <- predict(lasso_mod, s = best_lambda, newx = x[test, ])
 # ROC
@@ -221,6 +223,10 @@ plot(roc(y[test] ~ lasso_pred))
 
 
 
+
+
+
+# Based on this ROC curve, recommend a probability threshold for declaring a mushroom poisonous. How well does your model perform at this threshold, as measured by false positive rate and true positive rate?
 
 
 

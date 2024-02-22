@@ -161,6 +161,8 @@ Baseline model 2 at threshold = 0.1:
     ##        'Positive' Class : 0               
     ## 
 
+# the best linear model you can build, including any engineered features that you can think of that improve the performance (interactions, features derived from time stamps, etc).
+
 Best linear model at threshold = 0.1:
 
     ## Confusion Matrix and Statistics
@@ -237,6 +239,8 @@ optimal lambda. The optimal lambda is:
 
     ## [1] 0.0001739773
 
-I use this optimal lambda to predict the probability that a mushroom is
-poisonous.  
+I use this optimal lambda to predict the out-of-sample probability that
+a mushroom is poisonous. ROC curve:  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+
+# Based on this ROC curve, recommend a probability threshold for declaring a mushroom poisonous. How well does your model perform at this threshold, as measured by false positive rate and true positive rate?
