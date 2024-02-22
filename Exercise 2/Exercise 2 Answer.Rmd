@@ -14,6 +14,7 @@ library(dplyr)
 library(ggplot2)
 library(caret)
 library(pROC)
+library(glmnet)  # Ridge and Lasso
 ```
 
 ## Saratoga house prices
@@ -38,6 +39,7 @@ I use two models and several features to predict the house price in Saratoga: li
 Below is the results of linear regression:
 ```{r}
 # Linear
+set.seed(12)
 train(price ~ ., 
       data = SaratogaStd, method = "lm", trControl = ctrl)
 ```
@@ -45,6 +47,7 @@ train(price ~ .,
 Below is the results of KNN regression:
 ```{r}
 # KNN
+set.seed(12)
 train(price ~ . - fireplaces - fuel,
       data = SaratogaStd, method = "knn", trControl = ctrl)
 ```
@@ -56,7 +59,7 @@ The linear regression model has better prediction performance, with a lower RMSE
 loan <- read.csv("german_credit.csv")
 ```
 
-Bar plot of default probability by credit history:
+Bar plot of default probability by credit history:  
 ```{r}
 loan |>
   group_by(history) |> summarize(default_prob = mean(Default)) |>
@@ -125,6 +128,10 @@ confusionMatrix(factor(hotels_pred_2), factor(test$children))
 
 
 
+
+
+
+
 Best linear model at threshold = 0.1:
 ```{r}
 hotels_glm_3 <- glm(children ~ . - arrival_date,
@@ -135,7 +142,7 @@ confusionMatrix(factor(hotels_pred_3), factor(test$children))
 ```
 
 ### Model validation: step 1
-ROC curve for the best model:
+ROC curve for the best model:  
 ```{r}
 hotels_prob_val <- predict(hotels_glm_3, hotels_val, type = "response")
 # ROC curve
@@ -143,8 +150,7 @@ plot(roc(hotels_val$children ~ hotels_prob_val))
 ```
 
 ### Model validation: step 2
-I split the validation data set into 20 folds, where each fold has about 250 bookings.  
-In each fold, I calculate the expected number of bookings with children versus the actual number of bookings with children.  
+I split the validation data set into 20 folds, where each fold has about 250 bookings. In each fold, I calculate the expected number of bookings with children versus the actual number of bookings with children.  
 ```{r}
 # Create a shuffled column "fold_id"
 set.seed(424)
@@ -155,7 +161,7 @@ hotels_val <- hotels_val |> mutate(fold_id =
 pred_actual <- data.frame()
 
 # For each fold
-for(fold in 1:20){
+for (fold in 1:20){
   # Create a temp data frame saving i-th fold
   temp <- hotels_val |> filter(fold_id == fold)
   # Sum predicted probabilities
@@ -176,16 +182,52 @@ pred_actual |> ggplot(aes(x = fold)) +
   labs(x = "Fold", y = "Number of children", col = "")
 ```
 
-
-
-
-
-
-
 ## Mushroom classification
+The y variable is a dummy, where it equals 1 if a mushroom is poisonous and 0 otherwise. I exclude `veil.type` from x variables as it has no variation.  
 ```{r}
 mush <- read.csv("mushrooms.csv")
+# Delete column "veil.type" as it has no variation
+mush <- mush |> select(-veil.type)
+# One-hot encoding
+mush <- model.matrix(~ . - 1, data = mush)
+
+x <- mush[, 3:ncol(mush)]
+y <- mush[, 2]  # Poisonous
+
+# Train-test split
+set.seed(42)
+train <- sample(1:nrow(mush), 0.8 * nrow(mush))
+test <- (-train)
 ```
+
+I fit a lasso model, and use a 10-fold cross validation to choose an optimal lambda. The optimal lambda is:  
+```{r}
+# Fit a lasso model
+lasso_mod <- glmnet(x[train, ], y[train], alpha = 1)
+# Choosing an optimal lambda using cross validation
+set.seed(123)
+lasso_cv <- cv.glmnet(x[train, ], y[train], alpha = 1, nfolds = 10)
+best_lambda <- lasso_cv$lambda.min
+```
+
+I use this optimal lambda to predict the probability that a mushroom is poisonous.  
+```{r}
+lasso_pred <- predict(lasso_mod, s = best_lambda, newx = x[test, ])
+# ROC
+plot(roc(y[test] ~ lasso_pred))
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

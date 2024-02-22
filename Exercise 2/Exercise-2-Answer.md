@@ -14,11 +14,11 @@ Below is the results of linear regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1554, 1555, 1554, 1555, 1556, 1555, ... 
+    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1555, ... 
     ## Resampling results:
     ## 
-    ##   RMSE      Rsquared   MAE      
-    ##   0.592952  0.6473497  0.4225266
+    ##   RMSE       Rsquared   MAE      
+    ##   0.5951011  0.6424518  0.4223487
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
@@ -31,13 +31,13 @@ Below is the results of KNN regression:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1554, 1555, 1555, 1555, ... 
+    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1555, ... 
     ## Resampling results across tuning parameters:
     ## 
     ##   k  RMSE       Rsquared   MAE      
-    ##   5  0.6174166  0.6193197  0.4286015
-    ##   7  0.6072143  0.6326017  0.4252309
-    ##   9  0.6056296  0.6337029  0.4212659
+    ##   5  0.6185145  0.6193737  0.4259107
+    ##   7  0.6166096  0.6212428  0.4242421
+    ##   9  0.6156431  0.6229348  0.4216721
     ## 
     ## RMSE was used to select the optimal model using the smallest value.
     ## The final value used for the model was k = 9.
@@ -47,7 +47,7 @@ lower RMSE.
 
 ## Classification and retrospective sampling
 
-Bar plot of default probability by credit history:
+Bar plot of default probability by credit history:  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 Logistic regression results:
@@ -193,15 +193,14 @@ Best linear model at threshold = 0.1:
 
 ### Model validation: step 1
 
-ROC curve for the best model:
+ROC curve for the best model:  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 ### Model validation: step 2
 
 I split the validation data set into 20 folds, where each fold has about
-250 bookings.  
-In each fold, I calculate the expected number of bookings with children
-versus the actual number of bookings with children.
+250 bookings. In each fold, I calculate the expected number of bookings
+with children versus the actual number of bookings with children.
 
     ##    fold expected_children actual_children
     ## 1     1          21.36255              22
@@ -228,3 +227,14 @@ versus the actual number of bookings with children.
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-13-1.png)
 
 ## Mushroom classification
+
+The y variable is a dummy, where it equals 1 if a mushroom is poisonous
+and 0 otherwise. I exclude `veil.type` from x variables as it has no
+variation.
+
+I fit a lasso model, and use a 10-fold cross validation to choose an
+optimal lambda. The optimal lambda is:
+
+I use this optimal lambda to predict the probability that a mushroom is
+poisonous.  
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-16-1.png)
