@@ -47,10 +47,13 @@ lower RMSE.
 
 ## Classification and retrospective sampling
 
-Bar plot of default probability by credit history:  
+From the bar plot, better credit history increases default
+probability.  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
-Logistic regression results:
+In the logistic regression , compared to `historygood`, `historypoor`
+decreases default probability, and `historyterrible` further decreases
+default probability.
 
     ## 
     ## Call:
@@ -82,18 +85,10 @@ Logistic regression results:
     ## 
     ## Number of Fisher Scoring iterations: 4
 
-In the `history` variable: compared to `good` category, `poor` category
-decreases the default probability, and `terrible` category decreases the
-default probability even more. This is reasonable as low credit level
-means low payback ability, thus more likely to default.
-
-The sampling process (*“It then attempted to match each default with
-similar sets of loans that had not defaulted”*) is not appropriate for
-predicting defaults. Features used in prediction are similar between
-defaulted and not defaulted cases. Thus, the outcome variable `Default`
-has high variance and low robustness.
-
-# would you recommend any changes to the bank’s sampling scheme?
+In the bar plot (or the data set), the relationship between default
+probability and credit history is counter-intuitive. This probably
+results from the inappropriate sampling process.  
+The bank can randomly select a subset of loans that had not defaulted.
 
 ## Children and hotel reservations
 
