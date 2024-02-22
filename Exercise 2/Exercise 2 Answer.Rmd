@@ -90,10 +90,7 @@ The sampling process (*"It then attempted to match each default with similar set
 ```{r}
 hotels_dev <- read.csv("hotels_dev.csv")
 hotels_val <- read.csv("hotels_val.csv")
-```
 
-### Model building
-```{r}
 # Train-test split
 set.seed(123)
 index <- createDataPartition(hotels_dev$children,
@@ -102,6 +99,7 @@ train <- hotels_dev[index, ]
 test <- hotels_dev[-index, ]
 ```
 
+### Model building
 Baseline model 1. I choose the threshold = 0.1 mainly considering a balance between true positive rate (sensitivity) and false positive rate (1 - specificity).
 ```{r}
 # Fit logistic regression model
@@ -124,19 +122,9 @@ hotels_pred_2 <- as.numeric(hotels_prob_2 > 0.1)
 confusionMatrix(factor(hotels_pred_2), factor(test$children))
 ```
 
-
-
-
-# the best linear model you can build, including any engineered features that you can think of that improve the performance (interactions, features derived from time stamps, etc).
-
-
-
-
-
-
 Best linear model at threshold = 0.1:
 ```{r}
-hotels_glm_3 <- glm(children ~ . - arrival_date,
+hotels_glm_3 <- glm(children ~ . - arrival_date + hotel*adults + stays_in_week_nights*adults + is_repeated_guest*market_segment + is_repeated_guest*reserved_room_type,
                     family = "binomial", data = train)
 hotels_prob_3 <- predict(hotels_glm_3, test, type = "response")
 hotels_pred_3 <- as.numeric(hotels_prob_3 > 0.1)
@@ -185,7 +173,7 @@ pred_actual |> ggplot(aes(x = fold)) +
 ```
 
 ## Mushroom classification
-The y variable is a dummy, where it equals 1 if a mushroom is poisonous and 0 otherwise. I exclude `veil.type` from x variables as it has no variation.  
+The y variable is a dummy, where it equals to 1 if a mushroom is poisonous and 0 otherwise. I exclude `veil.type` from x variables as it has no variation.  
 ```{r}
 mush <- read.csv("mushrooms.csv")
 # Delete column "veil.type" as it has no variation

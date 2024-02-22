@@ -161,34 +161,32 @@ Baseline model 2 at threshold = 0.1:
     ##        'Positive' Class : 0               
     ## 
 
-# the best linear model you can build, including any engineered features that you can think of that improve the performance (interactions, features derived from time stamps, etc).
-
 Best linear model at threshold = 0.1:
 
     ## Confusion Matrix and Statistics
     ## 
     ##           Reference
     ## Prediction    0    1
-    ##          0 7257  218
-    ##          1 1012  513
+    ##          0 7266  217
+    ##          1 1003  514
     ##                                           
-    ##                Accuracy : 0.8633          
-    ##                  95% CI : (0.8561, 0.8704)
+    ##                Accuracy : 0.8644          
+    ##                  95% CI : (0.8572, 0.8715)
     ##     No Information Rate : 0.9188          
     ##     P-Value [Acc > NIR] : 1               
     ##                                           
-    ##                   Kappa : 0.3875          
+    ##                   Kappa : 0.3905          
     ##                                           
     ##  Mcnemar's Test P-Value : <2e-16          
     ##                                           
-    ##             Sensitivity : 0.8776          
-    ##             Specificity : 0.7018          
-    ##          Pos Pred Value : 0.9708          
-    ##          Neg Pred Value : 0.3364          
+    ##             Sensitivity : 0.8787          
+    ##             Specificity : 0.7031          
+    ##          Pos Pred Value : 0.9710          
+    ##          Neg Pred Value : 0.3388          
     ##              Prevalence : 0.9188          
-    ##          Detection Rate : 0.8063          
-    ##    Detection Prevalence : 0.8306          
-    ##       Balanced Accuracy : 0.7897          
+    ##          Detection Rate : 0.8073          
+    ##    Detection Prevalence : 0.8314          
+    ##       Balanced Accuracy : 0.7909          
     ##                                           
     ##        'Positive' Class : 0               
     ## 
@@ -196,7 +194,7 @@ Best linear model at threshold = 0.1:
 ### Model validation: step 1
 
 ROC curve for the best model:  
-![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 ### Model validation: step 2
 
@@ -205,34 +203,34 @@ I split the validation data set into 20 folds, where each fold has about
 with children versus the actual number of bookings with children.
 
     ##    fold expected_children actual_children
-    ## 1     1          21.36255              22
-    ## 2     2          22.38709              25
-    ## 3     3          21.67960              18
-    ## 4     4          24.84926              25
-    ## 5     5          21.20369              23
-    ## 6     6          20.51205              23
-    ## 7     7          23.25109              21
-    ## 8     8          18.05322              24
-    ## 9     9          20.02743              13
-    ## 10   10          27.16261              24
-    ## 11   11          18.54008              15
-    ## 12   12          21.12504              17
-    ## 13   13          17.61870              15
-    ## 14   14          19.68738              16
-    ## 15   15          19.62167              18
-    ## 16   16          20.68738              19
-    ## 17   17          23.39385              21
-    ## 18   18          21.09860              23
-    ## 19   19          17.38282              16
-    ## 20   20          23.11533              24
+    ## 1     1          21.70967              22
+    ## 2     2          22.25847              25
+    ## 3     3          22.55427              18
+    ## 4     4          25.17844              25
+    ## 5     5          21.20312              23
+    ## 6     6          20.83748              23
+    ## 7     7          23.09596              21
+    ## 8     8          19.29644              24
+    ## 9     9          20.27112              13
+    ## 10   10          27.07746              24
+    ## 11   11          18.35804              15
+    ## 12   12          21.40634              17
+    ## 13   13          17.71660              15
+    ## 14   14          19.81054              16
+    ## 15   15          19.83295              18
+    ## 16   16          20.38584              19
+    ## 17   17          23.43068              21
+    ## 18   18          20.93573              23
+    ## 19   19          17.30087              16
+    ## 20   20          23.27040              24
 
-![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-13-1.png)
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-12-1.png)
 
 ## Mushroom classification
 
-The y variable is a dummy, where it equals 1 if a mushroom is poisonous
-and 0 otherwise. I exclude `veil.type` from x variables as it has no
-variation.
+The y variable is a dummy, where it equals to 1 if a mushroom is
+poisonous and 0 otherwise. I exclude `veil.type` from x variables as it
+has no variation.
 
 I fit a lasso model, and use a 10-fold cross validation to choose an
 optimal lambda. The optimal lambda is:
@@ -241,6 +239,6 @@ optimal lambda. The optimal lambda is:
 
 I use this optimal lambda to predict the out-of-sample probability that
 a mushroom is poisonous. ROC curve:  
-![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-16-1.png)
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
 # Based on this ROC curve, recommend a probability threshold for declaring a mushroom poisonous. How well does your model perform at this threshold, as measured by false positive rate and true positive rate?
