@@ -235,6 +235,8 @@ variation.
 I fit a lasso model, and use a 10-fold cross validation to choose an
 optimal lambda. The optimal lambda is:
 
+    ## [1] 0.0001739773
+
 I use this optimal lambda to predict the probability that a mushroom is
 poisonous.  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-16-1.png)

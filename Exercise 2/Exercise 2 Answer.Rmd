@@ -208,6 +208,7 @@ lasso_mod <- glmnet(x[train, ], y[train], alpha = 1)
 set.seed(123)
 lasso_cv <- cv.glmnet(x[train, ], y[train], alpha = 1, nfolds = 10)
 best_lambda <- lasso_cv$lambda.min
+best_lambda
 ```
 
 I use this optimal lambda to predict the probability that a mushroom is poisonous.  
