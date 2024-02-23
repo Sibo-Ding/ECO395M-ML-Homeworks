@@ -59,7 +59,7 @@ The linear regression model has better prediction performance, with a lower RMSE
 loan <- read.csv("german_credit.csv")
 ```
 
-From the bar plot, better credit history increases default probability.  
+Bar plot of default probability by credit history:  
 ```{r}
 loan |>
   group_by(history) |> summarize(default_prob = mean(Default)) |>
@@ -68,15 +68,16 @@ loan |>
   labs(x = "Credit History", y = "Default Probability")
 ```
 
-In the logistic regression , compared to `historygood`, `historypoor` decreases default probability, and `historyterrible` further decreases default probability.  
+Logistic regression results:  
 ```{r}
 # Logistic regression
 loan_glm <- glm(Default ~ duration + amount + installment + age + history + purpose + foreign, family = "binomial", data = loan)
 summary(loan_glm)
 ```
 
-In the bar plot (or the data set), the relationship between default probability and credit history is counter-intuitive. This probably results from the inappropriate sampling process.  
-The bank can randomly select a subset of loans that had not defaulted.
+In both bar plot (or data set) and logistic regression, compared to `historygood`, `historypoor` decreases default probability, and `historyterrible` further decreases default probability.  
+
+This relationship is counter-intuitive, probably resulting from the inappropriate sampling process. To improve the sampling scheme, the bank can randomly select a subset of loans that had not defaulted.
 
 ## Children and hotel reservations
 ```{r}
