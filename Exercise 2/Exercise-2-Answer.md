@@ -5,7 +5,7 @@ Saratoga: linear regression and KNN regression. I use 10-fold cross
 validation and out-of-sample RMSE to measure the model performance. I
 standardize variables to improve model performance.
 
-Below is the results of linear regression:
+Linear regression results:
 
     ## Linear Regression 
     ## 
@@ -22,7 +22,7 @@ Below is the results of linear regression:
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
-Below is the results of KNN regression:
+KNN regression results:
 
     ## k-Nearest Neighbors 
     ## 
@@ -42,7 +42,7 @@ Below is the results of KNN regression:
     ## RMSE was used to select the optimal model using the smallest value.
     ## The final value used for the model was k = 9.
 
-The linear regression model has better prediction performance, with a
+The linear regression model has a better prediction performance, with a
 lower RMSE.
 
 ## Classification and retrospective sampling
@@ -82,9 +82,10 @@ Logistic regression results:
     ## 
     ## Number of Fisher Scoring iterations: 4
 
-In both bar plot (or data set) and logistic regression, compared to
-`historygood`, `historypoor` decreases default probability, and
-`historyterrible` further decreases default probability.
+In both the bar plot (or the data set) and the logistic regression,
+compared to `historygood`, `historypoor` decreases the default
+probability, and `historyterrible` further decreases the default
+probability.
 
 This relationship is counter-intuitive, probably resulting from the
 inappropriate sampling process. To improve the sampling scheme, the bank
