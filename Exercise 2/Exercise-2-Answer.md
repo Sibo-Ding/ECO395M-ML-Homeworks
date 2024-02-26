@@ -228,13 +228,43 @@ The y variable is a dummy, where it equals to 1 if a mushroom is
 poisonous and 0 otherwise. I exclude `veil.type` from x variables as it
 has no variation.
 
-I fit a lasso model, and use a 10-fold cross validation to choose an
-optimal lambda. The optimal lambda is:
+I use 10-fold cross validation to fit a lasso model and find an optimal
+lambda. The optimal lambda is:
 
-    ## [1] 0.0001739773
+    ## [1] 0.000144439
 
-I use this optimal lambda to predict the out-of-sample probability that
-a mushroom is poisonous. ROC curve:  
+I use the optimal lambda to predict the out-of-sample probability that a
+mushroom is poisonous. ROC curve:  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
-# Based on this ROC curve, recommend a probability threshold for declaring a mushroom poisonous. How well does your model perform at this threshold, as measured by false positive rate and true positive rate?
+I choose the threshold = 0.5. The model perfectly predicts poisonous
+mushrooms, with true positive rate (sensitivity) = 1 and false positive
+rate (1 - specificity) = 0.
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction   0   1
+    ##          0 861   0
+    ##          1   0 764
+    ##                                      
+    ##                Accuracy : 1          
+    ##                  95% CI : (0.9977, 1)
+    ##     No Information Rate : 0.5298     
+    ##     P-Value [Acc > NIR] : < 2.2e-16  
+    ##                                      
+    ##                   Kappa : 1          
+    ##                                      
+    ##  Mcnemar's Test P-Value : NA         
+    ##                                      
+    ##             Sensitivity : 1.0000     
+    ##             Specificity : 1.0000     
+    ##          Pos Pred Value : 1.0000     
+    ##          Neg Pred Value : 1.0000     
+    ##              Prevalence : 0.5298     
+    ##          Detection Rate : 0.5298     
+    ##    Detection Prevalence : 0.5298     
+    ##       Balanced Accuracy : 1.0000     
+    ##                                      
+    ##        'Positive' Class : 0          
+    ## 

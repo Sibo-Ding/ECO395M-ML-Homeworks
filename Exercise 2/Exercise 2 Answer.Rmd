@@ -183,41 +183,28 @@ train <- sample(1:nrow(mush), 0.8 * nrow(mush))
 test <- (-train)
 ```
 
-I fit a lasso model, and use a 10-fold cross validation to choose an optimal lambda. The optimal lambda is:  
+I use 10-fold cross validation to fit a lasso model and find an optimal lambda. The optimal lambda is:  
 ```{r}
-# Fit a lasso model
-lasso_mod <- glmnet(x[train, ], y[train], alpha = 1)
-# Choosing an optimal lambda using cross validation
+# Fit a lasso using cross validation
 set.seed(123)
-lasso_cv <- cv.glmnet(x[train, ], y[train], alpha = 1, nfolds = 10)
+lasso_cv <- cv.glmnet(x[train, ], y[train],
+                      family = "binomial", alpha = 1, nfolds = 10)
+# Find the optimal lambda
 best_lambda <- lasso_cv$lambda.min
 best_lambda
 ```
 
-I use this optimal lambda to predict the out-of-sample probability that a mushroom is poisonous. ROC curve:  
+I use the optimal lambda to predict the out-of-sample probability that a mushroom is poisonous. ROC curve:  
 ```{r}
-lasso_pred <- predict(lasso_mod, s = best_lambda, newx = x[test, ])
+# Probability
+lasso_prob <- predict(lasso_cv, s = best_lambda, newx = x[test, ],
+                      type = "response")
 # ROC
-plot(roc(y[test] ~ lasso_pred))
+plot(roc(y[test] ~ lasso_prob))
 ```
 
-
-
-
-
-
-
-# Based on this ROC curve, recommend a probability threshold for declaring a mushroom poisonous. How well does your model perform at this threshold, as measured by false positive rate and true positive rate?
-
-
-
-
-
-
-
-
-
-
-
-
-
+I choose the threshold = 0.5. The model perfectly predicts poisonous mushrooms, with true positive rate (sensitivity) = 1 and false positive rate (1 - specificity) = 0.  
+```{r}
+lasso_pred <- as.numeric(lasso_prob > 0.5)
+confusionMatrix(factor(lasso_pred), factor(y[test]))
+```
