@@ -41,9 +41,6 @@ heights, as measured by the standard deviation:
 
 Average age of male and female swimmers over time:
 
-    ## `summarise()` has grouped output by 'year'. You can override using the
-    ## `.groups` argument.
-
     ## # A tibble: 6 × 3
     ## # Groups:   year [6]
     ##    year sex   avg_age
