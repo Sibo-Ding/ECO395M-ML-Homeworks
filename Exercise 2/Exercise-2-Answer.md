@@ -1,9 +1,9 @@
 ## Saratoga house prices
 
-I use two models and several features to predict the house price in
-Saratoga: linear regression and KNN regression. I use 10-fold cross
-validation and out-of-sample RMSE to measure the model performance. I
-standardize variables to improve model performance.
+I use linear regression and KNN regression models to predict the house
+price in Saratoga. I use 10-fold cross validation and out-of-sample RMSE
+to measure the model performance. I standardize variables to improve
+model performance.
 
 Linear regression results:
 
@@ -89,15 +89,16 @@ probability.
 
 This relationship is counter-intuitive, probably resulting from the
 inappropriate sampling process. To improve the sampling scheme, the bank
-can randomly select a subset of loans that had not defaulted.
+can use undersampling, where it randomly remove loans that had not
+defaulted so that the class distribution becomes more balanced.
 
 ## Children and hotel reservations
 
 ### Model building
 
-Baseline model 1. I choose the threshold = 0.1 mainly considering a
-balance between true positive rate (sensitivity) and false positive rate
-(1 - specificity).
+Baseline model 1. I choose threshold = 0.1 mainly considering a balance
+between true positive rate (sensitivity) and false positive rate (1 -
+specificity).
 
     ## Confusion Matrix and Statistics
     ## 
