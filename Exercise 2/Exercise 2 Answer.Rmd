@@ -24,11 +24,11 @@ library(mosaic)
 data(SaratogaHouses)
 unloadNamespace("mosaic")
 
-# Identify numerical variables
+# Identify numerical columns
 numerical_vars <- sapply(SaratogaHouses, is.numeric)
-# Standardize numerical variables
-SaratogaStd <- SaratogaHouses
-SaratogaStd[numerical_vars] <- scale(SaratogaHouses[numerical_vars])
+# Standardize numerical columns
+SaratogaHouses[numerical_vars] <- 
+  scale(SaratogaHouses[numerical_vars])
 
 # 10-fold cross validation
 ctrl <- trainControl(method = "cv", number = 10)
@@ -41,7 +41,7 @@ Linear regression results:
 # Linear
 set.seed(12)
 train(price ~ ., 
-      data = SaratogaStd, method = "lm", trControl = ctrl)
+      data = SaratogaHouses, method = "lm", trControl = ctrl)
 ```
 
 KNN regression results:
@@ -49,7 +49,7 @@ KNN regression results:
 # KNN
 set.seed(12)
 train(price ~ . - fireplaces - fuel,
-      data = SaratogaStd, method = "knn", trControl = ctrl)
+      data = SaratogaHouses, method = "knn", trControl = ctrl)
 ```
 
 The linear regression model has a better prediction performance, with a lower RMSE.
@@ -181,6 +181,7 @@ y <- mush[, 2]  # Poisonous
 set.seed(42)
 train <- sample(1:nrow(mush), 0.8 * nrow(mush))
 test <- (-train)
+# test <- setdiff(1:nrow(mush), train)
 ```
 
 I use 10-fold cross validation to fit a lasso model and find an optimal lambda. The optimal lambda is:  
