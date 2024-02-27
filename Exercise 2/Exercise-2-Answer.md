@@ -238,9 +238,13 @@ I use the optimal lambda to predict the out-of-sample probability that a
 mushroom is poisonous. ROC curve:  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-15-1.png)
 
-I choose the threshold = 0.5. The model perfectly predicts poisonous
-mushrooms, with true positive rate (sensitivity) = 1 and false positive
-rate (1 - specificity) = 0.
+Recommended threshold from the ROC curve:
+
+    ##   threshold
+    ## 1 0.5017072
+
+The model perfectly predicts poisonous mushrooms, with true positive
+rate (sensitivity) = 1 and false positive rate (1 - specificity) = 0.
 
     ## Confusion Matrix and Statistics
     ## 
@@ -273,4 +277,4 @@ rate (1 - specificity) = 0.
 To investigate this case, I plot the predicted probability versus
 whether a mushroom is poisonous (= 1 if poisonous). It can be seen the
 predicted probabilities cluster for two classes.  
-![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-17-1.png)
+![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-18-1.png)
