@@ -26,6 +26,8 @@ unloadNamespace("mosaic")
 
 # Identify numerical columns
 numerical_vars <- sapply(SaratogaHouses, is.numeric)
+# Exclude the outcome variable
+numerical_vars[1] <- FALSE
 # Standardize numerical columns
 SaratogaHouses[numerical_vars] <- 
   scale(SaratogaHouses[numerical_vars])
@@ -65,7 +67,8 @@ loan |>
   group_by(history) |> summarize(default_prob = mean(Default)) |>
   ggplot(aes(history, default_prob)) +
   geom_col() + 
-  labs(x = "Credit History", y = "Default Probability")
+  xlab("Credit History") +
+  ylab("Default Probability")
 ```
 
 Logistic regression results:  
@@ -212,8 +215,8 @@ confusionMatrix(factor(lasso_pred), factor(y[test]))
 
 To investigate this case, I plot the predicted probability versus whether a mushroom is poisonous (= 1 if poisonous). It can be seen the predicted probabilities cluster for two classes.  
 ```{r}
-data.frame(lasso_prob, y[test]) |>
-  ggplot(aes(y.test., s1)) +
+data.frame(lasso_prob, factor(y[test])) |>
+  ggplot(aes(factor.y.test.., s1)) +
   geom_point() +
   xlab("Poisonous or not") +
   ylab("Predicted probability")

@@ -14,11 +14,11 @@ Linear regression results:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1555, ... 
+    ## Summary of sample sizes: 1555, 1556, 1556, 1556, 1555, 1555, ... 
     ## Resampling results:
     ## 
-    ##   RMSE       Rsquared   MAE      
-    ##   0.5951011  0.6424518  0.4223487
+    ##   RMSE      Rsquared   MAE     
+    ##   58519.85  0.6435423  41609.96
     ## 
     ## Tuning parameter 'intercept' was held constant at a value of TRUE
 
@@ -31,16 +31,16 @@ KNN regression results:
     ## 
     ## No pre-processing
     ## Resampling: Cross-Validated (10 fold) 
-    ## Summary of sample sizes: 1555, 1555, 1555, 1556, 1555, 1555, ... 
+    ## Summary of sample sizes: 1555, 1556, 1556, 1556, 1555, 1555, ... 
     ## Resampling results across tuning parameters:
     ## 
-    ##   k  RMSE       Rsquared   MAE      
-    ##   5  0.6185145  0.6193737  0.4259107
-    ##   7  0.6166096  0.6212428  0.4242421
-    ##   9  0.6156431  0.6229348  0.4216721
+    ##   k  RMSE      Rsquared   MAE     
+    ##   5  61013.83  0.6190461  42217.35
+    ##   7  60768.84  0.6210751  41879.75
+    ##   9  60843.83  0.6208543  41855.75
     ## 
     ## RMSE was used to select the optimal model using the smallest value.
-    ## The final value used for the model was k = 9.
+    ## The final value used for the model was k = 7.
 
 The linear regression model has a better prediction performance, with a
 lower RMSE.
