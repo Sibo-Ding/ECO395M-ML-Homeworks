@@ -271,6 +271,6 @@ rate (1 - specificity) = 0.
     ## 
 
 To investigate this case, I plot the predicted probability versus
-whether a mushroom is poisonous (poisonous = 1). It can be seen the
+whether a mushroom is poisonous (= 1 if poisonous). It can be seen the
 predicted probabilities cluster for two classes.  
 ![](Exercise-2-Answer_files/figure-markdown_strict/unnamed-chunk-17-1.png)

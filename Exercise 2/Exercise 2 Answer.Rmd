@@ -209,7 +209,7 @@ lasso_pred <- as.numeric(lasso_prob > 0.5)
 confusionMatrix(factor(lasso_pred), factor(y[test]))
 ```
 
-To investigate this case, I plot the predicted probability versus whether a mushroom is poisonous (poisonous = 1). It can be seen the predicted probabilities cluster for two classes.  
+To investigate this case, I plot the predicted probability versus whether a mushroom is poisonous (= 1 if poisonous). It can be seen the predicted probabilities cluster for two classes.  
 ```{r}
 data.frame(lasso_prob, y[test]) |>
   ggplot(aes(y.test., s1)) +
