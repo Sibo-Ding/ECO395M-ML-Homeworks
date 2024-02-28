@@ -80,7 +80,7 @@ summary(loan_glm)
 
 In both the bar plot (or the data set) and the logistic regression, compared to `historygood`, `historypoor` decreases the default probability, and `historyterrible` further decreases the default probability.  
 
-This relationship is counter-intuitive, probably resulting from the inappropriate sampling process. To improve the sampling scheme, the bank can use undersampling, where it randomly remove loans that had not defaulted so that the class distribution becomes more balanced.
+This relationship is counter-intuitive, probably resulting from the inappropriate sampling process. To improve the sampling scheme, the bank can undersample, where it randomly removes loans that had not defaulted so that the class distribution becomes more balanced.
 
 ## Children and hotel reservations
 ```{r}

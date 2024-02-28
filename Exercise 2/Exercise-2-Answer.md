@@ -89,8 +89,8 @@ probability.
 
 This relationship is counter-intuitive, probably resulting from the
 inappropriate sampling process. To improve the sampling scheme, the bank
-can use undersampling, where it randomly remove loans that had not
-defaulted so that the class distribution becomes more balanced.
+can undersample, where it randomly removes loans that had not defaulted
+so that the class distribution becomes more balanced.
 
 ## Children and hotel reservations
 
