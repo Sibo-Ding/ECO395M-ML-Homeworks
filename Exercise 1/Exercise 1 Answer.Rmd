@@ -155,9 +155,13 @@ For trim level 350, the optimal K = 9. A plot of the fitted model (i.e. predicti
 model <- knnreg(price ~ mileage, data = train_350, k = 9)
 pred <- predict(model, newdata = test_350)
 
-data.frame(x = test_350$mileage, pred = pred) |> 
-  ggplot(aes(x, pred)) +
-  geom_point()
+data.frame(mileage = test_350$mileage,
+           price = test_350$price,
+           pred = pred) |> 
+  ggplot(aes(x = mileage)) +
+  geom_point(aes(y = price)) +
+  geom_line(aes(y = pred, col = "red")) +
+  theme(legend.position = "none")
 ```
 
 For trim level 65 AMG, the optimal K = 10. A plot of the fitted model (i.e. predictions vs. x):
@@ -165,9 +169,13 @@ For trim level 65 AMG, the optimal K = 10. A plot of the fitted model (i.e. pred
 model <- knnreg(price ~ mileage, data = train_65AMG, k = 10)
 pred <- predict(model, newdata = test_65AMG)
 
-data.frame(x = test_65AMG$mileage, pred = pred) |> 
-  ggplot(aes(x, pred)) +
-  geom_point()
+data.frame(mileage = test_65AMG$mileage,
+           price = test_65AMG$price,
+           pred = pred) |> 
+  ggplot(aes(x = mileage)) +
+  geom_point(aes(y = price)) +
+  geom_line(aes(y = pred, col = "red")) +
+  theme(legend.position = "none")
 ```
 
 65 AMG yields a larger optimal value of K. From the plots of fitted models, 65 AMG is more clustered, so the number of nearest neighbors can be larger.

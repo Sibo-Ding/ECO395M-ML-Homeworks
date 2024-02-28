@@ -225,8 +225,8 @@ confusionMatrix(factor(lasso_pred), factor(y[test]))
 
 To investigate this case, I plot the predicted probability versus whether a mushroom is poisonous (= 1 if poisonous). It can be seen the predicted probabilities cluster for two classes.  
 ```{r}
-data.frame(lasso_prob, factor(y[test])) |>
-  ggplot(aes(factor.y.test.., s1)) +
+data.frame(x = factor(y[test]), lasso_prob) |>
+  ggplot(aes(x, s1)) +
   geom_point() +
   xlab("Poisonous or not") +
   ylab("Predicted probability")
