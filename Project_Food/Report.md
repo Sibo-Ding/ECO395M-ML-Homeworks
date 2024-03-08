@@ -7,8 +7,8 @@
 I started to record what I ate everyday in July 2022 by a very
 incidental chance. Since then, I spent most of my time in Hong Kong
 until I moved to Austin in July 2023. From my experience in HK, I was
-wondering whether people tend to eat better (to relax or compensate) or
-simpler (to save time) when they are busy. However, my life and food
+wondering whether people tend to eat better (to relax or to compensate)
+or simpler (to save time) when they are busy. However, my life and food
 patterns in HK were so complicated and unpredictable to verify this
 hypothesis. Considering the feasibility, I decide to estimate and
 predict my life and food patterns in Austin.
@@ -37,28 +37,103 @@ To implement this, I filter relevant `date` in Austin: after Jul 4, 2023
 inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both
 inclusive).
 
-During this time, I am studying at University of Texas at Austin, so my
-life pattern heavily depends on the school calender. Thus, I create a
+During this time, I am studying at The University of Texas at Austin, so
+my life pattern heavily depends on the school calender. Thus, I create a
 `semester` variable: it equals to “summer” when `date` is before Aug 14
 (inclusive), equals to “fall” when `date` is after Aug 15 and before Dec
 11 (both inclusive), and equals to “spring” otherwise.
 
-Create `week_of_sem` column
+Create `week_of_sem` column  
+\## Check spring break
 
-## Check spring break
+The variation in `breakfast` is close to zero as I eat at home most of
+the time. To extract useful information, I convert `breakfast` to a
+binary variable `breakfast_or_not`, because having breakfast may
+indicate going out, and its food pattern may be different from staying
+at home.
 
-Below is the data frame:
+Below is the data frame after processing:
 
-    ## # A tibble: 6 × 7
-    ##   dow   semester week_of_sem meal   food_class breakfast_or_not
-    ##   <fct> <fct>    <fct>       <fct>  <fct>      <fct>           
-    ## 1 Wed   summer   0           lunch  other      1               
-    ## 2 Thu   summer   0           lunch  other      1               
-    ## 3 Fri   summer   0           dinner other      0               
-    ## 4 Sat   summer   0           lunch  home       0               
-    ## 5 Sat   summer   0           dinner home       0               
-    ## 6 Sun   summer   0           lunch  home       1               
-    ## # ℹ 1 more variable: days_since_last_meal <dbl>
+<table>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 11%" />
+<col style="width: 14%" />
+<col style="width: 8%" />
+<col style="width: 13%" />
+<col style="width: 20%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">dow</th>
+<th style="text-align: left;">semester</th>
+<th style="text-align: left;">week_of_sem</th>
+<th style="text-align: left;">meal</th>
+<th style="text-align: left;">food_class</th>
+<th style="text-align: left;">breakfast_or_not</th>
+<th style="text-align: right;">days_since_last_meal</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Wed</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Thu</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fri</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">dinner</td>
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sat</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sat</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">dinner</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sun</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+
+Number of meals in each category
 
     ## # A tibble: 3 × 2
     ## # Groups:   food_class [3]

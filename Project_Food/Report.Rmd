@@ -19,7 +19,7 @@ library(lubridate)
 ## Abstract
 
 ## Introduction
-I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in HK, I was wondering whether people tend to eat better (to relax or compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
+I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in HK, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
 It is worth noting that I have full discretion in the food recording process, causing potential discrepancies and biases. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the distinction between snacks and meals. I may consider 50 g popcorn as snacks, then what about 51 g, 51.11 g, 50 g rice, etc.?  
 
@@ -29,20 +29,28 @@ Beyond the discrepancies, I am not very confident in the predictive accuracy for
 ### Data wrangling
 To implement this, I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive), exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive).  
 
-During this time, I am studying at University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` is before Aug 14 (inclusive), equals to "fall" when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to "spring" otherwise.  
+During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` is before Aug 14 (inclusive), equals to "fall" when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to "spring" otherwise.  
 
-Create `week_of_sem` column
-
+Create `week_of_sem` column  
 ## Check spring break
 
 
 
 
-Below is the data frame:
+
+
+The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
+
+
+
+
+
+
+Below is the data frame after processing:
 ```{r}
 df <- read.csv("Food.csv", na.strings = "")
 
-df1 <- df |>
+df <- df |>
   # Drop `note` column
   select(-note) |>
   # Convert to `Date` data type
@@ -51,7 +59,10 @@ df1 <- df |>
   pivot_longer(cols = c(lunch, dinner),
                names_to = "meal", 
                values_to = "food") |>
-  filter(!is.na(food)) |>  # Drop N/A in `food`
+  # Drop N/A in `food`
+  filter(!is.na(food))
+
+df <- df |>
   # Create 2 categorical columns using `case_when`
   mutate(food_class = case_when(
     food == "Home" ~ "home",
@@ -66,16 +77,20 @@ df1 <- df |>
   mutate(days_since_last_meal = as.numeric(date - lag(date))) |>
   ungroup() |>
   # Drop N/A in `days_since_last_meal` (First meal of a `food_class`)
-  filter(!is.na(days_since_last_meal)) |>
+  filter(!is.na(days_since_last_meal))
+
+df1 <- df |>
   # Select columns
   select(-date, -breakfast, -food) |>
   # Convert data type of several columns
   mutate(across(
     c(dow, semester, week_of_sem, meal, food_class, breakfast_or_not),
     as.factor))
-head(df1)
+
+knitr::kable(head(df1))
 ```
 
+Number of meals in each category  
 ```{r}
 df1 |> group_by(food_class) |> count() |> rename(count = n)
 ```
