@@ -1,0 +1,235 @@
+﻿date,dow,breakfast,lunch,dinner,note,semester,week_of_sem
+7/4/2023,Tue,,SouthCloud Ramen,,,summer,0
+7/5/2023,Wed,MA Econ orientation,MA Econ orientation,,,summer,0
+7/6/2023,Thu,Home,Wendy's,,,summer,0
+7/7/2023,Fri,,Home,China Family,,summer,0
+7/8/2023,Sat,,Home,Home,,summer,0
+7/9/2023,Sun,Home,Home,,,summer,0
+7/10/2023,Mon,Home,Sabor,,Start of semester,summer,1
+7/11/2023,Tue,Home,Wendy's,,,summer,1
+7/12/2023,Wed,Home,Homemade bring to school,,,summer,1
+7/13/2023,Thu,Home,Homemade bring to school,,,summer,1
+7/14/2023,Fri,Home,China Family,,,summer,1
+7/15/2023,Sat,Home,Home,,,summer,1
+7/16/2023,Sun,Home,Home,,,summer,1
+7/17/2023,Mon,Home,Homemade bring to school,,,summer,2
+7/18/2023,Tue,Home,Wendy's,,,summer,2
+7/19/2023,Wed,Home,Homemade bring to school,,,summer,2
+7/20/2023,Thu,Home,China Family,,,summer,2
+7/21/2023,Fri,Home,SouthCloud Ramen,,,summer,2
+7/22/2023,Sat,,Home,Home,,summer,2
+7/23/2023,Sun,,Home,Home,,summer,2
+7/24/2023,Mon,Home,Wendy's,,,summer,3
+7/25/2023,Tue,Home,Chick-fil-A,,,summer,3
+7/26/2023,Wed,Home,Sabor,,,summer,3
+7/27/2023,Thu,Home,Sabor,,,summer,3
+7/28/2023,Fri,Home,Wendy's,,,summer,3
+7/29/2023,Sat,,Home,Home,,summer,3
+7/30/2023,Sun,,Home,Home,,summer,3
+7/31/2023,Mon,Home,Chick-fil-A,,,summer,4
+8/1/2023,Tue,Home,Wendy's,,,summer,4
+8/2/2023,Wed,Home,Chick-fil-A,Wingstop,,summer,4
+8/3/2023,Thu,Home,China Family,,,summer,4
+8/4/2023,Fri,Home,Wendy's,,,summer,4
+8/5/2023,Sat,,Home,Home,,summer,4
+8/6/2023,Sun,,Home,Home,,summer,4
+8/7/2023,Mon,Home,Chick-fil-A,,,summer,5
+8/8/2023,Tue,Home,O's Campus Café,,,summer,5
+8/9/2023,Wed,Home,O's Campus Café,,,summer,5
+8/10/2023,Thu,Home,China Family,,,summer,5
+8/11/2023,Fri,,Home,Home,,summer,5
+8/12/2023,Sat,Home,China Family,,,summer,5
+8/13/2023,Sun,,Home,Home,,summer,5
+8/14/2023,Mon,Home,Wendy's,,End of semester,summer,6
+8/15/2023,Tue,,Home,Home,,fall,0
+8/16/2023,Wed,,Home,Home,,fall,0
+8/17/2023,Thu,Home,Home,J2 Dining,,fall,0
+8/18/2023,Fri,Home,Home,Home,,fall,0
+8/19/2023,Sat,Home,Xian Sushi and Noodle,Home,,fall,0
+8/20/2023,Sun,,Home,J2 Dining,,fall,0
+8/21/2023,Mon,Home,Home,Home,Start of semester,fall,1
+8/22/2023,Tue,Home,Jester City Limits,,,fall,1
+8/23/2023,Wed,Home,Home,Home,,fall,1
+8/24/2023,Thu,Home,Jester City Limits,J2 Dining,,fall,1
+8/25/2023,Fri,,Home,J2 Dining,,fall,1
+8/26/2023,Sat,,Home,Home,,fall,1
+8/27/2023,Sun,,Home,J2 Dining,,fall,1
+8/28/2023,Mon,,J2 Dining,J2 Dining,,fall,2
+8/29/2023,Tue,Home,J2 Dining,,,fall,2
+8/30/2023,Wed,,Home,J2 Dining,,fall,2
+8/31/2023,Thu,Home,J2 Dining,J2 Dining,,fall,2
+9/1/2023,Fri,Home,J2 Dining,,,fall,2
+9/2/2023,Sat,Home,Home,Home,,fall,2
+9/3/2023,Sun,,Home,J2 Dining,,fall,2
+9/4/2023,Mon,,Home,Home,,fall,3
+9/5/2023,Tue,Home,Jester City Limits,J2 Dining,,fall,3
+9/6/2023,Wed,,Home,J2 Dining,,fall,3
+9/7/2023,Thu,,J2 Dining,DQ,,fall,3
+9/8/2023,Fri,Home,J2 Dining,Domino,,fall,3
+9/9/2023,Sat,,Home,Home,,fall,3
+9/10/2023,Sun,,Home,Home,,fall,3
+9/11/2023,Mon,Home,Home,J2 Dining,,fall,4
+9/12/2023,Tue,Home,J2 Dining,,,fall,4
+9/13/2023,Wed,Home,Home,Subway,,fall,4
+9/14/2023,Thu,Home,Homemade bring to school,J2 Dining,,fall,4
+9/15/2023,Fri,Home,J2 Dining,Home,,fall,4
+9/16/2023,Sat,,Home,Home,,fall,4
+9/17/2023,Sun,,Home,J2 Dining,,fall,4
+9/18/2023,Mon,,Home,Home,,fall,5
+9/19/2023,Tue,Home,J2 Dining,Home,,fall,5
+9/20/2023,Wed,,Home,Jester City Limits,,fall,5
+9/21/2023,Thu,Home,J2 Dining,,,fall,5
+9/22/2023,Fri,Home,J2 Dining,,,fall,5
+9/23/2023,Sat,,Home,Home,,fall,5
+9/24/2023,Sun,,Home,Home,,fall,5
+9/25/2023,Mon,,Home,Wendy's,,fall,6
+9/26/2023,Tue,Home,J2 Dining,J2 Dining,,fall,6
+9/27/2023,Wed,,Home,Jester City Limits,,fall,6
+9/28/2023,Thu,Home,J2 Dining,J2 Dining,,fall,6
+9/29/2023,Fri,,Home,MA Econ 10-year anniversary,,fall,6
+9/30/2023,Sat,,Home,Home,,fall,6
+10/1/2023,Sun,,Home,Home,,fall,6
+10/2/2023,Mon,,Home,Home,,fall,7
+10/3/2023,Tue,Home,J2 Dining,Jester City Limits,,fall,7
+10/4/2023,Wed,,Home,J2 Dining,,fall,7
+10/5/2023,Thu,Home,Jester City Limits,J2 Dining,,fall,7
+10/6/2023,Fri,,Home,J2 Dining,,fall,7
+10/7/2023,Sat,,Home,Home,,fall,7
+10/8/2023,Sun,,Home,Home,,fall,7
+10/9/2023,Mon,Home,Home,Home,,fall,8
+10/10/2023,Tue,Home,J2 Dining,J2 Dining,,fall,8
+10/11/2023,Wed,,Home,Wendy's,,fall,8
+10/12/2023,Thu,Home,Jester City Limits,J2 Dining,,fall,8
+10/13/2023,Fri,Home,J2 Dining,,,fall,8
+10/14/2023,Sat,,Home,Home,,fall,8
+10/15/2023,Sun,,Home,Home,,fall,8
+10/16/2023,Mon,Home,Home,Home,,fall,9
+10/17/2023,Tue,Home,J2 Dining,Jester City Limits,,fall,9
+10/18/2023,Wed,Home,J2 Dining,Jester City Limits,,fall,9
+10/19/2023,Thu,Home,Jester City Limits,Home,,fall,9
+10/20/2023,Fri,Home,Wendy's,,,fall,9
+10/21/2023,Sat,,Home,Home,,fall,9
+10/22/2023,Sun,,Home,Home,,fall,9
+10/23/2023,Mon,,Home,Home,,fall,10
+10/24/2023,Tue,Home,Jester City Limits,J2 Dining,,fall,10
+10/25/2023,Wed,,Home,,,fall,10
+10/26/2023,Thu,Home,Kins Dining,,,fall,10
+10/27/2023,Fri,Home,Home,Home,,fall,10
+10/28/2023,Sat,,Home,Home,,fall,10
+10/29/2023,Sun,,Home,Home,,fall,10
+10/30/2023,Mon,,Home,,,fall,11
+10/31/2023,Tue,Home,J2 Dining,Home,,fall,11
+11/1/2023,Wed,,Home,J2 Dining,,fall,11
+11/2/2023,Thu,Home,J2 Dining,,,fall,11
+11/3/2023,Fri,,Home,Home,,fall,11
+11/4/2023,Sat,,Home,Home,,fall,11
+11/5/2023,Sun,,Home,Home,,fall,11
+11/6/2023,Mon,,Home,Home,,fall,12
+11/7/2023,Tue,Home,Jester City Limits,Wendy's,,fall,12
+11/8/2023,Wed,,Home,J2 Dining,,fall,12
+11/9/2023,Thu,Home,Wendy's,,,fall,12
+11/10/2023,Fri,,Home,Home,,fall,12
+11/11/2023,Sat,,Home,Home,,fall,12
+11/12/2023,Sun,,Home,Home,,fall,12
+11/13/2023,Mon,,Home,Home,,fall,13
+11/14/2023,Tue,Home,Sabor,,,fall,13
+11/15/2023,Wed,,Phoebe's Diner,Home,,fall,13
+11/16/2023,Thu,Home,J2 Dining,Home,,fall,13
+11/17/2023,Fri,Home,Home,Home,,fall,13
+11/18/2023,Sat,Home,Franklin Barbeque,,,fall,13
+11/19/2023,Sun,,Home,Home,,fall,13
+11/27/2023,Mon,,,Home,Austin,fall,14
+11/28/2023,Tue,Home,J2 Dining,,,fall,14
+11/29/2023,Wed,,Home,J2 Dining,,fall,14
+11/30/2023,Thu,Home,Wendy's,J2 Dining,,fall,14
+12/1/2023,Fri,Home,J2 Dining,Home,,fall,14
+12/2/2023,Sat,,Home,Home,,fall,14
+12/3/2023,Sun,,Home,Home,,fall,14
+12/4/2023,Mon,,Home,Home,,fall,15
+12/5/2023,Tue,,Home,Home,,fall,15
+12/6/2023,Wed,,Home,Home,,fall,15
+12/7/2023,Thu,Home,J2 Dining,Home,,fall,15
+12/8/2023,Fri,,Home,Home,,fall,15
+12/9/2023,Sat,,MA Econ holiday brunch,Home,,fall,15
+12/10/2023,Sun,,Home,Home,,fall,15
+12/11/2023,Mon,Home,Chick-fil-A,Home,End of semester,fall,16
+1/12/2024,Fri,,Home,,,spring,0
+1/13/2024,Sat,,Home,,,spring,0
+1/14/2024,Sun,,Home,Home,,spring,0
+1/15/2024,Mon,,Home,Home,,spring,0
+1/16/2024,Tue,Home,J2 Dining,,Start of semester,spring,1
+1/17/2024,Wed,,Home,J2 Dining,,spring,1
+1/18/2024,Thu,Home,J2 Dining,,,spring,1
+1/19/2024,Fri,Home,Home,Home,,spring,1
+1/20/2024,Sat,,Home,Home,,spring,1
+1/21/2024,Sun,,Home,Home,,spring,1
+1/22/2024,Mon,,Wendy's,Jester City Limits,,spring,2
+1/23/2024,Tue,Home,China Family,Home,,spring,2
+1/24/2024,Wed,,J2 Dining,Home,,spring,2
+1/25/2024,Thu,Home,J2 Dining,Home,,spring,2
+1/26/2024,Fri,,Home,Home,,spring,2
+1/27/2024,Sat,,Home,Home,,spring,2
+1/28/2024,Sun,,Home,Home,,spring,2
+1/29/2024,Mon,,J2 Dining,J2 Dining,,spring,3
+1/30/2024,Tue,Home,UT Immigration Laywer Event,Home,,spring,3
+1/31/2024,Wed,Home,China Family,Home,,spring,3
+2/1/2024,Thu,Home,J2 Dining,J2 Dining,,spring,3
+2/2/2024,Fri,,Sabor,,,spring,3
+2/3/2024,Sat,,Home,Home,,spring,3
+2/4/2024,Sun,,Home,Home,,spring,3
+2/5/2024,Mon,,Home,Home,,spring,4
+2/6/2024,Tue,,J2 Dining,Home,,spring,4
+2/7/2024,Wed,,J2 Dining,Jester City Limits,,spring,4
+2/8/2024,Thu,Home,J2 Dining,Posse East,,spring,4
+2/9/2024,Fri,,J2 Dining,Home,,spring,4
+2/10/2024,Sat,,Home,Home,,spring,4
+2/11/2024,Sun,Home,Popeyes,Amy's Ice Cream,,spring,4
+2/12/2024,Mon,Home,J2 Dining,Home,,spring,5
+2/13/2024,Tue,,China Family,Home,,spring,5
+2/14/2024,Wed,,J2 Dining,Home,,spring,5
+2/15/2024,Thu,Home,Panda Express,,,spring,5
+2/16/2024,Fri,,Home,Home,,spring,5
+2/17/2024,Sat,,Home,Home,,spring,5
+2/18/2024,Sun,,Home,Home,,spring,5
+2/19/2024,Mon,Home,Wendy's,,,spring,6
+2/20/2024,Tue,Home,J2 Dining,Kins Dining,,spring,6
+2/21/2024,Wed,,China Family,Home,,spring,6
+2/22/2024,Thu,Home,J2 Dining,Panda Express,,spring,6
+2/23/2024,Fri,,Home,Home,,spring,6
+2/24/2024,Sat,,Home,Home,,spring,6
+2/25/2024,Sun,,Home,Home,,spring,6
+2/26/2024,Mon,,J2 Dining,Home,,spring,7
+2/27/2024,Tue,,China Family,Home,,spring,7
+2/28/2024,Wed,Home,J2 Dining,Home,,spring,7
+2/29/2024,Thu,Home,Sabor,,,spring,7
+3/1/2024,Fri,,Home,Home,,spring,7
+3/2/2024,Sat,,J2 Dining,Posse East,,spring,7
+3/3/2024,Sun,,Home,Home,,spring,7
+3/4/2024,Mon,,,,,spring,8
+3/5/2024,Tue,,,,,spring,8
+3/6/2024,Wed,,,,,spring,8
+3/7/2024,Thu,,,,,spring,8
+3/8/2024,Fri,,,,,spring,8
+3/9/2024,Sat,,,,,spring,8
+3/10/2024,Sun,,,,,spring,8
+3/11/2024,Mon,,,,Spring break,spring,0
+3/12/2024,Tue,,,,,spring,0
+3/13/2024,Wed,,,,,spring,0
+3/14/2024,Thu,,,,,spring,0
+3/15/2024,Fri,,,,,spring,0
+3/16/2024,Sat,,,,,spring,0
+3/17/2024,Sun,,,,,spring,0
+3/18/2024,Mon,,,,,spring,9
+3/19/2024,Tue,,,,,spring,9
+3/20/2024,Wed,,,,,spring,9
+3/21/2024,Thu,,,,,spring,9
+3/22/2024,Fri,,,,,spring,9
+3/23/2024,Sat,,,,,spring,9
+3/24/2024,Sun,,,,,spring,9
+3/25/2024,Mon,,,,,spring,
+3/26/2024,Tue,,,,,spring,
+3/27/2024,Wed,,,,,spring,
+3/28/2024,Thu,,,,,spring,
+3/29/2024,Fri,,,,,spring,
+3/30/2024,Sat,,,,,spring,
+3/31/2024,Sun,,,,,spring,

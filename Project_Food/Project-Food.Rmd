@@ -1,0 +1,92 @@
+---
+title: "DM&SL Project Food"
+author: "Sibo Ding"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+library(dplyr)
+library(tidyr)
+library(lubridate)
+```
+
+# Title
+I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. When I was in HK, I was wondering when people are busy, do they tend to eat better (to relax or compensate) or simpler (to save time)? However, my life and food patterns in HK were so complicated and unpredictable.  
+
+Considering the feasibility, I focus on my life in Austin. To implement this, I keep `date >= 2023-07-04`, exclude Thanksgiving holiday `2023-11-20 <= date <= 2023-11-26` and winter vacation `2023-12-12 <= date <= 2024-01-11`.  
+
+Create `semester` column: = "summer" when `date` <= 2023-08-14; = "fall" when `date` <= 2023-12-11; "spring" otherwise.  
+Create `week_of_sem` column
+## Check spring break
+
+
+
+
+
+```{r}
+df <- read.csv("Food.csv", na.strings = "")
+
+# Drop a column
+# Convert to `Date` data type
+df <- df |>
+  select(-note) |>
+  mutate(date = mdy(date))
+head(df)
+```
+
+```{r}
+# Convert wide data to long data
+# Drop N/A in `food`
+df_long <- df |>
+  pivot_longer(cols = c(lunch, dinner),
+               names_to = "meal", 
+               values_to = "food") |>
+  filter(!is.na(food))
+head(df_long)
+```
+
+```{r}
+# Create 2 categorical columns using `case_when`
+# Create a column, the difference in `date` between this observation and
+# the last observation with the same `food_class`
+df1 <- df_long |> 
+  mutate(food_class = case_when(
+    food == "Home" ~ "home",
+    food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
+    TRUE ~ "other")) |>
+  mutate(breakfast_or_not = case_when(
+    is.na(breakfast) ~ 0,
+    TRUE ~ 1)) |>
+  group_by(food_class) |>
+  mutate(days_since_last_eat = as.numeric(date - lag(date))) |>
+  ungroup()
+head(df1)
+```
+
+```{r}
+# Drop N/A in `days_since_last_eat` (First meal of a `food_class`)
+# Select columns
+# Convert data type of several columns
+df2 <- df1 |> 
+  filter(!is.na(days_since_last_eat)) |>
+  select(-date, -breakfast, -food) |>
+  mutate(across(
+    c(dow, semester, week_of_sem, meal, food_class, breakfast_or_not),
+    as.factor))
+head(df2)
+```
+
+```{r}
+df2 |> group_by(food_class) |> count() |> rename(count = n)
+```
+
+
+
+
+
+
+
