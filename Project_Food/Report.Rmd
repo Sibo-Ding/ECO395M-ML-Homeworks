@@ -16,10 +16,15 @@ library(tidyr)
 library(lubridate)
 ```
 
-I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. When I was in HK, I was wondering whether people tend to eat better (to relax or compensate) or simpler (to save time) when they are busy? However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis.  
+## Abstract
+
+## Introduction
+I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. When I was in HK, I was wondering whether people tend to eat better (to relax or compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis.  
 
 Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin. I am not very confident in the predictive accuracy for two reasons. First, although my life in Austin is simple due to some constraints, the data is from real human with certain flexibility and unpredictability. Second, the data set is small. However, it is still fun to know the driving factors of my life and food patterns.  
 
+## Methods
+### Data wrangling
 To implement this, I filter relevant `date` in Austin: keep `date` >= 2023-07-04, exclude Thanksgiving holiday (`date` in [2023-11-20, 2023-11-26]) and winter vacation (`date` in [2023-12-12,2024-01-11]).  
 
 During this time, I am studying at University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` <= 2023-08-14, equals to "fall" when `date` in [2023-08-14, 2023-12-11], and equals to "spring" otherwise.  
@@ -35,29 +40,17 @@ Below is the data frame:
 ```{r}
 df <- read.csv("Food.csv", na.strings = "")
 
-# Drop a column
-# Convert to `Date` data type
-df <- df |>
+df1 <- df |>
+  # Drop `note` column
   select(-note) |>
-  mutate(date = mdy(date))
-head(df)
-```
-
-Convert wide data to long data  
-Drop N/A in `food`
-```{r}
-df_long <- df |>
+  # Convert to `Date` data type
+  mutate(date = mdy(date)) |>
+  # Convert wide data to long data
   pivot_longer(cols = c(lunch, dinner),
                names_to = "meal", 
                values_to = "food") |>
-  filter(!is.na(food))
-head(df_long)
-```
-
-Create 2 categorical columns using `case_when`  
-Create a column, the difference in `date` between this observation and the last observation with the same `food_class`
-```{r}
-df1 <- df_long |> 
+  filter(!is.na(food)) |>  # Drop N/A in `food`
+  # Create 2 categorical columns using `case_when`
   mutate(food_class = case_when(
     food == "Home" ~ "home",
     food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
@@ -65,32 +58,44 @@ df1 <- df_long |>
   mutate(breakfast_or_not = case_when(
     is.na(breakfast) ~ 0,
     TRUE ~ 1)) |>
+  # Create a column, the difference in `date` between this observation
+  # and the last observation with the same `food_class`
   group_by(food_class) |>
-  mutate(days_since_last_eat = as.numeric(date - lag(date))) |>
-  ungroup()
-head(df1)
-```
-
-Drop N/A in `days_since_last_eat` (First meal of a `food_class`)  
-Select columns  
-Convert data type of several columns
-```{r}
-df2 <- df1 |> 
-  filter(!is.na(days_since_last_eat)) |>
+  mutate(days_since_last_meal = as.numeric(date - lag(date))) |>
+  ungroup() |>
+  # Drop N/A in `days_since_last_meal` (First meal of a `food_class`)
+  filter(!is.na(days_since_last_meal)) |>
+  # Select columns
   select(-date, -breakfast, -food) |>
+  # Convert data type of several columns
   mutate(across(
     c(dow, semester, week_of_sem, meal, food_class, breakfast_or_not),
     as.factor))
-head(df2)
+head(df1)
 ```
 
 ```{r}
-df2 |> group_by(food_class) |> count() |> rename(count = n)
+df1 |> group_by(food_class) |> count() |> rename(count = n)
 ```
 
 
 
 
+
+
+
+
+
+
+
+
+
+## Results
+
+
+
+
+## Conclusion
 
 
 
