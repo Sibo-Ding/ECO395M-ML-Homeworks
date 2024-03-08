@@ -23,15 +23,16 @@ patterns.
 
 ### Data wrangling
 
-To implement this, I filter relevant `date` in Austin: keep `date` &gt;=
-2023-07-04, exclude Thanksgiving holiday (`date` in \[2023-11-20,
-2023-11-26\]) and winter vacation (`date` in \[2023-12-12,2024-01-11\]).
+To implement this, I filter relevant `date` in Austin: after Jul 4, 2023
+(inclusive), exclude Thanksgiving holiday (from Nov 20 to Nov 26, both
+inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both
+inclusive).
 
 During this time, I am studying at University of Texas at Austin, so my
 life pattern heavily depends on the school calender. Thus, I create a
-`semester` variable: it equals to “summer” when `date` &lt;= 2023-08-14,
-equals to “fall” when `date` in \[2023-08-14, 2023-12-11\], and equals
-to “spring” otherwise.
+`semester` variable: it equals to “summer” when `date` is before Aug 14
+(inclusive), equals to “fall” when `date` is after Aug 15 and before Dec
+11 (both inclusive), and equals to “spring” otherwise.
 
 Create `week_of_sem` column
 
