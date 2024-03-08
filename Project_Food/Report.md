@@ -1,4 +1,4 @@
-# Title
+# Estimate and Predict my Food Pattern in Austin Using Data Wrangling and Machine Learning
 
 ## Abstract
 
@@ -13,13 +13,13 @@ patterns in HK were so complicated and unpredictable to verify this
 hypothesis. Considering the feasibility, I decide to estimate and
 predict my life and food patterns in Austin.
 
-It is worth noting that I have full discretion in the food recording
-process, causing potential discrepancies and biases. For example, if I
-have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I
-may record them as breakfast and lunch, but I may also record them as
-lunch and dinner. Another discrepancy is the distinction between snacks
-and meals. I may consider 50 g popcorn as snacks, then what about 51 g,
-51.11 g, 50 g rice, etc.?
+It is worth noting that I have full discretion to record every meal,
+causing potential discrepancies and biases. For example, if I have a
+brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may
+record them as breakfast and lunch, but I may also record them as lunch
+and dinner. Another discrepancy is the vague distinction between snacks
+and meals. If I consider 10 g popcorn as snacks, should I consider 11 g
+as meals? If so, what about 10.1 g, 10.11 g, or 10 g rice, etc.?
 
 Beyond the discrepancies, I am not very confident in the predictive
 accuracy for two additional reasons. First, the data set is small.
@@ -32,10 +32,10 @@ of my life and food patterns.
 
 ### Data wrangling
 
-I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive),
-exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and
-winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The
-initial data frame looks like this:
+I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude
+Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter
+vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The
+initial data looks like this:
 
 <table>
 <thead>
@@ -99,9 +99,12 @@ my life pattern heavily depends on the school calender. Thus, I create a
 (inclusive), equals to “fall” when `date` is after Aug 15 and before Dec
 11 (both inclusive), and equals to “spring” otherwise.
 
-Create `week_of_sem` column
+For the same reason, I create a `week_of_sem` variable. Every week
+starts from Monday or the first day of a semester. So the first week of
+a semester is 1, second is 2, etc. I set non-school days as 0, including
+spring break and days before each semester.
 
-## Check spring break
+I convert the wide data to long data.
 
 The variation in `breakfast` is close to zero as I eat at home most of
 the time. To extract useful information, I convert `breakfast` to a
@@ -109,82 +112,87 @@ binary variable `breakfast_or_not`, because having breakfast may
 indicate going out, and its food pattern may be different from staying
 at home.
 
-After all procedures, I delete unwanted columns. Below is the data frame
-after processing:
+Previous meal has impacts on the choice of next meal. On one hand, I may
+get bored with the previous meal (diminishing marginal return). On the
+other hand, I may be reluctant or constrained to change meals.
+Therefore, I create a `days_since_last_meal` variable, measuring the
+difference in `date` between two meals with the same `food_class`.
+
+After all processes, I select useful columns and show the data:
 
 <table>
 <colgroup>
-<col style="width: 4%" />
+<col style="width: 13%" />
+<col style="width: 8%" />
 <col style="width: 11%" />
 <col style="width: 14%" />
-<col style="width: 8%" />
-<col style="width: 13%" />
+<col style="width: 4%" />
 <col style="width: 20%" />
 <col style="width: 25%" />
 </colgroup>
 <thead>
 <tr class="header">
-<th style="text-align: left;">dow</th>
+<th style="text-align: left;">food_class</th>
+<th style="text-align: left;">meal</th>
 <th style="text-align: left;">semester</th>
 <th style="text-align: left;">week_of_sem</th>
-<th style="text-align: left;">meal</th>
-<th style="text-align: left;">food_class</th>
+<th style="text-align: left;">dow</th>
 <th style="text-align: left;">breakfast_or_not</th>
 <th style="text-align: right;">days_since_last_meal</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
 <td style="text-align: left;">Wed</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">lunch</td>
-<td style="text-align: left;">other</td>
 <td style="text-align: left;">1</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">lunch</td>
+<td style="text-align: left;">summer</td>
+<td style="text-align: left;">0</td>
 <td style="text-align: left;">Thu</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">lunch</td>
-<td style="text-align: left;">other</td>
 <td style="text-align: left;">1</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Fri</td>
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">dinner</td>
 <td style="text-align: left;">summer</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: left;">dinner</td>
-<td style="text-align: left;">other</td>
+<td style="text-align: left;">Fri</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Sat</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">summer</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: left;">lunch</td>
-<td style="text-align: left;">home</td>
+<td style="text-align: left;">Sat</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Sat</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">dinner</td>
 <td style="text-align: left;">summer</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: left;">dinner</td>
-<td style="text-align: left;">home</td>
+<td style="text-align: left;">Sat</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Sun</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">summer</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: left;">lunch</td>
-<td style="text-align: left;">home</td>
+<td style="text-align: left;">Sun</td>
 <td style="text-align: left;">1</td>
 <td style="text-align: right;">1</td>
 </tr>
@@ -200,6 +208,8 @@ Number of meals in each category
     ## 1 canteen       86
     ## 2 home         204
     ## 3 other         63
+
+### Machine learning
 
 ## Results
 
