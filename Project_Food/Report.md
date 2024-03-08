@@ -18,8 +18,8 @@ causing potential discrepancies and biases. For example, if I have a
 brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may
 record them as breakfast and lunch, but I may also record them as lunch
 and dinner. Another discrepancy is the vague distinction between snacks
-and meals. If I consider 10 g popcorn as snacks, should I consider 11 g
-as meals? If so, what about 10.1 g, 10.11 g, or 10 g rice, etc.?
+and meals. If I consider 10 g popcorn as a snack, should I consider 11 g
+as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?
 
 Beyond the discrepancies, I am not very confident in the predictive
 accuracy for two additional reasons. First, the data set is small.
@@ -95,16 +95,14 @@ initial data looks like this:
 
 During this time, I am studying at The University of Texas at Austin, so
 my life pattern heavily depends on the school calender. Thus, I create a
-`semester` variable: it equals to “summer” when `date` is before Aug 14
-(inclusive), equals to “fall” when `date` is after Aug 15 and before Dec
-11 (both inclusive), and equals to “spring” otherwise.
+`semester` variable: it equals to *summer* when `date` is before Aug 14
+(inclusive), equals to *fall* when `date` is after Aug 15 and before Dec
+11 (both inclusive), and equals to *spring* otherwise.
 
 For the same reason, I create a `week_of_sem` variable. Every week
 starts from Monday or the first day of a semester. So the first week of
 a semester is 1, second is 2, etc. I set non-school days as 0, including
 spring break and days before each semester.
-
-I convert the wide data to long data.
 
 The variation in `breakfast` is close to zero as I eat at home most of
 the time. To extract useful information, I convert `breakfast` to a
@@ -112,13 +110,20 @@ binary variable `breakfast_or_not`, because having breakfast may
 indicate going out, and its food pattern may be different from staying
 at home.
 
-Previous meal has impacts on the choice of next meal. On one hand, I may
-get bored with the previous meal (diminishing marginal return). On the
+I convert the data frame from wide format to long format.
+
+I am interested in estimating and predicting my food pattern. For ease
+of implementation, I create a `food_class` variable, where I classify
+`food` into 3 categories: *home*, *canteen* (including *J2 Dining*,
+*Jester City Limits*, and *Kins Dining*), and *other*.
+
+Previous meals have impacts on the choice of next meal. On one hand, I
+may get bored with previous meals (diminishing marginal return). On the
 other hand, I may be reluctant or constrained to change meals.
 Therefore, I create a `days_since_last_meal` variable, measuring the
 difference in `date` between two meals with the same `food_class`.
 
-After all processes, I select useful columns and show the data:
+Here is the data after all processing:
 
 <table>
 <colgroup>
@@ -199,17 +204,32 @@ After all processes, I select useful columns and show the data:
 </tbody>
 </table>
 
+### Machine learning
+
 Number of meals in each category
 
-    ## # A tibble: 3 × 2
-    ## # Groups:   food_class [3]
-    ##   food_class count
-    ##   <fct>      <int>
-    ## 1 canteen       86
-    ## 2 home         204
-    ## 3 other         63
-
-### Machine learning
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">food_class</th>
+<th style="text-align: right;">count</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">206</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">65</td>
+</tr>
+</tbody>
+</table>
 
 ## Results
 

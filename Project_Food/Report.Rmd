@@ -21,7 +21,7 @@ library(lubridate)
 ## Introduction
 I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in HK, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
-It is worth noting that I have full discretion to record every meal, causing potential discrepancies and biases. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as snacks, should I consider 11 g as meals? If so, what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
+It is worth noting that I have full discretion to record every meal, causing potential discrepancies and biases. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as a snack, should I consider 11 g as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
 
 Beyond the discrepancies, I am not very confident in the predictive accuracy for two additional reasons. First, the data set is small. Second, although my life in Austin is simple due to some constraints, the data is from a real human with certain flexibility and unpredictability. However, it is still fun to know the driving factors of my life and food patterns.  
 
@@ -37,17 +37,26 @@ df |>
   knitr::kable()
 ```
 
-During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` is before Aug 14 (inclusive), equals to "fall" when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to "spring" otherwise.  
+During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to *summer* when `date` is before Aug 14 (inclusive), equals to *fall* when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to *spring* otherwise.  
 
 For the same reason, I create a `week_of_sem` variable. Every week starts from Monday or the first day of a semester. So the first week of a semester is 1, second is 2, etc. I set non-school days as 0, including spring break and days before each semester.  
 
-I convert the wide data to long data.  
+The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
 ```{r}
 df <- df |>
   # Drop `note` column
   select(-note) |>
   # Convert to `Date` data type
   mutate(date = mdy(date)) |>
+  # Create a categorical column
+  mutate(breakfast_or_not = case_when(
+    is.na(breakfast) ~ 0,
+    TRUE ~ 1))
+```
+
+I convert the data frame from wide format to long format.  
+```{r}
+df <- df |>
   # Convert wide data to long data
   pivot_longer(cols = c(lunch, dinner),
                names_to = "meal", 
@@ -56,24 +65,16 @@ df <- df |>
   filter(!is.na(food))
 ```
 
+I am interested in estimating and predicting my food pattern. For ease of implementation, I create a `food_class` variable, where I classify `food` into 3 categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
 
-
-
-
-
-The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
-
-Previous meal has impacts on the choice of next meal. On one hand, I may get bored with the previous meal (diminishing marginal return). On the other hand, I may be reluctant or constrained to change meals. Therefore, I create a `days_since_last_meal` variable, measuring the difference in `date` between two meals with the same `food_class`.  
+Previous meals have impacts on the choice of next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change meals. Therefore, I create a `days_since_last_meal` variable, measuring the difference in `date` between two meals with the same `food_class`.  
 ```{r}
 df <- df |>
-  # Create 2 categorical columns using `case_when`
+  # Create a categorical column
   mutate(food_class = case_when(
     food == "Home" ~ "home",
     food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
     TRUE ~ "other")) |>
-  mutate(breakfast_or_not = case_when(
-    is.na(breakfast) ~ 0,
-    TRUE ~ 1)) |>
   # Create a column, the difference in `date` between this observation
   # and the last observation with the same `food_class`
   group_by(food_class) |>
@@ -83,7 +84,7 @@ df <- df |>
   filter(!is.na(days_since_last_meal))
 ```
 
-After all processes, I select useful columns and show the data:
+Here is the data after all processing:
 ```{r}
 df1 <- df |>
   # Select columns
@@ -97,22 +98,15 @@ df1 <- df |>
 knitr::kable(head(df1))
 ```
 
+### Machine learning
 Number of meals in each category  
 ```{r}
-df1 |> group_by(food_class) |> count() |> rename(count = n)
+df1 |>
+  group_by(food_class) |>
+  count() |>
+  rename(count = n) |>
+  knitr::kable()
 ```
-
-
-
-
-
-
-
-
-
-
-### Machine learning
-
 
 ## Results
 
