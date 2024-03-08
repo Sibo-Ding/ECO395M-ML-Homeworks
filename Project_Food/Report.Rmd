@@ -19,9 +19,11 @@ library(lubridate)
 ## Abstract
 
 ## Introduction
-I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. When I was in HK, I was wondering whether people tend to eat better (to relax or compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis.  
+I started to record what I ate everyday in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in HK, I was wondering whether people tend to eat better (to relax or compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were so complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
-Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin. I am not very confident in the predictive accuracy for two reasons. First, although my life in Austin is simple due to some constraints, the data is from real human with certain flexibility and unpredictability. Second, the data set is small. However, it is still fun to know the driving factors of my life and food patterns.  
+It is worth noting that I have full discretion in the food recording process, causing potential discrepancies and biases. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the distinction between snacks and meals. I may consider 50 g popcorn as snacks, then what about 51 g, 51.11 g, 50 g rice, etc.?  
+
+Beyond the discrepancies, I am not very confident in the predictive accuracy for two additional reasons. First, the data set is small. Second, although my life in Austin is simple due to some constraints, the data is from a real human with certain flexibility and unpredictability. However, it is still fun to know the driving factors of my life and food patterns.  
 
 ## Methods
 ### Data wrangling
