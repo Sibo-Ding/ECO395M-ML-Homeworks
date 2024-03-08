@@ -4,12 +4,12 @@
 
 ## Introduction
 
-I started to record what I ate everyday in July 2022 by a very
+I started to record what I ate every day in July 2022 by a very
 incidental chance. Since then, I spent most of my time in Hong Kong (HK)
 until I moved to Austin in July 2023. From my experience in HK, I was
 wondering whether people tend to eat better (to relax or to compensate)
 or simpler (to save time) when they are busy. However, my life and food
-patterns in HK were so complicated and unpredictable to verify this
+patterns in HK were too complicated and unpredictable to verify this
 hypothesis. Considering the feasibility, I decide to estimate and
 predict my life and food patterns in Austin.
 
@@ -32,7 +32,7 @@ of my life and food patterns.
 
 ### Data wrangling
 
-I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude
+I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude the
 Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter
 vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The
 initial data looks like this:
@@ -94,14 +94,14 @@ initial data looks like this:
 </table>
 
 During this time, I am studying at The University of Texas at Austin, so
-my life pattern heavily depends on the school calender. Thus, I create a
-`semester` variable: it is **summer** when `date` is before Aug 14
-(inclusive), **fall** when `date` is after Aug 15 and before Dec 11
-(both inclusive), and **spring** otherwise.
+my life pattern heavily depends on the school calendar. Thus, I create a
+`semester` variable: it is *summer* when `date` is before Aug 14
+(inclusive), *fall* when `date` is after Aug 15 and before Dec 11 (both
+inclusive), and *spring* otherwise.
 
 For the same reason, I create a `week_of_sem` variable, where the first
-week of a semester is 1, second is 2, etc. Every week starts from Monday
-or the first day of a semester if that day is not a Monday. I set
+week of a semester is 1, the second is 2, etc. Every week starts on
+Monday or the first day of a semester if that day is not a Monday. I set
 non-school days as 0, including spring break and days before or after
 each semester.
 
@@ -115,12 +115,12 @@ I convert the data frame from wide format to long format.
 
 I am interested in estimating and predicting my food pattern. For ease
 of implementation, I create a `food_class` variable, where I classify
-`food` into 3 categories: **home**, **canteen** (including *J2 Dining*,
-*Jester City Limits*, and *Kins Dining*), and **other**.
+`food` into 3 categories: *home*, *canteen* (including *J2 Dining*,
+*Jester City Limits*, and *Kins Dining*), and *other*.
 
-Previous meals have impacts on the choice of next meal. On one hand, I
-may get bored with previous meals (diminishing marginal return). On the
-other hand, I may be reluctant or constrained to change meals.
+Previous meals have impacts on the choice of the next meal. On one hand,
+I may get bored with previous meals (diminishing marginal return). On
+the other hand, I may be reluctant or constrained to change meals.
 Therefore, I create a `days_since_last_meal` variable, measuring the
 difference in `date` between two meals with the same `food_class`.
 
