@@ -7,14 +7,30 @@ when people are busy, do they tend to eat better (to relax or
 compensate) or simpler (to save time)? However, my life and food
 patterns in HK were so complicated and unpredictable.
 
-Considering the feasibility, I focus on my life in Austin. To implement
-this, I keep `date >= 2023-07-04`, exclude Thanksgiving holiday
-`2023-11-20 <= date <= 2023-11-26` and winter vacation
-`2023-12-12 <= date <= 2024-01-11`.
+Considering the feasibility, I decide to estimate and predict my life
+and food patterns in Austin. I am not very confident in the predictive
+accuracy considering two reasons. First, although my life in Austin is
+simple due to some constraints, the data is from real human with certain
+flexibility and unpredictability. Second, the data set is small.
+However, it is still fun to know the driving factors of my life and food
+patterns.
 
-Create `semester` column: = “summer” when `date` &lt;= 2023-08-14; =
-“fall” when `date` &lt;= 2023-12-11; “spring” otherwise.  
-Create `week_of_sem` column \## Check spring break
+To implement this, I filter relevant `date` in Austin: keep
+`date >= 2023-07-04`, exclude Thanksgiving holiday (`date` in
+\[2023-11-20, 2023-11-26\]) and winter vacation (`date` in
+\[2023-12-12,2024-01-11\]).
+
+I am studying at University of Texas at Austin, so my life pattern
+heavily depends on the school calender. Thus, I create a `semester`
+variable: it equals to “summer” when `date <= 2023-08-14`, equals to
+“fall” when `date` in \[2023-08-14, 2023-12-11\], and equals to “spring”
+otherwise.
+
+Create `week_of_sem` column
+
+## Check spring break
+
+Below is the data frame:
 
     ##         date dow           breakfast               lunch       dinner semester
     ## 1 2023-07-04 Tue                <NA>    SouthCloud Ramen         <NA>   summer
@@ -31,6 +47,9 @@ Create `week_of_sem` column \## Check spring break
     ## 5           0
     ## 6           0
 
+Convert wide data to long data  
+Drop N/A in `food`
+
     ## # A tibble: 6 × 7
     ##   date       dow   breakfast           semester week_of_sem meal   food         
     ##   <date>     <chr> <chr>               <chr>          <int> <chr>  <chr>        
@@ -40,6 +59,10 @@ Create `week_of_sem` column \## Check spring break
     ## 4 2023-07-07 Fri   <NA>                summer             0 lunch  Home         
     ## 5 2023-07-07 Fri   <NA>                summer             0 dinner China Family 
     ## 6 2023-07-08 Sat   <NA>                summer             0 lunch  Home
+
+Create 2 categorical columns using `case_when`  
+Create a column, the difference in `date` between this observation and
+the last observation with the same `food_class`
 
     ## # A tibble: 6 × 10
     ##   date       dow   breakfast         semester week_of_sem meal  food  food_class
@@ -51,6 +74,10 @@ Create `week_of_sem` column \## Check spring break
     ## 5 2023-07-07 Fri   <NA>              summer             0 dinn… Chin… other     
     ## 6 2023-07-08 Sat   <NA>              summer             0 lunch Home  home      
     ## # ℹ 2 more variables: breakfast_or_not <dbl>, days_since_last_eat <dbl>
+
+Drop N/A in `days_since_last_eat` (First meal of a `food_class`)  
+Select columns  
+Convert data type of several columns
 
     ## # A tibble: 6 × 7
     ##   dow   semester week_of_sem meal   food_class breakfast_or_not
