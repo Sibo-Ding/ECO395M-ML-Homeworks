@@ -32,90 +32,66 @@ of my life and food patterns.
 
 ### Data wrangling
 
-The original data frame looks like this:
+I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive),
+exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and
+winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The
+initial data frame looks like this:
 
 <table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 4%" />
-<col style="width: 24%" />
-<col style="width: 10%" />
-<col style="width: 14%" />
-<col style="width: 8%" />
-<col style="width: 24%" />
-</colgroup>
 <thead>
 <tr class="header">
 <th style="text-align: left;">date</th>
 <th style="text-align: left;">dow</th>
 <th style="text-align: left;">breakfast</th>
-<th style="text-align: left;">semester</th>
-<th style="text-align: right;">week_of_sem</th>
-<th style="text-align: left;">meal</th>
-<th style="text-align: left;">food</th>
+<th style="text-align: left;">lunch</th>
+<th style="text-align: left;">dinner</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">2023-07-04</td>
+<td style="text-align: left;">7/4/2023</td>
 <td style="text-align: left;">Tue</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">SouthCloud Ramen</td>
+<td style="text-align: left;">NA</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2023-07-05</td>
+<td style="text-align: left;">7/5/2023</td>
 <td style="text-align: left;">Wed</td>
 <td style="text-align: left;">MA Econ orientation</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">MA Econ orientation</td>
+<td style="text-align: left;">NA</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">2023-07-06</td>
+<td style="text-align: left;">7/6/2023</td>
 <td style="text-align: left;">Thu</td>
 <td style="text-align: left;">Home</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">Wendy’s</td>
+<td style="text-align: left;">NA</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">2023-07-07</td>
+<td style="text-align: left;">7/7/2023</td>
 <td style="text-align: left;">Fri</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">Home</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">2023-07-07</td>
-<td style="text-align: left;">Fri</td>
-<td style="text-align: left;">NA</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">dinner</td>
 <td style="text-align: left;">China Family</td>
 </tr>
-<tr class="even">
-<td style="text-align: left;">2023-07-08</td>
+<tr class="odd">
+<td style="text-align: left;">7/8/2023</td>
 <td style="text-align: left;">Sat</td>
 <td style="text-align: left;">NA</td>
-<td style="text-align: left;">summer</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: left;">lunch</td>
 <td style="text-align: left;">Home</td>
+<td style="text-align: left;">Home</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">7/9/2023</td>
+<td style="text-align: left;">Sun</td>
+<td style="text-align: left;">Home</td>
+<td style="text-align: left;">Home</td>
+<td style="text-align: left;">NA</td>
 </tr>
 </tbody>
 </table>
-
-I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive),
-exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and
-winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive).
 
 During this time, I am studying at The University of Texas at Austin, so
 my life pattern heavily depends on the school calender. Thus, I create a

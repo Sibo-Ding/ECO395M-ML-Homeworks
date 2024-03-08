@@ -27,10 +27,26 @@ Beyond the discrepancies, I am not very confident in the predictive accuracy for
 
 ## Methods
 ### Data wrangling
-The original data frame looks like this:
+I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive), exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The initial data frame looks like this:
 ```{r}
 df <- read.csv("Food.csv", na.strings = "")
 
+df |>
+  select(date, dow, breakfast, lunch, dinner) |>
+  head() |>
+  knitr::kable()
+```
+
+During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` is before Aug 14 (inclusive), equals to "fall" when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to "spring" otherwise.  
+
+Create `week_of_sem` column
+
+## Check spring break
+
+
+
+
+```{r}
 df <- df |>
   # Drop `note` column
   select(-note) |>
@@ -42,18 +58,7 @@ df <- df |>
                values_to = "food") |>
   # Drop N/A in `food`
   filter(!is.na(food))
-
-knitr::kable(head(df))
 ```
-
-I filter relevant `date` in Austin: after Jul 4, 2023 (inclusive), exclude Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive).  
-
-During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calender. Thus, I create a `semester` variable: it equals to "summer" when `date` is before Aug 14 (inclusive), equals to "fall" when `date` is after Aug 15 and before Dec 11 (both inclusive), and equals to "spring" otherwise.  
-
-Create `week_of_sem` column
-
-## Check spring break
-
 
 
 
@@ -62,11 +67,6 @@ Create `week_of_sem` column
 
 The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
 
-
-
-
-
-After all procedures, I delete unwanted columns. Below is the data frame after processing:
 ```{r}
 df <- df |>
   # Create 2 categorical columns using `case_when`
@@ -84,9 +84,15 @@ df <- df |>
   ungroup() |>
   # Drop N/A in `days_since_last_meal` (First meal of a `food_class`)
   filter(!is.na(days_since_last_meal))
+```
 
+
+
+
+After all procedures, I delete unwanted columns. Below is the data frame after processing:
+```{r}
 df1 <- df |>
-  # Select columns
+  # Drop columns
   select(-date, -breakfast, -food) |>
   # Convert data types of columns
   mutate(across(
