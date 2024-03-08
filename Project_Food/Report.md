@@ -5,7 +5,7 @@
 ## Introduction
 
 I started to record what I ate everyday in July 2022 by a very
-incidental chance. Since then, I spent most of my time in Hong Kong
+incidental chance. Since then, I spent most of my time in Hong Kong (HK)
 until I moved to Austin in July 2023. From my experience in HK, I was
 wondering whether people tend to eat better (to relax or to compensate)
 or simpler (to save time) when they are busy. However, my life and food
@@ -95,14 +95,15 @@ initial data looks like this:
 
 During this time, I am studying at The University of Texas at Austin, so
 my life pattern heavily depends on the school calender. Thus, I create a
-`semester` variable: it equals to *summer* when `date` is before Aug 14
-(inclusive), equals to *fall* when `date` is after Aug 15 and before Dec
-11 (both inclusive), and equals to *spring* otherwise.
+`semester` variable: it is **summer** when `date` is before Aug 14
+(inclusive), **fall** when `date` is after Aug 15 and before Dec 11
+(both inclusive), and **spring** otherwise.
 
-For the same reason, I create a `week_of_sem` variable. Every week
-starts from Monday or the first day of a semester. So the first week of
-a semester is 1, second is 2, etc. I set non-school days as 0, including
-spring break and days before each semester.
+For the same reason, I create a `week_of_sem` variable, where the first
+week of a semester is 1, second is 2, etc. Every week starts from Monday
+or the first day of a semester if that day is not a Monday. I set
+non-school days as 0, including spring break and days before or after
+each semester.
 
 The variation in `breakfast` is close to zero as I eat at home most of
 the time. To extract useful information, I convert `breakfast` to a
@@ -114,8 +115,8 @@ I convert the data frame from wide format to long format.
 
 I am interested in estimating and predicting my food pattern. For ease
 of implementation, I create a `food_class` variable, where I classify
-`food` into 3 categories: *home*, *canteen* (including *J2 Dining*,
-*Jester City Limits*, and *Kins Dining*), and *other*.
+`food` into 3 categories: **home**, **canteen** (including *J2 Dining*,
+*Jester City Limits*, and *Kins Dining*), and **other**.
 
 Previous meals have impacts on the choice of next meal. On one hand, I
 may get bored with previous meals (diminishing marginal return). On the
