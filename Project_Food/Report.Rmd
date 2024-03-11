@@ -14,21 +14,32 @@ knitr::opts_chunk$set(message = FALSE)
 library(dplyr)
 library(tidyr)
 library(lubridate)
+library(caret)
+library(nnet)  # Multinomial logistic regression
+library(mlogit)  # Multinomial lasso regression
 ```
 
 ## Abstract
 
-## Introduction
-I started to record what I ate every day in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong (HK) until I moved to Austin in July 2023. From my experience in HK, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in HK were too complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
-It is worth noting that I have full discretion to record every meal, causing potential discrepancies and biases. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as a snack, should I consider 11 g as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
+
+
+
+
+
+
+
+## Introduction
+I started to record what I ate every day in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in Hong Kong, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in Hong Kong were too complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
+
+When recording meals, there are potential discrepancies and biases due to my discretion. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as a snack, should I consider 11 g as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
 
 Beyond the discrepancies, I am not very confident in the predictive accuracy for two additional reasons. First, the data set is small. Second, although my life in Austin is simple due to some constraints, the data is from a real human with certain flexibility and unpredictability. However, it is still fun to know the driving factors of my life and food patterns.  
 
 ## Methods
 ### Data wrangling
 I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The initial data looks like this:
-```{r}
+```{r Read and display data}
 df <- read.csv("Food.csv", na.strings = "")
 
 df |>
@@ -42,40 +53,38 @@ During this time, I am studying at The University of Texas at Austin, so my life
 For the same reason, I create a `week_of_sem` variable, where the first week of a semester is 1, the second is 2, etc. Every week starts on Monday or the first day of a semester if that day is not a Monday. I set non-school days as 0, including spring break and days before or after each semester.  
 
 The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
-```{r}
+```{r Data wrangling 1}
+# Create a categorical column
 df <- df |>
-  # Drop `note` column
-  select(-note) |>
-  # Convert to `Date` data type
-  mutate(date = mdy(date)) |>
-  # Create a categorical column
   mutate(breakfast_or_not = case_when(
     is.na(breakfast) ~ 0,
     TRUE ~ 1))
 ```
 
 I convert the data frame from wide format to long format.  
-```{r}
+```{r Data wrangling 2}
+# Convert wide data to long data
+# Drop N/A in `food`
 df <- df |>
-  # Convert wide data to long data
   pivot_longer(cols = c(lunch, dinner),
                names_to = "meal", 
                values_to = "food") |>
-  # Drop N/A in `food`
   filter(!is.na(food))
 ```
 
 I am interested in estimating and predicting my food pattern. For ease of implementation, I create a `food_class` variable, where I classify `food` into 3 categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
 
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change meals. Therefore, I create a `days_since_last_meal` variable, measuring the difference in `date` between two meals with the same `food_class`.  
-```{r}
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a `days_since_last_meal` variable, measuring the difference in `date` between a meal and the last meal with the same `food_class`.  
+```{r Data wrangling 3}
 df <- df |>
   # Create a categorical column
   mutate(food_class = case_when(
     food == "Home" ~ "home",
     food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
     TRUE ~ "other")) |>
-  # Create a column, the difference in `date` between this observation
+  # Convert `date` to "Date" data type
+  mutate(date = mdy(date)) |>
+  # Create a column, the difference in `date` between an observation
   # and the last observation with the same `food_class`
   group_by(food_class) |>
   mutate(days_since_last_meal = as.numeric(date - lag(date))) |>
@@ -85,7 +94,7 @@ df <- df |>
 ```
 
 Here is the data after all processing:
-```{r}
+```{r Data wrangling 4}
 df1 <- df |>
   # Select columns
   select(food_class, meal, semester, week_of_sem, dow,
@@ -99,7 +108,7 @@ knitr::kable(head(df1))
 ```
 
 ### Machine learning
-Number of meals in each category  
+The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or a clustering problem in unsupervised learning. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
 ```{r}
 df1 |>
   group_by(food_class) |>
@@ -108,7 +117,54 @@ df1 |>
   knitr::kable()
 ```
 
+I set 80% of data as training data, and 20% as test data.  
+```{r Train-test split}
+set.seed(123)
+index <- createDataPartition(df1$food_class ,
+                             p = 0.8, list = FALSE)
+train <- df1[index, ]
+test <- df1[-index, ]
+```
+
+### Logistic regression
+I include all features and their interactions in logistic regression. The reason of including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between meal and semester, etc.  
+```{r Logistic regression 1}
+# Fit multinomial logistic regression
+logit <- multinom(food_class ~ . ^2, data = train)
+# Predict classes
+logit_pred <- predict(logit, test)
+```
+
+
+
+
+
+
+### Lasso
+```{r}
+# lasso <- mlogit(food_class ~ . ^2, data = df1, method = "br", reflevel = "setosa", lambda = 1)
+
+
+```
+
+
+
+### Random forest
+
+
+### Boosting
+
+
+### KNN
+
+
 ## Results
+### Logistic regression
+```{r Logistic regression 2}
+# Confusion matrix
+table(logit_pred, test$food_class) |> knitr::kable()
+```
+This is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class.
 
 
 

@@ -5,21 +5,21 @@
 ## Introduction
 
 I started to record what I ate every day in July 2022 by a very
-incidental chance. Since then, I spent most of my time in Hong Kong (HK)
-until I moved to Austin in July 2023. From my experience in HK, I was
-wondering whether people tend to eat better (to relax or to compensate)
-or simpler (to save time) when they are busy. However, my life and food
-patterns in HK were too complicated and unpredictable to verify this
-hypothesis. Considering the feasibility, I decide to estimate and
-predict my life and food patterns in Austin.
+incidental chance. Since then, I spent most of my time in Hong Kong
+until I moved to Austin in July 2023. From my experience in Hong Kong, I
+was wondering whether people tend to eat better (to relax or to
+compensate) or simpler (to save time) when they are busy. However, my
+life and food patterns in Hong Kong were too complicated and
+unpredictable to verify this hypothesis. Considering the feasibility, I
+decide to estimate and predict my life and food patterns in Austin.
 
-It is worth noting that I have full discretion to record every meal,
-causing potential discrepancies and biases. For example, if I have a
-brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may
-record them as breakfast and lunch, but I may also record them as lunch
-and dinner. Another discrepancy is the vague distinction between snacks
-and meals. If I consider 10 g popcorn as a snack, should I consider 11 g
-as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?
+When recording meals, there are potential discrepancies and biases due
+to my discretion. For example, if I have a brunch (at 10:00) and an
+afternoon tea (at 16:00), sometimes I may record them as breakfast and
+lunch, but I may also record them as lunch and dinner. Another
+discrepancy is the vague distinction between snacks and meals. If I
+consider 10 g popcorn as a snack, should I consider 11 g as a meal? If
+so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?
 
 Beyond the discrepancies, I am not very confident in the predictive
 accuracy for two additional reasons. First, the data set is small.
@@ -120,9 +120,10 @@ of implementation, I create a `food_class` variable, where I classify
 
 Previous meals have impacts on the choice of the next meal. On one hand,
 I may get bored with previous meals (diminishing marginal return). On
-the other hand, I may be reluctant or constrained to change meals.
-Therefore, I create a `days_since_last_meal` variable, measuring the
-difference in `date` between two meals with the same `food_class`.
+the other hand, I may be reluctant or constrained to change life and
+food patterns. Therefore, I create a `days_since_last_meal` variable,
+measuring the difference in `date` between a meal and the last meal with
+the same `food_class`.
 
 Here is the data after all processing:
 
@@ -207,7 +208,12 @@ Here is the data after all processing:
 
 ### Machine learning
 
-Number of meals in each category
+The outcome variable (y variable) `food_class` is categorical. So this
+can be a classification problem in supervised learning, or a clustering
+problem in unsupervised learning. Features (x variables) are all
+categorical except `days_since_last_meal` is continuous. Before any
+analysis, let us look at the number of outcome variables in each
+category:
 
 <table>
 <thead>
@@ -232,6 +238,69 @@ Number of meals in each category
 </tbody>
 </table>
 
+I set 80% of data as training data, and 20% as test data.
+
+### Logistic regression
+
+I include all features and their interactions in logistic regression.
+The reason of including interactions is a lunch on Monday may be
+different from a lunch on Saturday, depending on my class schedule.
+Similar for interactions between meal and semester, etc.
+
+    ## # weights:  732 (486 variable)
+    ## initial  value 317.498951 
+    ## iter  10 value 133.162946
+    ## iter  20 value 48.311577
+    ## iter  30 value 11.311373
+    ## iter  40 value 0.106087
+    ## iter  50 value 0.002034
+    ## final  value 0.000076 
+    ## converged
+
+### Lasso
+
+### Random forest
+
+### Boosting
+
+### KNN
+
 ## Results
+
+### Logistic regression
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">9</td>
+</tr>
+</tbody>
+</table>
+
+This is the confusion matrix of logistic regression. Each column is an
+original class, each row is a predicted class.
 
 ## Conclusion
