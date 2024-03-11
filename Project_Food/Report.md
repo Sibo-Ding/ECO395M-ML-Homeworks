@@ -240,30 +240,20 @@ category:
 
 I set 80% of data as training data, and 20% as test data.
 
-### Logistic regression
+#### Logistic regression
 
 I include all features and their interactions in logistic regression.
 The reason of including interactions is a lunch on Monday may be
 different from a lunch on Saturday, depending on my class schedule.
 Similar for interactions between meal and semester, etc.
 
-    ## # weights:  732 (486 variable)
-    ## initial  value 317.498951 
-    ## iter  10 value 133.162946
-    ## iter  20 value 48.311577
-    ## iter  30 value 11.311373
-    ## iter  40 value 0.106087
-    ## iter  50 value 0.002034
-    ## final  value 0.000076 
-    ## converged
+#### Lasso
 
-### Lasso
+#### Random forest
 
-### Random forest
+#### Boosting
 
-### Boosting
-
-### KNN
+#### KNN
 
 ## Results
 

@@ -126,9 +126,9 @@ train <- df1[index, ]
 test <- df1[-index, ]
 ```
 
-### Logistic regression
+#### Logistic regression
 I include all features and their interactions in logistic regression. The reason of including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between meal and semester, etc.  
-```{r Logistic regression 1}
+```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~ . ^2, data = train)
 # Predict classes
@@ -140,7 +140,7 @@ logit_pred <- predict(logit, test)
 
 
 
-### Lasso
+#### Lasso
 ```{r}
 # lasso <- mlogit(food_class ~ . ^2, data = df1, method = "br", reflevel = "setosa", lambda = 1)
 
@@ -149,13 +149,13 @@ logit_pred <- predict(logit, test)
 
 
 
-### Random forest
+#### Random forest
 
 
-### Boosting
+#### Boosting
 
 
-### KNN
+#### KNN
 
 
 ## Results
