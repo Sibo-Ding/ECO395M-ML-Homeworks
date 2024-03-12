@@ -238,12 +238,12 @@ category:
 </tbody>
 </table>
 
-I set 80% of data as training data, and 20% as test data.
+I set 80% of the observations as training data, and 20% as test data.
 
 #### Logistic regression
 
 I include all features and their interactions in logistic regression.
-The reason of including interactions is a lunch on Monday may be
+The reason for including interactions is a lunch on Monday may be
 different from a lunch on Saturday, depending on my class schedule.
 Similar for interactions between meal and semester, etc.
 
@@ -293,15 +293,20 @@ I include all features in random forest.
 </table>
 
 This is the confusion matrix of logistic regression. Each column is an
-original class, each row is a predicted class. The overall accuracy is
+original class, each row is a predicted class.  
+Overall accuracy measures the fraction of accurate predictions among all
+observations. The overall accuracy is:
 
     ## [1] 0.6849315
 
-Sensitivity measures the fraction of accurate predictions among each
+Sensitivity measures the fraction of accurate predictions in each
 original class (column). The sensitivities are:
 
     ## Class: canteen    Class: home   Class: other 
     ##      0.6111111      0.7619048      0.5384615
+
+For example, in *canteen* column, there are **abba** accurate
+predictions out of **bbaa**.
 
 ### Random forest
 
