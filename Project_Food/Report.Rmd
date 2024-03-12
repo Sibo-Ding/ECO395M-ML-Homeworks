@@ -128,7 +128,7 @@ test <- df1[-index, ]
 ```
 
 #### Logistic regression
-I include all features and their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between meal and semester, etc.  
+I include all features and their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between `meal` and `semester`, etc.  
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~ . ^2, data = train)
@@ -165,19 +165,20 @@ rf_pred <- predict(rf, test)
 
 ## Results
 ### Logistic regression
-```{r Logistic regression 2}
+Below is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class.
+```{r Logistic regression 2-1}
 # Confusion matrix
 logit_cm <- confusionMatrix(logit_pred, test$food_class)
 logit_cm$table |> knitr::kable()
 ```
-This is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class.  
+
 Overall accuracy measures the fraction of accurate predictions among all observations. The overall accuracy is:
-```{r}
+```{r Logistic regression 2-2}
 logit_cm$overall[1] |> as.numeric()
 ```
 
 Sensitivity measures the fraction of accurate predictions in each original class (column). The sensitivities are:
-```{r}
+```{r Logistic regression 2-3}
 logit_cm$byClass[, 1]
 ```
 For example, in *canteen* column, there are **abba** accurate predictions out of **bbaa**.
@@ -191,9 +192,26 @@ For example, in *canteen* column, there are **abba** accurate predictions out of
 
 
 ### Random forest
+Confusion matrix:
 ```{r Random forest 2}
-confusionMatrix(rf_pred, test$food_class)
+rf_cm <- confusionMatrix(rf_pred, test$food_class)
+rf_cm$table |> knitr::kable()
 ```
+
+Overall accuracy:
+```{r Random forest 2-2}
+rf_cm$overall[1] |> as.numeric()
+```
+
+Sensitivity:
+```{r Random forest 2-3}
+rf_cm$byClass[, 1]
+```
+
+
+
+
+
 
 
 ## Case study: driving factors of my food pattern

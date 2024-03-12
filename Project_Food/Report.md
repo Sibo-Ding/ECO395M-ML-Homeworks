@@ -245,7 +245,7 @@ I set 80% of the observations as training data, and 20% as test data.
 I include all features and their interactions in logistic regression.
 The reason for including interactions is a lunch on Monday may be
 different from a lunch on Saturday, depending on my class schedule.
-Similar for interactions between meal and semester, etc.
+Similar for interactions between `meal` and `semester`, etc.
 
 #### Lasso
 
@@ -260,6 +260,9 @@ I include all features in random forest.
 ## Results
 
 ### Logistic regression
+
+Below is the confusion matrix of logistic regression. Each column is an
+original class, each row is a predicted class.
 
 <table>
 <thead>
@@ -292,8 +295,6 @@ I include all features in random forest.
 </tbody>
 </table>
 
-This is the confusion matrix of logistic regression. Each column is an
-original class, each row is a predicted class.  
 Overall accuracy measures the fraction of accurate predictions among all
 observations. The overall accuracy is:
 
@@ -310,36 +311,47 @@ predictions out of **bbaa**.
 
 ### Random forest
 
-    ## Confusion Matrix and Statistics
-    ## 
-    ##           Reference
-    ## Prediction canteen home other
-    ##    canteen       9    3     4
-    ##    home          9   37     2
-    ##    other         0    2     7
-    ## 
-    ## Overall Statistics
-    ##                                           
-    ##                Accuracy : 0.726           
-    ##                  95% CI : (0.6091, 0.8239)
-    ##     No Information Rate : 0.5753          
-    ##     P-Value [Acc > NIR] : 0.005619        
-    ##                                           
-    ##                   Kappa : 0.4979          
-    ##                                           
-    ##  Mcnemar's Test P-Value : 0.071898        
-    ## 
-    ## Statistics by Class:
-    ## 
-    ##                      Class: canteen Class: home Class: other
-    ## Sensitivity                  0.5000      0.8810      0.53846
-    ## Specificity                  0.8727      0.6452      0.96667
-    ## Pos Pred Value               0.5625      0.7708      0.77778
-    ## Neg Pred Value               0.8421      0.8000      0.90625
-    ## Prevalence                   0.2466      0.5753      0.17808
-    ## Detection Rate               0.1233      0.5068      0.09589
-    ## Detection Prevalence         0.2192      0.6575      0.12329
-    ## Balanced Accuracy            0.6864      0.7631      0.75256
+Confusion matrix:
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+Overall accuracy:
+
+    ## [1] 0.7260274
+
+Sensitivity:
+
+    ## Class: canteen    Class: home   Class: other 
+    ##      0.5000000      0.8809524      0.5384615
 
 ## Case study: driving factors of my food pattern
 
