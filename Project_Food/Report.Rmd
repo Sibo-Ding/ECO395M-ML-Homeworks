@@ -17,6 +17,7 @@ library(lubridate)
 library(caret)
 library(nnet)  # Multinomial logistic regression
 library(mlogit)  # Multinomial lasso regression
+library(randomForest)
 ```
 
 ## Abstract
@@ -135,11 +136,6 @@ logit <- multinom(food_class ~ . ^2, data = train)
 logit_pred <- predict(logit, test)
 ```
 
-
-
-
-
-
 #### Lasso
 ```{r}
 # lasso <- mlogit(food_class ~ . ^2, data = df1, method = "br", reflevel = "setosa", lambda = 1)
@@ -149,7 +145,16 @@ logit_pred <- predict(logit, test)
 
 
 
+
+
+
 #### Random forest
+
+```{r Random forest 1}
+rf <- randomForest(food_class ~ ., data = train)
+rf_pred <- predict(rf, test)
+```
+
 
 
 #### Boosting
@@ -162,12 +167,35 @@ logit_pred <- predict(logit, test)
 ### Logistic regression
 ```{r Logistic regression 2}
 # Confusion matrix
-table(logit_pred, test$food_class) |> knitr::kable()
+logit_cm <- confusionMatrix(logit_pred, test$food_class)
+logit_cm$table |> knitr::kable()
 ```
-This is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class.
+This is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class. The overall accuracy is
+```{r}
+logit_cm$overall[1]
+```
+
+Sensitivity measures the fraction of accurate predictions among each original class (column). The sensiticities are:
+```{r}
+logit_cm$byClass[, 1]
+```
 
 
 
+
+
+
+
+
+
+
+### Random forest
+```{r Random forest 2}
+confusionMatrix(rf_pred, test$food_class)
+```
+
+
+## Case study: driving factors of my food pattern
 
 ## Conclusion
 

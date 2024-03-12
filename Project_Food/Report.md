@@ -225,11 +225,11 @@ category:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">90</td>
+<td style="text-align: right;">91</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">206</td>
+<td style="text-align: right;">211</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
@@ -271,26 +271,70 @@ Similar for interactions between meal and semester, etc.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">11</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
 <td style="text-align: right;">6</td>
-<td style="text-align: right;">34</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">32</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">7</td>
 </tr>
 </tbody>
 </table>
 
 This is the confusion matrix of logistic regression. Each column is an
-original class, each row is a predicted class.
+original class, each row is a predicted class. The overall accuracy is
+
+    ##  Accuracy 
+    ## 0.6849315
+
+Sensitivity measures the fraction of accurate predictions among each
+original class (column). The sensiticities are:
+
+    ## Class: canteen    Class: home   Class: other 
+    ##      0.6111111      0.7619048      0.5384615
+
+### Random forest
+
+    ## Confusion Matrix and Statistics
+    ## 
+    ##           Reference
+    ## Prediction canteen home other
+    ##    canteen       9    3     4
+    ##    home          9   37     2
+    ##    other         0    2     7
+    ## 
+    ## Overall Statistics
+    ##                                           
+    ##                Accuracy : 0.726           
+    ##                  95% CI : (0.6091, 0.8239)
+    ##     No Information Rate : 0.5753          
+    ##     P-Value [Acc > NIR] : 0.005619        
+    ##                                           
+    ##                   Kappa : 0.4979          
+    ##                                           
+    ##  Mcnemar's Test P-Value : 0.071898        
+    ## 
+    ## Statistics by Class:
+    ## 
+    ##                      Class: canteen Class: home Class: other
+    ## Sensitivity                  0.5000      0.8810      0.53846
+    ## Specificity                  0.8727      0.6452      0.96667
+    ## Pos Pred Value               0.5625      0.7708      0.77778
+    ## Neg Pred Value               0.8421      0.8000      0.90625
+    ## Prevalence                   0.2466      0.5753      0.17808
+    ## Detection Rate               0.1233      0.5068      0.09589
+    ## Detection Prevalence         0.2192      0.6575      0.12329
+    ## Balanced Accuracy            0.6864      0.7631      0.75256
+
+## Case study: driving factors of my food pattern
 
 ## Conclusion
