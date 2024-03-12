@@ -251,6 +251,8 @@ Similar for interactions between meal and semester, etc.
 
 #### Random forest
 
+I include all features in random forest.
+
 #### Boosting
 
 #### KNN
@@ -293,11 +295,10 @@ Similar for interactions between meal and semester, etc.
 This is the confusion matrix of logistic regression. Each column is an
 original class, each row is a predicted class. The overall accuracy is
 
-    ##  Accuracy 
-    ## 0.6849315
+    ## [1] 0.6849315
 
 Sensitivity measures the fraction of accurate predictions among each
-original class (column). The sensiticities are:
+original class (column). The sensitivities are:
 
     ## Class: canteen    Class: home   Class: other 
     ##      0.6111111      0.7619048      0.5384615

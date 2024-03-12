@@ -149,7 +149,7 @@ logit_pred <- predict(logit, test)
 
 
 #### Random forest
-
+I include all features in random forest.
 ```{r Random forest 1}
 rf <- randomForest(food_class ~ ., data = train)
 rf_pred <- predict(rf, test)
@@ -172,10 +172,10 @@ logit_cm$table |> knitr::kable()
 ```
 This is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class. The overall accuracy is
 ```{r}
-logit_cm$overall[1]
+logit_cm$overall[1] |> as.numeric()
 ```
 
-Sensitivity measures the fraction of accurate predictions among each original class (column). The sensiticities are:
+Sensitivity measures the fraction of accurate predictions among each original class (column). The sensitivities are:
 ```{r}
 logit_cm$byClass[, 1]
 ```
