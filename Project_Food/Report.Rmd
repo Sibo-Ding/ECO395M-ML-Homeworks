@@ -177,11 +177,6 @@ Overall accuracy measures the fraction of accurate predictions among all observa
 logit_cm$overall[1] |> as.numeric()
 ```
 
-Sensitivity measures the fraction of accurate predictions in each original class (column). The sensitivities are:
-```{r Logistic regression 2-3}
-logit_cm$byClass[, 1]
-```
-For example, in *canteen* column, there are **abba** accurate predictions out of **bbaa**.
 
 
 
@@ -203,10 +198,7 @@ Overall accuracy:
 rf_cm$overall[1] |> as.numeric()
 ```
 
-Sensitivity:
-```{r Random forest 2-3}
-rf_cm$byClass[, 1]
-```
+
 
 
 

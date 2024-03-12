@@ -300,15 +300,6 @@ observations. The overall accuracy is:
 
     ## [1] 0.6849315
 
-Sensitivity measures the fraction of accurate predictions in each
-original class (column). The sensitivities are:
-
-    ## Class: canteen    Class: home   Class: other 
-    ##      0.6111111      0.7619048      0.5384615
-
-For example, in *canteen* column, there are **abba** accurate
-predictions out of **bbaa**.
-
 ### Random forest
 
 Confusion matrix:
@@ -347,11 +338,6 @@ Confusion matrix:
 Overall accuracy:
 
     ## [1] 0.7260274
-
-Sensitivity:
-
-    ## Class: canteen    Class: home   Class: other 
-    ##      0.5000000      0.8809524      0.5384615
 
 ## Case study: driving factors of my food pattern
 
