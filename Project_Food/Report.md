@@ -209,11 +209,10 @@ Here is the data after all processing:
 ### Machine learning
 
 The outcome variable (y variable) `food_class` is categorical. So this
-can be a classification problem in supervised learning, or an
-unsupervised learning problem. Features (x variables) are all
-categorical except `days_since_last_meal` is continuous. Before any
-analysis, let us look at the number of outcome variables in each
-category:
+can be classification problems in supervised learning, or unsupervised
+learning problems. Features (x variables) are all categorical except
+`days_since_last_meal` is continuous. Before any analysis, let us look
+at the number of outcome variables in each category:
 
 <table>
 <thead>
@@ -238,16 +237,15 @@ category:
 </tbody>
 </table>
 
-I set 80% of the observations as training data, and 20% as test data.  
-I use
+I set 80% of the observations as training data, and 20% as test data.
 
 #### Logistic regression
 
 I include all features and their interactions in logistic regression.
 The reason for including interactions is a lunch on Monday may be
 different from a lunch on Saturday, depending on my class schedule.
-Similar for interactions between `meal` and `semester`, etc.  
-The outcome variable has 3 classes, so I use softmax function.
+Similar for interactions between `meal` and `semester`, etc. I use
+softmax function to handle 3 classes in the outcome variable.
 
 #### Lasso regularization
 
@@ -256,30 +254,42 @@ Thus, I use lasso to regularize the above model. I use 10-fold cross
 validation in the training data to find the optimal regularization
 parameter *λ*.
 
+#### KNN
+
+KNN measures “distances” among features (x variables). It is not
+rigorously appropriate for this data set, as most features are
+categorical whose distances are not very explicit. However, it is still
+worth a try. So I include all features in KNN. I use 10-fold cross
+validation in the training data to find the optimal number of neighbors
+*k*.
+
 #### Random forest
 
 I include all features in random forest.
 
 #### Boosting
 
-#### KNN
-
-10-fold cv
-
 #### Clustering
 
 #### PCA
 
-Finance dominant features among all features and their interactions.
+Find dominant features among all features and their interactions.
 
 ## Results
 
-### Confusion matrix
+### Overall accuracy
 
-In a confusion matrix, each column is an original class, each row is a
-predicted class.
+Overall accuracy measures the fraction of accurate predictions among all
+observations. The overall accuracy for each model:
 
-#### Logistic regression
+    ## [1] 0.6849315
+
+    ## [1] 0.7260274
+
+Below are confusion matrices of each model. In a confusion matrix, each
+column is an original class, each row is a predicted class.
+
+### Logistic regression
 
 <table>
 <thead>
@@ -312,7 +322,7 @@ predicted class.
 </tbody>
 </table>
 
-#### Lasso regularization
+### Lasso regularization
 
 <table>
 <thead>
@@ -345,40 +355,7 @@ predicted class.
 </tbody>
 </table>
 
-#### Random forest
-
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;"></th>
-<th style="text-align: right;">canteen</th>
-<th style="text-align: right;">home</th>
-<th style="text-align: right;">other</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">canteen</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">home</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">other</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">7</td>
-</tr>
-</tbody>
-</table>
-
-#### KNN
+### KNN
 
 <table>
 <thead>
@@ -411,14 +388,38 @@ predicted class.
 </tbody>
 </table>
 
-### Overall accuracy
+### Random forest
 
-Overall accuracy measures the fraction of accurate predictions among all
-observations. The overall accuracy for each model:
-
-    ## [1] 0.6849315
-
-    ## [1] 0.7534247
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
 
 ## Case study: driving factors of my food pattern
 
