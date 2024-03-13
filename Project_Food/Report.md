@@ -209,8 +209,8 @@ Here is the data after all processing:
 ### Machine learning
 
 The outcome variable (y variable) `food_class` is categorical. So this
-can be a classification problem in supervised learning, or a clustering
-problem in unsupervised learning. Features (x variables) are all
+can be a classification problem in supervised learning, or an
+unsupervised learning problem. Features (x variables) are all
 categorical except `days_since_last_meal` is continuous. Before any
 analysis, let us look at the number of outcome variables in each
 category:
@@ -238,16 +238,23 @@ category:
 </tbody>
 </table>
 
-I set 80% of the observations as training data, and 20% as test data.
+I set 80% of the observations as training data, and 20% as test data.  
+I use
 
 #### Logistic regression
 
 I include all features and their interactions in logistic regression.
 The reason for including interactions is a lunch on Monday may be
 different from a lunch on Saturday, depending on my class schedule.
-Similar for interactions between `meal` and `semester`, etc.
+Similar for interactions between `meal` and `semester`, etc.  
+The outcome variable has 3 classes, so I use softmax function.
 
-#### Lasso
+#### Lasso regularization
+
+Logistic regression with too many features may result in overfitting.
+Thus, I use lasso to regularize the above model. I use 10-fold cross
+validation in the training data to find the optimal regularization
+parameter *λ*.
 
 #### Random forest
 
@@ -257,12 +264,22 @@ I include all features in random forest.
 
 #### KNN
 
+10-fold cv
+
+#### Clustering
+
+#### PCA
+
+Finance dominant features among all features and their interactions.
+
 ## Results
 
-### Logistic regression
+### Confusion matrix
 
-Below is the confusion matrix of logistic regression. Each column is an
-original class, each row is a predicted class.
+In a confusion matrix, each column is an original class, each row is a
+predicted class.
+
+#### Logistic regression
 
 <table>
 <thead>
@@ -295,14 +312,7 @@ original class, each row is a predicted class.
 </tbody>
 </table>
 
-Overall accuracy measures the fraction of accurate predictions among all
-observations. The overall accuracy is:
-
-    ## [1] 0.6849315
-
-### Random forest
-
-Confusion matrix:
+#### Lasso regularization
 
 <table>
 <thead>
@@ -316,13 +326,46 @@ Confusion matrix:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">8</td>
+</tr>
+</tbody>
+</table>
+
+#### Random forest
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">11</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">9</td>
+<td style="text-align: right;">7</td>
 <td style="text-align: right;">37</td>
 <td style="text-align: right;">2</td>
 </tr>
@@ -335,9 +378,47 @@ Confusion matrix:
 </tbody>
 </table>
 
-Overall accuracy:
+#### KNN
 
-    ## [1] 0.7260274
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+### Overall accuracy
+
+Overall accuracy measures the fraction of accurate predictions among all
+observations. The overall accuracy for each model:
+
+    ## [1] 0.6849315
+
+    ## [1] 0.7534247
 
 ## Case study: driving factors of my food pattern
 

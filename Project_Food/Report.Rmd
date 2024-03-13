@@ -16,7 +16,6 @@ library(tidyr)
 library(lubridate)
 library(caret)
 library(nnet)  # Multinomial logistic regression
-library(mlogit)  # Multinomial lasso regression
 library(randomForest)
 ```
 
@@ -109,7 +108,7 @@ knitr::kable(head(df1))
 ```
 
 ### Machine learning
-The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or a clustering problem in unsupervised learning. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
+The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or an unsupervised learning problem. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
 ```{r}
 df1 |>
   group_by(food_class) |>
@@ -119,16 +118,20 @@ df1 |>
 ```
 
 I set 80% of the observations as training data, and 20% as test data.  
+I use 
 ```{r Train-test split}
 set.seed(123)
 index <- createDataPartition(df1$food_class ,
                              p = 0.8, list = FALSE)
 train <- df1[index, ]
 test <- df1[-index, ]
+
+# 10-fold cross validation
 ```
 
 #### Logistic regression
 I include all features and their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between `meal` and `semester`, etc.  
+The outcome variable has 3 classes, so I use softmax function.  
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~ . ^2, data = train)
@@ -136,12 +139,26 @@ logit <- multinom(food_class ~ . ^2, data = train)
 logit_pred <- predict(logit, test)
 ```
 
-#### Lasso
-```{r}
-# lasso <- mlogit(food_class ~ . ^2, data = df1, method = "br", reflevel = "setosa", lambda = 1)
 
 
+
+
+
+#### Lasso regularization
+Logistic regression with too many features may result in overfitting. Thus, I use lasso to regularize the above model. I use 10-fold cross validation in the training data to find the optimal regularization parameter $\lambda$.
+```{r Lasso regularization 1, results='hide'}
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
+
+set.seed(12)
+lasso <- train(food_class ~ . ^2,
+               data = train,
+               method = "multinom",
+               trControl = ctrl,
+               alpha = 1)
+lasso_pred <- predict(lasso, test)
 ```
+
 
 
 
@@ -161,20 +178,38 @@ rf_pred <- predict(rf, test)
 
 
 #### KNN
+10-fold cv
+```{r KNN 1}
+set.seed(12)
+knn <- train(food_class ~ .,
+             data = train,
+             method = "knn",
+             trControl = ctrl)
+knn_pred <- predict(knn, test)
+```
+
+
+#### Clustering
+
+#### PCA
+Finance dominant features among all features and their interactions.
 
 
 ## Results
-### Logistic regression
-Below is the confusion matrix of logistic regression. Each column is an original class, each row is a predicted class.
-```{r Logistic regression 2-1}
+### Confusion matrix
+In a confusion matrix, each column is an original class, each row is a predicted class.
+
+#### Logistic regression
+```{r Logistic regression 2}
 # Confusion matrix
 logit_cm <- confusionMatrix(logit_pred, test$food_class)
 logit_cm$table |> knitr::kable()
 ```
 
-Overall accuracy measures the fraction of accurate predictions among all observations. The overall accuracy is:
-```{r Logistic regression 2-2}
-logit_cm$overall[1] |> as.numeric()
+#### Lasso regularization
+```{r Lasso regularization 2}
+lasso_cm <- confusionMatrix(lasso_pred, test$food_class)
+lasso_cm$table |> knitr::kable()
 ```
 
 
@@ -185,26 +220,33 @@ logit_cm$overall[1] |> as.numeric()
 
 
 
-
-### Random forest
-Confusion matrix:
+#### Random forest
 ```{r Random forest 2}
 rf_cm <- confusionMatrix(rf_pred, test$food_class)
 rf_cm$table |> knitr::kable()
 ```
 
-Overall accuracy:
-```{r Random forest 2-2}
-rf_cm$overall[1] |> as.numeric()
+
+
+
+
+
+
+#### KNN
+```{r KNN 2}
+knn_cm <- confusionMatrix(knn_pred, test$food_class)
+knn_cm$table |> knitr::kable()
 ```
 
 
 
+### Overall accuracy
+Overall accuracy measures the fraction of accurate predictions among all observations. The overall accuracy for each model:
+```{r}
+logit_cm$overall[1] |> as.numeric()
 
-
-
-
-
+rf_cm$overall[1] |> as.numeric()
+```
 
 ## Case study: driving factors of my food pattern
 
