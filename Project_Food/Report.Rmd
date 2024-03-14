@@ -194,26 +194,30 @@ Find dominant features among all features and their interactions.
 
 
 ## Results
-### Overall accuracy
-Overall accuracy measures the fraction of accurate predictions among all observations. The overall accuracy for each model:
+### Overall accuracies for predictive models
 ```{r Overall accuracy}
-logit_cm$overall[1] |> as.numeric()
-
-rf_cm$overall[1] |> as.numeric()
-
-
-
-
-
+data.frame(
+  model = c(
+    "Logistic regression",
+    "Lasso regularization",
+    "KNN",
+    "Random forest"),
+  overall_accuracy = c(
+    logit_cm$overall[1],
+    lasso_cm$overall[1],
+    knn_cm$overall[1],
+    rf_cm$overall[1]
+  )
+) |> knitr::kable()
 ```
+Overall accuracy measures the fraction of accurate predictions among all observations.
 
 
 
 
+### Clustering
 
-#### Clustering
-
-#### PCA
+### PCA
 
 ## Case study: driving factors of my food pattern
 
@@ -222,24 +226,24 @@ rf_cm$overall[1] |> as.numeric()
 
 
 ## Appendix
-Confusion matrices of predictive models. In a confusion matrix, each column is an original class, each row is a predicted class.  
+Below are confusion matrices of predictive models. In a confusion matrix, each column is an original class, each row is a predicted class.  
 
-Logistic regression
+Logistic regression:
 ```{r Logistic regression 2}
 logit_cm$table |> knitr::kable()
 ```
 
-Lasso regularization
+Lasso regularization:
 ```{r Lasso regularization 2}
 lasso_cm$table |> knitr::kable()
 ```
 
-KNN
+KNN:
 ```{r KNN 2}
 knn_cm$table |> knitr::kable()
 ```
 
-Random forest
+Random forest:
 ```{r Random forest 2}
 rf_cm$table |> knitr::kable()
 ```

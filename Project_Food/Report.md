@@ -278,18 +278,41 @@ Find dominant features among all features and their interactions.
 
 ## Results
 
-### Overall accuracy
+### Overall accuracies for predictive models
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: right;">overall_accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Logistic regression</td>
+<td style="text-align: right;">0.6849315</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Lasso regularization</td>
+<td style="text-align: right;">0.7808219</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">KNN</td>
+<td style="text-align: right;">0.7808219</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Random forest</td>
+<td style="text-align: right;">0.7260274</td>
+</tr>
+</tbody>
+</table>
 
 Overall accuracy measures the fraction of accurate predictions among all
-observations. The overall accuracy for each model:
+observations.
 
-    ## [1] 0.6849315
+### Clustering
 
-    ## [1] 0.7260274
-
-#### Clustering
-
-#### PCA
+### PCA
 
 ## Case study: driving factors of my food pattern
 
@@ -297,10 +320,10 @@ observations. The overall accuracy for each model:
 
 ## Appendix
 
-Confusion matrices of predictive models. In a confusion matrix, each
-column is an original class, each row is a predicted class.
+Below are confusion matrices of predictive models. In a confusion
+matrix, each column is an original class, each row is a predicted class.
 
-Logistic regression
+Logistic regression:
 
 <table>
 <thead>
@@ -333,7 +356,7 @@ Logistic regression
 </tbody>
 </table>
 
-Lasso regularization
+Lasso regularization:
 
 <table>
 <thead>
@@ -366,7 +389,7 @@ Lasso regularization
 </tbody>
 </table>
 
-KNN
+KNN:
 
 <table>
 <thead>
@@ -399,7 +422,7 @@ KNN
 </tbody>
 </table>
 
-Random forest
+Random forest:
 
 <table>
 <thead>
