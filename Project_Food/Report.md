@@ -32,10 +32,10 @@ of my life and food patterns.
 
 ### Data wrangling
 
-I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude the
-Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter
-vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The
-initial data looks like this:
+I keep `date` when I am in Austin: after Jul 4, 2023 (inclusive),
+exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive)
+and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive).
+The initial data looks like this:
 
 <table>
 <thead>
@@ -209,10 +209,11 @@ Here is the data after all processing:
 ### Machine learning
 
 The outcome variable (y variable) `food_class` is categorical. So this
-can be classification problems in supervised learning, or unsupervised
-learning problems. Features (x variables) are all categorical except
-`days_since_last_meal` is continuous. Before any analysis, let us look
-at the number of outcome variables in each category:
+can be a classification problem in supervised learning, or an
+unsupervised learning problem. Features (x variables) are all
+categorical except `days_since_last_meal` is continuous. Before any
+analysis, let us look at the number of outcome variables in each
+category:
 
 <table>
 <thead>
@@ -258,8 +259,8 @@ parameter *λ*.
 
 KNN measures “distances” among features (x variables). It is not
 rigorously appropriate for this data set, as most features are
-categorical whose distances are not very explicit. However, it is still
-worth a try. So I include all features in KNN. I use 10-fold cross
+categorical whose distances are not clearly measurable. However, it is
+still worth a try. So I include all features in KNN. I use 10-fold cross
 validation in the training data to find the optimal number of neighbors
 *k*.
 
@@ -286,10 +287,20 @@ observations. The overall accuracy for each model:
 
     ## [1] 0.7260274
 
-Below are confusion matrices of each model. In a confusion matrix, each
+#### Clustering
+
+#### PCA
+
+## Case study: driving factors of my food pattern
+
+## Conclusion
+
+## Appendix
+
+Confusion matrices of predictive models. In a confusion matrix, each
 column is an original class, each row is a predicted class.
 
-### Logistic regression
+Logistic regression
 
 <table>
 <thead>
@@ -322,7 +333,7 @@ column is an original class, each row is a predicted class.
 </tbody>
 </table>
 
-### Lasso regularization
+Lasso regularization
 
 <table>
 <thead>
@@ -355,7 +366,7 @@ column is an original class, each row is a predicted class.
 </tbody>
 </table>
 
-### KNN
+KNN
 
 <table>
 <thead>
@@ -388,7 +399,7 @@ column is an original class, each row is a predicted class.
 </tbody>
 </table>
 
-### Random forest
+Random forest
 
 <table>
 <thead>
@@ -421,6 +432,4 @@ column is an original class, each row is a predicted class.
 </tbody>
 </table>
 
-## Case study: driving factors of my food pattern
-
-## Conclusion
+Boosting

@@ -38,7 +38,7 @@ Beyond the discrepancies, I am not very confident in the predictive accuracy for
 
 ## Methods
 ### Data wrangling
-I keep `date` in Austin after Jul 4, 2023 (inclusive), exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The initial data looks like this:
+I keep `date` when I am in Austin: after Jul 4, 2023 (inclusive), exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The initial data looks like this:
 ```{r Read and display data}
 df <- read.csv("Food.csv", na.strings = "")
 
@@ -108,7 +108,7 @@ knitr::kable(head(df1))
 ```
 
 ### Machine learning
-The outcome variable (y variable) `food_class` is categorical. So this can be classification problems in supervised learning, or unsupervised learning problems. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
+The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or an unsupervised learning problem. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
 ```{r}
 df1 |>
   group_by(food_class) |>
@@ -154,7 +154,7 @@ lasso_cm <- confusionMatrix(lasso_pred, test$food_class)
 ```
 
 #### KNN
-KNN measures "distances" among features (x variables). It is not rigorously appropriate for this data set, as most features are categorical whose distances are not very explicit. However, it is still worth a try. So I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
+KNN measures "distances" among features (x variables). It is not rigorously appropriate for this data set, as most features are categorical whose distances are not clearly measurable. However, it is still worth a try. So I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
 ```{r KNN 1}
 # 10-fold cross validation is in Lasso chunk
 set.seed(12)
@@ -196,7 +196,7 @@ Find dominant features among all features and their interactions.
 ## Results
 ### Overall accuracy
 Overall accuracy measures the fraction of accurate predictions among all observations. The overall accuracy for each model:
-```{r}
+```{r Overall accuracy}
 logit_cm$overall[1] |> as.numeric()
 
 rf_cm$overall[1] |> as.numeric()
@@ -207,43 +207,47 @@ rf_cm$overall[1] |> as.numeric()
 
 ```
 
-Below are confusion matrices of each model. In a confusion matrix, each column is an original class, each row is a predicted class.
-
-### Logistic regression
-```{r Logistic regression 2}
-logit_cm$table |> knitr::kable()
-```
-
-### Lasso regularization
-```{r Lasso regularization 2}
-lasso_cm$table |> knitr::kable()
-```
-
-### KNN
-```{r KNN 2}
-knn_cm$table |> knitr::kable()
-```
-
-### Random forest
-```{r Random forest 2}
-rf_cm$table |> knitr::kable()
-```
 
 
 
 
+#### Clustering
 
-
-
-
-
-
-
-
+#### PCA
 
 ## Case study: driving factors of my food pattern
 
 ## Conclusion
+
+
+
+## Appendix
+Confusion matrices of predictive models. In a confusion matrix, each column is an original class, each row is a predicted class.  
+
+Logistic regression
+```{r Logistic regression 2}
+logit_cm$table |> knitr::kable()
+```
+
+Lasso regularization
+```{r Lasso regularization 2}
+lasso_cm$table |> knitr::kable()
+```
+
+KNN
+```{r KNN 2}
+knn_cm$table |> knitr::kable()
+```
+
+Random forest
+```{r Random forest 2}
+rf_cm$table |> knitr::kable()
+```
+
+Boosting
+
+
+
 
 
 
