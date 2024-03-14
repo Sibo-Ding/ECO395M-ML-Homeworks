@@ -48,9 +48,9 @@ df |>
   knitr::kable()
 ```
 
-During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calendar. Thus, I create a `semester` variable: it is *summer* when `date` is before Aug 14 (inclusive), *fall* when `date` is after Aug 15 and before Dec 11 (both inclusive), and *spring* otherwise.  
+During this time, I am studying at The University of Texas at Austin, so my life pattern heavily depends on the school calendar. Thus, I create a categotical variable `semester`: it is *summer* when `date` is before Aug 14 (inclusive), *fall* when `date` is after Aug 15 and before Dec 11 (both inclusive), and *spring* otherwise.  
 
-For the same reason, I create a `week_of_sem` variable, where the first week of a semester is 1, the second is 2, etc. Every week starts on Monday or the first day of a semester if that day is not a Monday. I set non-school days as 0, including spring break and days before or after each semester.  
+For the same reason, I create a categorical variable `week_of_sem`, where the first week of a semester is 1, the second is 2, etc. Every week starts on Monday or the first day of a semester if that day is not a Monday. I set non-school days as 0, including spring break and days before or after each semester.  
 
 The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
 ```{r Data wrangling 1}
@@ -72,16 +72,19 @@ df <- df |>
   filter(!is.na(food))
 ```
 
-I am interested in estimating and predicting my food pattern. For ease of implementation, I create a `food_class` variable, where I classify `food` into 3 categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
-
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a `days_since_last_meal` variable, measuring the difference in `date` between a meal and the last meal with the same `food_class`.  
+I am interested in estimating and predicting my food pattern. For ease of implementation, I create a categorical variable `food_class` representing 3 `food` categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
 ```{r Data wrangling 3}
 df <- df |>
   # Create a categorical column
   mutate(food_class = case_when(
     food == "Home" ~ "home",
     food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
-    TRUE ~ "other")) |>
+    TRUE ~ "other"))
+```
+
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`.  
+```{r Data wrangling 4}
+df <- df |>
   # Convert `date` to "Date" data type
   mutate(date = mdy(date)) |>
   # Create a column, the difference in `date` between an observation
@@ -94,7 +97,7 @@ df <- df |>
 ```
 
 Here is the data after all processing:
-```{r Data wrangling 4}
+```{r Data wrangling 5}
 df1 <- df |>
   # Select columns
   select(food_class, meal, semester, week_of_sem, dow,
@@ -107,8 +110,7 @@ df1 <- df |>
 knitr::kable(head(df1))
 ```
 
-### Machine learning
-The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or an unsupervised learning problem. Features (x variables) are all categorical except `days_since_last_meal` is continuous. Before any analysis, let us look at the number of outcome variables in each category:
+The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or an unsupervised learning problem. Before any analysis, let us look at the number of outcome variables in each category:
 ```{r}
 df1 |>
   group_by(food_class) |>
@@ -117,6 +119,7 @@ df1 |>
   knitr::kable()
 ```
 
+### Supervised learning - Classification
 I set 80% of the observations as training data, and 20% as test data.
 ```{r Train-test split}
 set.seed(123)
@@ -180,12 +183,6 @@ rf_cm <- confusionMatrix(rf_pred, test$food_class)
 
 
 
-#### Clustering
-
-
-
-
-
 #### PCA
 Find dominant features among all features and their interactions.
 
@@ -194,28 +191,34 @@ Find dominant features among all features and their interactions.
 
 
 ## Results
-### Overall accuracies for predictive models
+### Overall accuracies for classification models
 ```{r Overall accuracy}
 data.frame(
   model = c(
     "Logistic regression",
     "Lasso regularization",
     "KNN",
-    "Random forest"),
+    "Random forest",
+    "Boosting"),
   overall_accuracy = c(
     logit_cm$overall[1],
     lasso_cm$overall[1],
     knn_cm$overall[1],
-    rf_cm$overall[1]
-  )
+    rf_cm$overall[1],
+    0) |> round(4)
 ) |> knitr::kable()
+
+
+
 ```
-Overall accuracy measures the fraction of accurate predictions among all observations.
+
+Overall accuracy measures the fraction of accurate predictions among all observations.  
+
+Boosting
 
 
 
 
-### Clustering
 
 ### PCA
 

@@ -95,15 +95,15 @@ The initial data looks like this:
 
 During this time, I am studying at The University of Texas at Austin, so
 my life pattern heavily depends on the school calendar. Thus, I create a
-`semester` variable: it is *summer* when `date` is before Aug 14
-(inclusive), *fall* when `date` is after Aug 15 and before Dec 11 (both
-inclusive), and *spring* otherwise.
+categotical variable `semester`: it is *summer* when `date` is before
+Aug 14 (inclusive), *fall* when `date` is after Aug 15 and before Dec 11
+(both inclusive), and *spring* otherwise.
 
-For the same reason, I create a `week_of_sem` variable, where the first
-week of a semester is 1, the second is 2, etc. Every week starts on
-Monday or the first day of a semester if that day is not a Monday. I set
-non-school days as 0, including spring break and days before or after
-each semester.
+For the same reason, I create a categorical variable `week_of_sem`,
+where the first week of a semester is 1, the second is 2, etc. Every
+week starts on Monday or the first day of a semester if that day is not
+a Monday. I set non-school days as 0, including spring break and days
+before or after each semester.
 
 The variation in `breakfast` is close to zero as I eat at home most of
 the time. To extract useful information, I convert `breakfast` to a
@@ -114,16 +114,16 @@ at home.
 I convert the data frame from wide format to long format.
 
 I am interested in estimating and predicting my food pattern. For ease
-of implementation, I create a `food_class` variable, where I classify
-`food` into 3 categories: *home*, *canteen* (including *J2 Dining*,
-*Jester City Limits*, and *Kins Dining*), and *other*.
+of implementation, I create a categorical variable `food_class`
+representing 3 `food` categories: *home*, *canteen* (including *J2
+Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.
 
 Previous meals have impacts on the choice of the next meal. On one hand,
 I may get bored with previous meals (diminishing marginal return). On
 the other hand, I may be reluctant or constrained to change life and
-food patterns. Therefore, I create a `days_since_last_meal` variable,
-measuring the difference in `date` between a meal and the last meal with
-the same `food_class`.
+food patterns. Therefore, I create a numerical variable
+`days_since_last_meal`, measuring the difference in `date` between a
+meal and the last meal with the same `food_class`.
 
 Here is the data after all processing:
 
@@ -206,14 +206,10 @@ Here is the data after all processing:
 </tbody>
 </table>
 
-### Machine learning
-
 The outcome variable (y variable) `food_class` is categorical. So this
 can be a classification problem in supervised learning, or an
-unsupervised learning problem. Features (x variables) are all
-categorical except `days_since_last_meal` is continuous. Before any
-analysis, let us look at the number of outcome variables in each
-category:
+unsupervised learning problem. Before any analysis, let us look at the
+number of outcome variables in each category:
 
 <table>
 <thead>
@@ -237,6 +233,8 @@ category:
 </tr>
 </tbody>
 </table>
+
+### Supervised learning - Classification
 
 I set 80% of the observations as training data, and 20% as test data.
 
@@ -270,15 +268,13 @@ I include all features in random forest.
 
 #### Boosting
 
-#### Clustering
-
 #### PCA
 
 Find dominant features among all features and their interactions.
 
 ## Results
 
-### Overall accuracies for predictive models
+### Overall accuracies for classification models
 
 <table>
 <thead>
@@ -290,19 +286,23 @@ Find dominant features among all features and their interactions.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Logistic regression</td>
-<td style="text-align: right;">0.6849315</td>
+<td style="text-align: right;">0.6849</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Lasso regularization</td>
-<td style="text-align: right;">0.7808219</td>
+<td style="text-align: right;">0.7808</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">KNN</td>
-<td style="text-align: right;">0.7808219</td>
+<td style="text-align: right;">0.7808</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Random forest</td>
-<td style="text-align: right;">0.7260274</td>
+<td style="text-align: right;">0.7260</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Boosting</td>
+<td style="text-align: right;">0.0000</td>
 </tr>
 </tbody>
 </table>
@@ -310,7 +310,7 @@ Find dominant features among all features and their interactions.
 Overall accuracy measures the fraction of accurate predictions among all
 observations.
 
-### Clustering
+Boosting
 
 ### PCA
 
