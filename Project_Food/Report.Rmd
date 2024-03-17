@@ -183,7 +183,7 @@ rf_cm <- confusionMatrix(rf_pred, test$food_class)
 
 
 
-#### PCA
+### Unsupervised learning - PCA
 Find dominant features among all features and their interactions.
 
 
@@ -206,7 +206,8 @@ data.frame(
     knn_cm$overall[1],
     rf_cm$overall[1],
     0) |> round(4)
-) |> knitr::kable()
+) |>
+  knitr::kable()
 
 
 

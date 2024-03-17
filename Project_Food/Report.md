@@ -221,15 +221,15 @@ number of outcome variables in each category:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">91</td>
+<td style="text-align: right;">92</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">211</td>
+<td style="text-align: right;">217</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">65</td>
+<td style="text-align: right;">68</td>
 </tr>
 </tbody>
 </table>
@@ -268,7 +268,7 @@ I include all features in random forest.
 
 #### Boosting
 
-#### PCA
+### Unsupervised learning - PCA
 
 Find dominant features among all features and their interactions.
 
@@ -286,19 +286,19 @@ Find dominant features among all features and their interactions.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Logistic regression</td>
-<td style="text-align: right;">0.6849</td>
+<td style="text-align: right;">0.7297</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Lasso regularization</td>
-<td style="text-align: right;">0.7808</td>
+<td style="text-align: right;">0.7568</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">KNN</td>
-<td style="text-align: right;">0.7808</td>
+<td style="text-align: right;">0.8243</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Random forest</td>
-<td style="text-align: right;">0.7260</td>
+<td style="text-align: right;">0.7838</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Boosting</td>
@@ -337,21 +337,21 @@ Logistic regression:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">32</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">35</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">7</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
 </tr>
 </tbody>
 </table>
@@ -370,21 +370,21 @@ Lasso regularization:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">12</td>
+<td style="text-align: right;">9</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
 </tr>
 </tbody>
 </table>
@@ -403,20 +403,20 @@ KNN:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">40</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">7</td>
 </tr>
 </tbody>
@@ -436,21 +436,21 @@ Random forest:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">37</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">6</td>
 </tr>
 </tbody>
 </table>
