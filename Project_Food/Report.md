@@ -432,6 +432,12 @@ Naive Bayes:
 </tbody>
 </table>
 
+    ##           Reference
+    ## Prediction canteen home other
+    ##    canteen      10    1     2
+    ##    home          6   41     4
+    ##    other         2    1     7
+
 KNN:
 
 <table>

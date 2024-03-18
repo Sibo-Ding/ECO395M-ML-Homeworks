@@ -260,6 +260,7 @@ lasso_cm$table |> knitr::kable()
 Naive Bayes:
 ```{r Naive Bayes 2}
 nb_cm$table |> knitr::kable()
+nb_cm$table
 ```
 
 KNN:
