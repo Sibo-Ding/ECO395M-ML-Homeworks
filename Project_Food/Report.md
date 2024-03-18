@@ -209,8 +209,7 @@ Here is the data after all processing:
 ### Predict my food pattern using classification models
 
 The outcome variable (y variable) `food_class` is categorical. Before
-any analysis, let us look at the number of observations in each
-category:
+any analysis, here is the number of observations in each category:
 
 <table>
 <thead>
@@ -260,16 +259,16 @@ parameter *λ*.
 Naive Bayes assumes every feature is independent of all other features,
 conditional on the class labels of the outcome variable. This assumption
 contradicts the assumption of interactions in the logistic regression
-section above. However, it is still worth a try. So I include all
-features in Naive Bayes.
+section above. However, it is still worth a try to fit a Naive Bayes
+model using all features.
 
 #### KNN
 
-KNN measures “distances” among features. It is not strictly appropriate
-for this data set, as most features are categorical whose distances are
-not clearly measurable. However, it is still worth a try. So I include
-all features in KNN. I use 10-fold cross validation in the training data
-to find the optimal number of neighbors *k*.
+KNN measures “distances” between features. It is not strictly
+appropriate for this data set, as most features are categorical whose
+distances are not clearly measurable. However, it is still worth a try
+to fit a KNN model using all features. I use 10-fold cross validation in
+the training data to find the optimal number of neighbors *k*.
 
 #### Random forest
 
