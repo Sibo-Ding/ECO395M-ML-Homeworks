@@ -83,8 +83,7 @@ df <- df |>
     TRUE ~ "other") |> factor())
 ```
 
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create four lagging variables of `food_class`. I drop the first four observations and the first four observations after winter break.  
-
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create 4 lagging variables of `food_class`. I drop the first 4 observations and the first 4 observations after winter break.  
 ```{r Data wrangling 4}
 # Create 4 lags of `food_class`
 df <- df |>
@@ -97,26 +96,6 @@ df <- df |>
   # Drop first 4 observations after winter break
   filter(!date %in% c("1/12/2024", "1/13/2024", "1/14/2024"))
 ```
-
-
-
-Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`. In each `food_class`, I drop the first meal and the first meal after winter break.
-```{r, eval=FALSE}
-df <- df |>
-  # Convert `date` to "Date" data type
-  mutate(date = mdy(date)) |>
-  # Create a column, the difference in `date` between an observation
-  # and the last observation with the same `food_class`
-  group_by(food_class) |>
-  mutate(days_since_last_meal = as.numeric(date - lag(date))) |>
-  ungroup() |>
-  # Drop N/A in `days_since_last_meal` (First meal of a `food_class`)
-  filter(!is.na(days_since_last_meal)) |>
-  # Drop the first meal after winter break
-  filter(days_since_last_meal < 30)
-```
-
-
 
 Here is the data after all processing:
 ```{r Data wrangling 5}
@@ -154,7 +133,7 @@ test <- df1[-index, ]
 ```
 
 #### Logistic regression
-I include all features and most of their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for the interaction between `meal` and `semester`, etc. I do not include the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle three classes in the outcome variable.
+I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle 3 classes in the outcome variable.
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~
@@ -192,7 +171,7 @@ nb_cm <- confusionMatrix(nb_pred, test$food_class)
 ```
 
 #### KNN
-KNN measures "distances" between features. It is not strictly appropriate for this data set, as most features are categorical whose distances are not clearly measurable. However, it is still worth a try to fit a KNN model with all features. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
+KNN measures "distances" between features, which is not strictly appropriate for this data set with categorical features since the distances between categories are not clear. However, it is still worth a try to fit a KNN model with all features. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
 ```{r KNN 1}
 # 10-fold cross validation is in Lasso chunk
 set.seed(12)

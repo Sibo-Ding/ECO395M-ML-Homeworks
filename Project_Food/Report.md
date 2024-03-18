@@ -121,14 +121,9 @@ Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.
 Previous meals have impacts on the choice of the next meal. On one hand,
 I may get bored with previous meals (diminishing marginal return). On
 the other hand, I may be reluctant or constrained to change life and
-food patterns. Therefore, I create four lagging variables of
-`food_class`. I drop the first four observations and the first four
-observations after winter break.
-
-Therefore, I create a numerical variable `days_since_last_meal`,
-measuring the difference in `date` between a meal and the last meal with
-the same `food_class`. In each `food_class`, I drop the first meal and
-the first meal after winter break.
+food patterns. Therefore, I create 4 lagging variables of `food_class`.
+I drop the first 4 observations and the first 4 observations after
+winter break.
 
 Here is the data after all processing:
 
@@ -271,12 +266,12 @@ I set 80% of the observations as training data, and 20% as test data.
 #### Logistic regression
 
 I include all features and most of their interactions in logistic
-regression. The reason for including interactions is a lunch on Monday
-may be different from a lunch on Saturday, depending on my class
-schedule. Similar for the interaction between `meal` and `semester`,
-etc. I do not include the interaction between `week_of_sem` and `dow`,
-and the interaction between `semester` and `week_of_sem`. I use softmax
-function to handle three classes in the outcome variable.
+regression. The reason for including interactions is, for example, a
+lunch on Monday may differ from one on Saturday, depending on my class
+schedule. For easy computation, I omit the interaction between
+`week_of_sem` and `dow`, and the interaction between `semester` and
+`week_of_sem`. I use softmax function to handle 3 classes in the outcome
+variable.
 
 #### Lasso regularization
 
@@ -295,11 +290,11 @@ model with all features.
 
 #### KNN
 
-KNN measures “distances” between features. It is not strictly
-appropriate for this data set, as most features are categorical whose
-distances are not clearly measurable. However, it is still worth a try
-to fit a KNN model with all features. I use 10-fold cross validation in
-the training data to find the optimal number of neighbors *k*.
+KNN measures “distances” between features, which is not strictly
+appropriate for this data set with categorical features since the
+distances between categories are not clear. However, it is still worth a
+try to fit a KNN model with all features. I use 10-fold cross validation
+in the training data to find the optimal number of neighbors *k*.
 
 #### Random forest
 
@@ -310,7 +305,7 @@ I include all features in random forest.
 ### Driving factors of my food pattern
 
 Find dominant features among all features and their interactions.
-![](Report_files/figure-markdown_strict/unnamed-chunk-3-1.png)
+![](Report_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
 ### Comments on unsupervised learning
 
