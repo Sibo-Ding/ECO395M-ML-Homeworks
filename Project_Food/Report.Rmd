@@ -83,7 +83,7 @@ df <- df |>
     TRUE ~ "other"))
 ```
 
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`.  
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`. In each `food_class`, I drop the first meal and the first meal after winter break.  
 ```{r Data wrangling 4}
 df <- df |>
   # Convert `date` to "Date" data type
@@ -94,7 +94,9 @@ df <- df |>
   mutate(days_since_last_meal = as.numeric(date - lag(date))) |>
   ungroup() |>
   # Drop N/A in `days_since_last_meal` (First meal of a `food_class`)
-  filter(!is.na(days_since_last_meal))
+  filter(!is.na(days_since_last_meal)) |>
+  # Drop the first meal after winter break
+  filter(days_since_last_meal < 30)
 ```
 
 Here is the data after all processing:
