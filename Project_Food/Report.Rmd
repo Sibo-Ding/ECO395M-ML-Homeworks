@@ -16,6 +16,7 @@ library(tidyr)
 library(lubridate)
 library(caret)
 library(nnet)  # Multinomial logistic regression
+library(e1071)  # Naive Bayes
 library(randomForest)
 ```
 
@@ -110,7 +111,8 @@ df1 <- df |>
 knitr::kable(head(df1))
 ```
 
-The outcome variable (y variable) `food_class` is categorical. So this can be a classification problem in supervised learning, or an unsupervised learning problem. Before any analysis, let us look at the number of outcome variables in each category:
+### Predict my food pattern using classification models
+The outcome variable (y variable) `food_class` is categorical. Before any analysis, let us look at the number of observations in each category:
 ```{r}
 df1 |>
   group_by(food_class) |>
@@ -119,7 +121,8 @@ df1 |>
   knitr::kable()
 ```
 
-### Supervised learning - Classification
+I do not scale or normalize the data, as all features (x variables) except `days_since_last_meal` are categorical.  
+
 I set 80% of the observations as training data, and 20% as test data.
 ```{r Train-test split}
 set.seed(123)
@@ -156,8 +159,16 @@ lasso_pred <- predict(lasso, test)
 lasso_cm <- confusionMatrix(lasso_pred, test$food_class)
 ```
 
+#### Naive Bayes
+Naive Bayes assumes every feature is independent of all other features, conditional on the class labels of the outcome variable. This assumption contradicts the assumption of interactions in the logistic regression section above. However, it is still worth a try. So I include all features in Naive Bayes.
+```{r Naive Bayes 1}
+nb <- naiveBayes(food_class ~ ., data = train)
+nb_pred <- predict(nb, test)
+nb_cm <- confusionMatrix(nb_pred, test$food_class)
+```
+
 #### KNN
-KNN measures "distances" among features (x variables). It is not rigorously appropriate for this data set, as most features are categorical whose distances are not clearly measurable. However, it is still worth a try. So I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
+KNN measures "distances" among features. It is not strictly appropriate for this data set, as most features are categorical whose distances are not clearly measurable. However, it is still worth a try. So I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
 ```{r KNN 1}
 # 10-fold cross validation is in Lasso chunk
 set.seed(12)
@@ -168,6 +179,16 @@ knn <- train(food_class ~ .,
 knn_pred <- predict(knn, test)
 knn_cm <- confusionMatrix(knn_pred, test$food_class)
 ```
+
+
+
+
+
+
+
+
+
+
 
 #### Random forest
 I include all features in random forest.
@@ -183,26 +204,32 @@ rf_cm <- confusionMatrix(rf_pred, test$food_class)
 
 
 
-### Unsupervised learning - PCA
+### Driving factors of my food pattern
 Find dominant features among all features and their interactions.
 
 
 
 
 
+### Comments on unsupervised learning
+
+
+
 ## Results
-### Overall accuracies for classification models
+### Overall accuracies of classification models
 ```{r Overall accuracy}
 data.frame(
   model = c(
     "Logistic regression",
     "Lasso regularization",
+    "Naive Bayes",
     "KNN",
     "Random forest",
     "Boosting"),
   overall_accuracy = c(
     logit_cm$overall[1],
     lasso_cm$overall[1],
+    nb_cm$overall[1],
     knn_cm$overall[1],
     rf_cm$overall[1],
     0) |> round(4)
@@ -221,9 +248,7 @@ Boosting
 
 
 
-### PCA
 
-## Case study: driving factors of my food pattern
 
 ## Conclusion
 
@@ -240,6 +265,11 @@ logit_cm$table |> knitr::kable()
 Lasso regularization:
 ```{r Lasso regularization 2}
 lasso_cm$table |> knitr::kable()
+```
+
+Naive Bayes:
+```{r Naive Bayes 2}
+nb_cm$table |> knitr::kable()
 ```
 
 KNN:

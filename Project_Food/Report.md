@@ -206,10 +206,11 @@ Here is the data after all processing:
 </tbody>
 </table>
 
-The outcome variable (y variable) `food_class` is categorical. So this
-can be a classification problem in supervised learning, or an
-unsupervised learning problem. Before any analysis, let us look at the
-number of outcome variables in each category:
+### Predict my food pattern using classification models
+
+The outcome variable (y variable) `food_class` is categorical. Before
+any analysis, let us look at the number of observations in each
+category:
 
 <table>
 <thead>
@@ -234,7 +235,8 @@ number of outcome variables in each category:
 </tbody>
 </table>
 
-### Supervised learning - Classification
+I do not scale or normalize the data, as all features (x variables)
+except `days_since_last_meal` are categorical.
 
 I set 80% of the observations as training data, and 20% as test data.
 
@@ -253,14 +255,21 @@ Thus, I use lasso to regularize the above model. I use 10-fold cross
 validation in the training data to find the optimal regularization
 parameter *λ*.
 
+#### Naive Bayes
+
+Naive Bayes assumes every feature is independent of all other features,
+conditional on the class labels of the outcome variable. This assumption
+contradicts the assumption of interactions in the logistic regression
+section above. However, it is still worth a try. So I include all
+features in Naive Bayes.
+
 #### KNN
 
-KNN measures “distances” among features (x variables). It is not
-rigorously appropriate for this data set, as most features are
-categorical whose distances are not clearly measurable. However, it is
-still worth a try. So I include all features in KNN. I use 10-fold cross
-validation in the training data to find the optimal number of neighbors
-*k*.
+KNN measures “distances” among features. It is not strictly appropriate
+for this data set, as most features are categorical whose distances are
+not clearly measurable. However, it is still worth a try. So I include
+all features in KNN. I use 10-fold cross validation in the training data
+to find the optimal number of neighbors *k*.
 
 #### Random forest
 
@@ -268,13 +277,15 @@ I include all features in random forest.
 
 #### Boosting
 
-### Unsupervised learning - PCA
+### Driving factors of my food pattern
 
 Find dominant features among all features and their interactions.
 
+### Comments on unsupervised learning
+
 ## Results
 
-### Overall accuracies for classification models
+### Overall accuracies of classification models
 
 <table>
 <thead>
@@ -293,14 +304,18 @@ Find dominant features among all features and their interactions.
 <td style="text-align: right;">0.7568</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Naive Bayes</td>
+<td style="text-align: right;">0.7838</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">KNN</td>
 <td style="text-align: right;">0.8243</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Random forest</td>
 <td style="text-align: right;">0.7838</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Boosting</td>
 <td style="text-align: right;">0.0000</td>
 </tr>
@@ -311,10 +326,6 @@ Overall accuracy measures the fraction of accurate predictions among all
 observations.
 
 Boosting
-
-### PCA
-
-## Case study: driving factors of my food pattern
 
 ## Conclusion
 
@@ -383,6 +394,39 @@ Lasso regularization:
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">7</td>
+</tr>
+</tbody>
+</table>
+
+Naive Bayes:
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">canteen</th>
+<th style="text-align: right;">home</th>
+<th style="text-align: right;">other</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">home</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">other</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">7</td>
 </tr>
