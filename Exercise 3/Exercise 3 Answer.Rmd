@@ -1,0 +1,64 @@
+---
+title: "ECO395M DM&SL Exercise 3"
+author: "Sibo Ding"
+date: "Spring 2024"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+
+library(dplyr)
+library(ggplot2)
+library(caret)
+```
+
+## What causes what?
+
+
+
+
+
+
+## Tree modeling: dengue cases
+```{r}
+dengue <- read.csv("dengue.csv")
+```
+
+
+
+
+
+
+
+
+
+
+## Predictive model building: green certification
+```{r}
+green <- read.csv("greenbuildings.csv")
+```
+
+
+
+
+
+
+
+
+
+## Predictive model building: California housing
+```{r}
+house <- read.csv("CAhousing.csv")
+```
+
+
+
+
+
+
+
+
+
