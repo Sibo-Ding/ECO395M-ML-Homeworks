@@ -59,7 +59,7 @@ The variation in `breakfast` is close to zero as I eat at home most of the time.
 df <- df |>
   mutate(breakfast_or_not = case_when(
     is.na(breakfast) ~ 0,
-    TRUE ~ 1))
+    TRUE ~ 1) |> factor())
 ```
 
 I convert the data frame from wide format to long format.  
@@ -75,16 +75,33 @@ df <- df |>
 
 I am interested in estimating and predicting my food pattern. For ease of implementation, I create a categorical variable `food_class` representing 3 `food` categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
 ```{r Data wrangling 3}
+# Create a categorical column
 df <- df |>
-  # Create a categorical column
   mutate(food_class = case_when(
     food == "Home" ~ "home",
     food %in% c("J2 Dining", "Jester City Limits", "Kins Dining") ~ "canteen",
-    TRUE ~ "other"))
+    TRUE ~ "other") |> factor())
 ```
 
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`. In each `food_class`, I drop the first meal and the first meal after winter break.  
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create four lagging variables of `food_class`. I drop the first four observations and the first four observations after winter break.  
+
 ```{r Data wrangling 4}
+# Create 4 lags of `food_class`
+df <- df |>
+  mutate(food_class_l1 = lag(food_class)) |>
+  mutate(food_class_l2 = lag(food_class, n = 2)) |>
+  mutate(food_class_l3 = lag(food_class, n = 3)) |>
+  mutate(food_class_l4 = lag(food_class, n = 4)) |>
+  # Drop first 4 observations
+  filter(!is.na(food_class_l4)) |>
+  # Drop first 4 observations after winter break
+  filter(!date %in% c("1/12/2024", "1/13/2024", "1/14/2024"))
+```
+
+
+
+Therefore, I create a numerical variable `days_since_last_meal`, measuring the difference in `date` between a meal and the last meal with the same `food_class`. In each `food_class`, I drop the first meal and the first meal after winter break.
+```{r, eval=FALSE}
 df <- df |>
   # Convert `date` to "Date" data type
   mutate(date = mdy(date)) |>
@@ -99,18 +116,20 @@ df <- df |>
   filter(days_since_last_meal < 30)
 ```
 
+
+
 Here is the data after all processing:
 ```{r Data wrangling 5}
 df1 <- df |>
   # Select columns
-  select(food_class, meal, semester, week_of_sem, dow,
-         breakfast_or_not, days_since_last_meal) |>
+  select(food_class,
+         food_class_l1, food_class_l2, food_class_l3, food_class_l4,
+         meal, semester, week_of_sem, dow, breakfast_or_not) |>
   # Convert data types of columns
   mutate(across(
-    c(food_class, meal, semester, week_of_sem, dow, breakfast_or_not),
-    as.factor))
+    c(meal, semester, week_of_sem, dow), as.factor))
 
-knitr::kable(head(df1))
+head(df1) |> knitr::kable()
 ```
 
 ### Predict my food pattern using classification models
@@ -123,7 +142,7 @@ df1 |>
   knitr::kable()
 ```
 
-I do not scale or normalize the data, as all features (x variables) except `days_since_last_meal` are categorical.  
+I do not scale or normalize the data, as all features (x variables) are categorical.  
 
 I set 80% of the observations as training data, and 20% as test data.
 ```{r Train-test split}
@@ -135,10 +154,12 @@ test <- df1[-index, ]
 ```
 
 #### Logistic regression
-I include all features and their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for interactions between `meal` and `semester`, etc. I use softmax function to handle 3 classes in the outcome variable.
+I include all features and most of their interactions in logistic regression. The reason for including interactions is a lunch on Monday may be different from a lunch on Saturday, depending on my class schedule. Similar for the interaction between `meal` and `semester`, etc. I do not include the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle three classes in the outcome variable.
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
-logit <- multinom(food_class ~ . ^2, data = train)
+logit <- multinom(food_class ~
+                    . ^2 - week_of_sem*dow - semester*week_of_sem,
+                  data = train)
 # Predict classes
 logit_pred <- predict(logit, test)
 # Confusion matrix
@@ -152,7 +173,8 @@ Logistic regression with too many features may result in overfitting. Thus, I us
 ctrl <- trainControl(method = "cv", number = 10)
 
 set.seed(12)
-lasso <- train(food_class ~ . ^2,
+lasso <- train(food_class ~
+                 . ^2 - week_of_sem*dow - semester*week_of_sem,
                data = train,
                method = "multinom",
                trControl = ctrl,
@@ -198,6 +220,12 @@ rf_cm <- confusionMatrix(rf_pred, test$food_class)
 
 ### Driving factors of my food pattern
 Find dominant features among all features and their interactions.
+```{r}
+library(rpart)
+library(rpart.plot)
+tree <- rpart(food_class ~ . - week_of_sem, data = df1, maxdepth = 5)
+rpart.plot(tree, type = 3, extra = 1, cex = 0.5)
+```
 
 
 
