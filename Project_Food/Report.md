@@ -260,14 +260,14 @@ Naive Bayes assumes every feature is independent of all other features,
 conditional on the class labels of the outcome variable. This assumption
 contradicts the assumption of interactions in the logistic regression
 section above. However, it is still worth a try to fit a Naive Bayes
-model using all features.
+model with all features.
 
 #### KNN
 
 KNN measures “distances” between features. It is not strictly
 appropriate for this data set, as most features are categorical whose
 distances are not clearly measurable. However, it is still worth a try
-to fit a KNN model using all features. I use 10-fold cross validation in
+to fit a KNN model with all features. I use 10-fold cross validation in
 the training data to find the optimal number of neighbors *k*.
 
 #### Random forest
