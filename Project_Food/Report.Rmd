@@ -17,7 +17,6 @@ library(caret)
 library(nnet)  # Multinomial logistic regression
 library(e1071)  # Naive Bayes
 library(randomForest)
-library(xgboost)
 ```
 
 ## Abstract
@@ -123,7 +122,7 @@ df1 |>
 
 I do not scale or normalize the data, as all features (x variables) are categorical.  
 
-I set 80% of the observations as training data, and 20% as test data.
+I set 80% of the observations as training data, and 20% as test data. I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.
 ```{r Train-test split}
 set.seed(123)
 index <- createDataPartition(df1$food_class ,
@@ -132,7 +131,6 @@ train <- df1[index, ]
 test <- df1[-index, ]
 ```
 
-I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.
 
 #### Logistic regression
 I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle 3 classes in the outcome variable.

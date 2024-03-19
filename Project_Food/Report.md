@@ -261,9 +261,8 @@ any analysis, here is the number of observations in each category:
 I do not scale or normalize the data, as all features (x variables) are
 categorical.
 
-I set 80% of the observations as training data, and 20% as test data.
-
-I fit classification models with training data, predict outcomes on test
+I set 80% of the observations as training data, and 20% as test data. I
+fit classification models with training data, predict outcomes on test
 data, and compare the predicted outcomes to the actual outcomes.
 
 #### Logistic regression
