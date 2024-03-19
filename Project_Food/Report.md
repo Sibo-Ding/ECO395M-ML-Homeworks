@@ -4,14 +4,14 @@
 
 ## Introduction
 
-I started to record what I ate every day in July 2022 by a very
-incidental chance. Since then, I spent most of my time in Hong Kong
-until I moved to Austin in July 2023. From my experience in Hong Kong, I
-was wondering whether people tend to eat better (to relax or to
-compensate) or simpler (to save time) when they are busy. However, my
-life and food patterns in Hong Kong were too complicated and
-unpredictable to verify this hypothesis. Considering the feasibility, I
-decide to estimate and predict my life and food patterns in Austin.
+I started to record my everyday meals in July 2022 by a very incidental
+chance. Since then, I spent most of my time in Hong Kong until I moved
+to Austin in July 2023. From my experience in Hong Kong, I was wondering
+whether people tend to eat better (to relax or to compensate) or simpler
+(to save time) when they are busy. However, my life and food patterns in
+Hong Kong were too complicated and unpredictable to verify this
+hypothesis. Considering the feasibility, I decide to estimate and
+predict my life and food patterns in Austin.
 
 When recording meals, there are potential discrepancies and biases due
 to my discretion. For example, if I have a brunch (at 10:00) and an
@@ -121,9 +121,9 @@ Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.
 Previous meals have impacts on the choice of the next meal. On one hand,
 I may get bored with previous meals (diminishing marginal return). On
 the other hand, I may be reluctant or constrained to change life and
-food patterns. Therefore, I create 4 lagging variables of `food_class`.
-I drop the first 4 observations and the first 4 observations after
-winter break.
+food patterns. Therefore, I create four lagging variables of
+`food_class`. I drop the first four observations and the first four
+observations after winter break.
 
 Here is the data after all processing:
 
@@ -263,6 +263,9 @@ categorical.
 
 I set 80% of the observations as training data, and 20% as test data.
 
+I fit classification models with training data, predict outcomes on test
+data, and compare the predicted outcomes to the actual outcomes.
+
 #### Logistic regression
 
 I include all features and most of their interactions in logistic
@@ -300,7 +303,10 @@ in the training data to find the optimal number of neighbors *k*.
 
 I include all features in random forest.
 
-#### Boosting
+#### CatBoost
+
+CatBoost is a gradient boosting model for handling categorical features.
+I include all features in CatBoost.
 
 ### Driving factors of my food pattern
 
@@ -342,8 +348,8 @@ Find dominant features among all features and their interactions.
 <td style="text-align: right;">0.7568</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Boosting</td>
-<td style="text-align: right;">0.0000</td>
+<td style="text-align: left;">CatBoost</td>
+<td style="text-align: right;">0.7568</td>
 </tr>
 </tbody>
 </table>
@@ -351,7 +357,7 @@ Find dominant features among all features and their interactions.
 Overall accuracy measures the fraction of accurate predictions among all
 observations.
 
-Boosting
+CatBoost
 
 ## Conclusion
 
@@ -525,4 +531,33 @@ Random forest:
 </tbody>
 </table>
 
-Boosting
+CatBoost:
+
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"></td>
+<td style="text-align: left;">canteen</td>
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">other</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">canteen</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">home</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">other</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
+</tr>
+</tbody>
+</table>

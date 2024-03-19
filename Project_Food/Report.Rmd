@@ -13,11 +13,11 @@ knitr::opts_chunk$set(message = FALSE)
 
 library(dplyr)
 library(tidyr)
-library(lubridate)
 library(caret)
 library(nnet)  # Multinomial logistic regression
 library(e1071)  # Naive Bayes
 library(randomForest)
+library(xgboost)
 ```
 
 ## Abstract
@@ -31,7 +31,7 @@ library(randomForest)
 
 
 ## Introduction
-I started to record what I ate every day in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in Hong Kong, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in Hong Kong were too complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
+I started to record my everyday meals in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in Hong Kong, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in Hong Kong were too complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
 When recording meals, there are potential discrepancies and biases due to my discretion. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as a snack, should I consider 11 g as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
 
@@ -83,7 +83,7 @@ df <- df |>
     TRUE ~ "other") |> factor())
 ```
 
-Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create 4 lagging variables of `food_class`. I drop the first 4 observations and the first 4 observations after winter break.  
+Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create four lagging variables of `food_class`. I drop the first four observations and the first four observations after winter break.  
 ```{r Data wrangling 4}
 # Create 4 lags of `food_class`
 df <- df |>
@@ -131,6 +131,8 @@ index <- createDataPartition(df1$food_class ,
 train <- df1[index, ]
 test <- df1[-index, ]
 ```
+
+I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.
 
 #### Logistic regression
 I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle 3 classes in the outcome variable.
@@ -191,11 +193,14 @@ rf_pred <- predict(rf, test)
 rf_cm <- confusionMatrix(rf_pred, test$food_class)
 ```
 
-#### Boosting
+#### CatBoost
+CatBoost is a gradient boosting model for handling categorical features. I include all features in CatBoost.
 
-
-
-
+```{r CatBoost 1, eval=FALSE}
+# Output training and test data and fit CatBoost in Python
+write.csv(train, "train.csv")
+write.csv(test, "test.csv")
+```
 
 ### Driving factors of my food pattern
 Find dominant features among all features and their interactions.
@@ -224,14 +229,14 @@ data.frame(
     "Naive Bayes",
     "KNN",
     "Random forest",
-    "Boosting"),
+    "CatBoost"),
   overall_accuracy = c(
     logit_cm$overall[1],
     lasso_cm$overall[1],
     nb_cm$overall[1],
     knn_cm$overall[1],
     rf_cm$overall[1],
-    0) |> round(4)
+    0.7568) |> round(4)
 ) |>
   knitr::kable()
 
@@ -241,7 +246,7 @@ data.frame(
 
 Overall accuracy measures the fraction of accurate predictions among all observations.  
 
-Boosting
+CatBoost
 
 
 
@@ -281,7 +286,17 @@ Random forest:
 rf_cm$table |> knitr::kable()
 ```
 
-Boosting
+CatBoost:
+```{r CatBoost 2}
+matrix(c("", "canteen", "home", "other",
+         "canteen", 0, 0, 0,
+         "home", 0, 0, 0,
+         "other", 0, 0, 0),
+       nrow = 4,
+       ncol = 4) |>
+  knitr::kable()
+```
+
 
 
 
