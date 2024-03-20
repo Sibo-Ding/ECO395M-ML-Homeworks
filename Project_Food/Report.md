@@ -111,7 +111,7 @@ binary variable `breakfast_or_not`, because having breakfast may
 indicate going out, and its food pattern may be different from staying
 at home.
 
-Visiting sports facilities may indicate certain life patterns, though
+Visiting sports facilities may signal certain life patterns, though
 patterns may differ between on-campus gyms and off-campus fields. I
 obtain my visiting records of sports facilities from [UT Recreational
 Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary
@@ -122,7 +122,7 @@ I convert the data frame from wide format to long format.
 
 I am interested in estimating and predicting my food pattern. For ease
 of implementation, I create a categorical variable `food_class`
-representing 3 `food` categories: *home*, *canteen* (including *J2
+representing three `food` categories: *home*, *canteen* (including *J2
 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.
 
 Previous meals have impacts on the choice of the next meal. On one hand,
@@ -285,10 +285,10 @@ data, and compare the predicted outcomes to the actual outcomes.
 I include all features and most of their interactions in logistic
 regression. The reason for including interactions is, for example, a
 lunch on Monday may differ from one on Saturday, depending on my class
-schedule. For easy computation, I omit 4 interactions:
-`food_class_l4 * week_of_sem`, `week_of_sem * dow`,
-`semester * week_of_sem`, and `semester * dow`. I use softmax function
-to handle 3 classes in the outcome variable.
+schedule. For easy computation, I omit four interactions:
+`food_class_l4 * week_of_sem`, `semester * dow`, `week_of_sem * dow`,
+and `semester * week_of_sem`. I use softmax function to handle three
+classes in the outcome variable.
 
 #### Lasso regularization
 
@@ -368,8 +368,8 @@ Find dominant features among all features and their interactions.
 </tbody>
 </table>
 
-Overall accuracy measures the fraction of accurate predictions among all
-observations.
+Overall accuracy measures the fraction of accurate predictions among
+outcomes in test data.
 
 CatBoost
 

@@ -62,7 +62,7 @@ df <- df |>
     TRUE ~ 1) |> factor())
 ```
 
-Visiting sports facilities may indicate certain life patterns, though patterns may differ between on-campus gyms and off-campus fields. I obtain my visiting records of sports facilities from [UT Recreational Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary variable `gym_or_not`, measuring whether I visit sports facilities on a day.  
+Visiting sports facilities may signal certain life patterns, though patterns may differ between on-campus gyms and off-campus fields. I obtain my visiting records of sports facilities from [UT Recreational Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary variable `gym_or_not`, measuring whether I visit sports facilities on a day.  
 ```{r Cleaning 2: create gym}
 gym <- read.csv("GymVisit.csv")
 gym1 <- data.frame(date = as.Date(mdy_hms(gym$time)),
@@ -87,7 +87,7 @@ df <- df |>
   filter(!is.na(food))
 ```
 
-I am interested in estimating and predicting my food pattern. For ease of implementation, I create a categorical variable `food_class` representing 3 `food` categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
+I am interested in estimating and predicting my food pattern. For ease of implementation, I create a categorical variable `food_class` representing three `food` categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
 ```{r Cleaning 4: create food class}
 # Create a categorical column
 df <- df |>
@@ -149,13 +149,12 @@ test <- df1[-index, ]
 
 
 #### Logistic regression
-I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit 4 interactions: `food_class_l4 * week_of_sem`, `week_of_sem * dow`, `semester * week_of_sem`, and `semester * dow`. I use softmax function to handle 3 classes in the outcome variable.
+I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit four interactions: `food_class_l4 * week_of_sem`, `semester * dow`, `week_of_sem * dow`, and `semester * week_of_sem`. I use softmax function to handle three classes in the outcome variable.
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~
-                    . ^2 - food_class_l4*week_of_sem - 
-                    week_of_sem*dow - semester*week_of_sem -
-                    semester*dow,
+                    . ^2 - food_class_l4*week_of_sem - semester*dow -
+                    week_of_sem*dow - semester*week_of_sem,
                   data = train)
 # Predict classes
 logit_pred <- predict(logit, test)
@@ -171,9 +170,8 @@ ctrl <- trainControl(method = "cv", number = 10)
 
 set.seed(12)
 lasso <- train(food_class ~
-                 . ^2 - food_class_l4*week_of_sem - 
-                    week_of_sem*dow - semester*week_of_sem -
-                    semester*dow,
+                 . ^2 - food_class_l4*week_of_sem - semester*dow -
+                 week_of_sem*dow - semester*week_of_sem,
                data = train,
                method = "multinom",
                trControl = ctrl,
@@ -257,12 +255,9 @@ data.frame(
     0.8077) |> round(4)
 ) |>
   knitr::kable()
-
-
-
 ```
 
-Overall accuracy measures the fraction of accurate predictions among all observations.  
+Overall accuracy measures the fraction of accurate predictions among outcomes in test data.  
 
 CatBoost
 
@@ -306,13 +301,15 @@ rf_cm$table |> knitr::kable()
 
 CatBoost:
 ```{r CatBoost 2}
-matrix(c("", "canteen", "home", "other",
-         "canteen", 0, 0, 0,
-         "home", 0, 0, 0,
-         "other", 0, 0, 0),
-       nrow = 4,
-       ncol = 4) |>
-  knitr::kable()
+cboost_cm <- matrix(c(
+  "", "canteen", "home", "other",
+  "canteen", 0, 0, 0,
+  "home", 0, 0, 0,
+  "other", 0, 0, 0),
+  nrow = 4,
+  ncol = 4) |> as.table()
+dimnames(cboost_cm) <- list(NULL, NULL)
+cboost_cm |> knitr::kable()
 ```
 
 
