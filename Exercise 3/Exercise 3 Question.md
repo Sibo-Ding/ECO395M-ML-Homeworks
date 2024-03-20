@@ -24,7 +24,7 @@ What is the conclusion?
 
 ## Tree modeling: dengue cases
 
-In this question, you will look at [dengue.csv](../data/dengue.csv), containing data on dengue fever in Latin America.  This data was compiled by a group of students in spring 2017 for their course project.  I'll let them describe the data and the problem in their own words:
+In this question, you will look at [dengue.csv](dengue.csv), containing data on dengue fever in Latin America.  This data was compiled by a group of students in spring 2017 for their course project.  I'll let them describe the data and the problem in their own words:
 
 
 > As one of the most prolific diseases in the world, dengue fever is a mosquito-borne infection that affects almost half a billion people every year. Mainly endangering the tropics, the fever at best causes symptoms like vomiting and at worst can turn life-threatening. Thousands die every year while researchers attempt to find the best way to fight the pandemic.  The disease first started to become prevalent after World War II as mosquitoes were able to travel around the world much easier than before. Since the disease can’t spread directly between people, the spread of mosquitoes led to the spread of dengue fever. Specifically, the Aegypti mosquito is the main vector for the virus. Researchers understand this link and have turned their attention to efforts like eliminating still water where mosquitoes breed and encouraging residents to wear clothes that cover more of their skin. If you want to stop dengue fever, you have to stop the mosquitoes.
@@ -53,7 +53,7 @@ Your task is to use _CART_, _random forests_, and _gradient-boosted trees_ to pr
 
 ## Predictive model building: green certification
 
-Consider the data set on green buildings in [greenbuildings.csv](../data/greenbuildings.csv), which we've examined before in the context of data visualization.  This contains data on 7,894 commercial rental properties from across the United States. Of these, 685 properties have been awarded either LEED or EnergyStar certification as a green building.  Here is a list of the variables:
+Consider the data set on green buildings in [greenbuildings.csv](greenbuildings.csv), which we've examined before in the context of data visualization.  This contains data on 7,894 commercial rental properties from across the United States. Of these, 685 properties have been awarded either LEED or EnergyStar certification as a green building.  Here is a list of the variables:
 
 - CS.PropertyID:  the building's unique identifier in the database.  
 - cluster:  an identifier for the building cluster, with each cluster containing one green-certified building and at least one other non-green-certified building within a quarter-mile radius of the cluster center.  
@@ -87,7 +87,7 @@ Write a short report, no more than the equivalent of about 4 pages, detailing yo
 
 ## Predictive model building: California housing
 
-The data in [CAhousing.csv](../data/CAhousing.csv) containts data at the census-tract level on residential housing in the state of California.  Each row is a [census tract](https://libguides.lib.msu.edu/tracts), and the columns are as follows:  
+The data in [CAhousing.csv](CAhousing.csv) containts data at the census-tract level on residential housing in the state of California.  Each row is a [census tract](https://libguides.lib.msu.edu/tracts), and the columns are as follows:  
 
 - longitude, latitude: coordinates of the geographic centroid of the census tract  
 - housingMedianAge: median age in years of all residential households in the census tract  

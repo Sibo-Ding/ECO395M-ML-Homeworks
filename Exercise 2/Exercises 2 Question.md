@@ -5,7 +5,7 @@ Due date: links must be submitted by 5 PM on Wednesday, Feb 28, 2024.
 
 ## Saratoga house prices
 
-Return to the data set on house prices in Saratoga, NY that we considered in class.  Recall that a starter script here is in `saratoga_lm.R`.  For this data set, you'll run a "horse race" (i.e. a model comparison exercise) between two model classes: linear models and KNN.  
+Return to the data set on house prices in Saratoga, NY that we considered in class.  Recall that a starter script here is in [saratoga_lm.R](saratoga_lm.R).  For this data set, you'll run a "horse race" (i.e. a model comparison exercise) between two model classes: linear models and KNN.  
 
 - Build the best linear model for price that you can.  It should clearly outperform the "medium" model that we considered in class.  Use any combination of transformations, engineering features, polynomial terms, and interactions that you want; and use any strategy for selecting the model that you want.  
 - Now build the best K-nearest-neighbor regression model for price that you can.  Note: you still need to choose which features should go into a KNN model, but you don't explicitly include interactions or polynomial terms.  The method is sufficiently adaptable to find interactions and nonlinearities, if they are there.   But do make sure to _standardize_ your variables before applying KNN, or at least do something that accounts for the large differences in scale across the different variables here.  
@@ -17,7 +17,7 @@ Note: When measuring out-of-sample performance, there is _random variation_ due 
 
 ## Classification and retrospective sampling
 
-Consider the data in `german_credit.csv` on loan defaults from a German bank.  The outcome variable of interest in this data set is `default`: a 0/1 indicator for whether a loan fell into default at some point before it was paid back to the bank.  All other variables are features of the loan or borrower that might, in principle, help the bank predict whether a borrower is likely to default on a loan.
+Consider the data in [german_credit.csv](german_credit.csv) on loan defaults from a German bank.  The outcome variable of interest in this data set is `default`: a 0/1 indicator for whether a loan fell into default at some point before it was paid back to the bank.  All other variables are features of the loan or borrower that might, in principle, help the bank predict whether a borrower is likely to default on a loan.
 
 This data was collected in a retrospective, "case-control" design.  Defaults are rare, and so the bank sampled a set of loans that had defaulted for inclusion in the study.  It then attempted to match each default with similar sets of loans that had not defaulted, including all reasonably close matches in the analysis.  This resulted in a substantial oversampling of defaults, relative to a random sample of loans in the bank's overall portfolio.  
 
@@ -28,7 +28,7 @@ What do you notice about the `history` variable vis-a-vis predicting defaults?  
 
 ## Children and hotel reservations
 
-The files `hotels_dev.csv` and `hotels_val.csv` contains data on tens of thousands of hotel stays from a major U.S.-based hotel chain.  The goal of this problem is simple: to build a predictive model for whether a hotel booking will have children on it.  
+The files [hotels_dev.csv](hotels_dev.csv) and [hotels_val.csv](hotels_val.csv) contains data on tens of thousands of hotel stays from a major U.S.-based hotel chain.  The goal of this problem is simple: to build a predictive model for whether a hotel booking will have children on it.  
 
 Why would that be important?  For an equally simple reason: when booking a hotel stay on a website, parents often enter the reservation exclusively for themselves and forget to include their children on the form.  Obviously, the hotel isn't going to turn parents away from their room if they neglected to mention that their children would be staying with them.  But __not__ knowing about those children does, at least in the aggregate, prevent the hotel from making accurate forecasts of resource utilization.   So if, for example, you could use the _other_ features associated with a booking to forecast that a bunch of kids were going to show up unannounced, you might know to order more chicken nuggets for the restaurant and less tequila for the bar.  (Or maybe more tequila, depending on how frazzled the parents who stay at your hotel tend to be.)  In any event, as a hotel operator, if you can forecast the arrival of those kids a bit better, you can  be just a bit more efficient, operationally speaking.  This is an excellent use case for an ML model: a piece of software that can scan the bookings for the week ahead and produce an estimate for how likely each one is to have a "hidden" child on it.  
 
@@ -36,13 +36,13 @@ The target variable of interest is `children`: a dummy variable for whether the 
 
 ### Model building
 
-Using only the data in `hotels.dev.csv`, please compare the out-of-sample performance of the following models:  
+Using only the data in `hotels_dev`, please compare the out-of-sample performance of the following models:  
 
 1. baseline 1: a small model that uses only the `market_segment`, `adults`, `customer_type`, and `is_repeated_guest` variables as features.   
 2. baseline 2: a big model that uses all the possible predictors _except_ the `arrival_date` variable (main effects only).  
 3. the best linear model you can build, including any engineered features that you can think of that improve the performance (interactions, features derived from time stamps, etc).  
 
-Use the `hotels_dev.csv` file for your __entire__ model building and testing pipeline.  That is, you'll create your train/test splits using `hotels_dev` only, and not testing at all on `hotels_val`.  Everything in `hotels_val` should be held back for the next part of this exercise.
+Use `hotels_dev` for your __entire__ model building and testing pipeline.  That is, you'll create your train/test splits using `hotels_dev` only, and not testing at all on `hotels_val`.  Everything in `hotels_val` should be held back for the next part of this exercise.
 
 Note: you can measure out-of-sample performance in any reasonable way that we've talked about in class or that you've encountered in the reading, as long as you are clear how you're doing it.  
 
@@ -67,7 +67,7 @@ How well does your model do at predicting the total number of bookings with chil
 
 ## Mushroom classification
 
-The data in [mushrooms.csv](../data/mushrooms.csv) correspond to 23 species of gilled mushrooms in the Agaricus and Lepiota Family.  Each species is identified as definitely edible (class = e), definitely poisonous (class = p), or of unknown edibility and not recommended.  (This latter class was combined with the poisonous one.)  There is no simple rule for determining the edibility of a mushroom, analogous to "leaves of three, let it be" for poison ivy.  
+The data in [mushrooms.csv](mushrooms.csv) correspond to 23 species of gilled mushrooms in the Agaricus and Lepiota Family.  Each species is identified as definitely edible (class = e), definitely poisonous (class = p), or of unknown edibility and not recommended.  (This latter class was combined with the poisonous one.)  There is no simple rule for determining the edibility of a mushroom, analogous to "leaves of three, let it be" for poison ivy.  
 
 The features in the data set are as follows:
 

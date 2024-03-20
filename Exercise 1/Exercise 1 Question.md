@@ -4,7 +4,7 @@
 
 This problem involves data exploration and data visualization using `ggplot2` and the `tidyverse`, but is entirely open-ended.   Recall these lessons from ECO s394D and revisit those notes and walkthroughs as needed.   
 
-Consider the data in [ABIA.csv](../data/ABIA.csv), which contains information on every commercial flight in 2008 that either departed from or landed at Austin-Bergstrom Interational Airport.  The variable codebook is as follows: 
+Consider the data in [ABIA.csv](ABIA.csv), which contains information on every commercial flight in 2008 that either departed from or landed at Austin-Bergstrom Interational Airport.  The variable codebook is as follows: 
 
 - Year    all 2008  
 - Month   1-12  
@@ -48,7 +48,7 @@ But anything interesting will fly :-).  If you want to try your hand at mapping 
 
 ### 2) Wrangling the Olympics
 
-The data in [olympics_top20.csv](../data/olympics_top20.csv) contains information on every Olympic medalist in the top 20 sports by participant count, all the way back to 1896. Use these data to answer the following questions.   (The names of the columns should be self-explanatory.)  
+The data in [olympics_top20.csv](olympics_top20.csv) contains information on every Olympic medalist in the top 20 sports by participant count, all the way back to 1896. Use these data to answer the following questions.   (The names of the columns should be self-explanatory.)  
 
 A) What is the 95th percentile of heights for female competitors across all Athletics events (i.e., track and field)?  Note that `sport` is the broad sport (e.g. Athletics) whereas `event` is the specific event (e.g. 100 meter sprint).  
 B) Which single women's `event` had the greatest variability in competitor's heights across the entire history of the Olympics, as measured by the standard deviation?  
@@ -57,7 +57,7 @@ C) How has the average age of Olympic swimmers changed over time? Does the trend
 
 ### 3) K-nearest neighbors: cars  
 
-The data in [sclass.csv](../data/sclass.csv) contains data on over 29,000 Mercedes S Class vehicles---essentially every such car in this class that was advertised on the secondary automobile market during 2014.  For websites like Cars.com or Truecar that aim to provide market-based pricing information to consumers, the Mercedes S class is a notoriously difficult case.  There is a huge range of sub-models that are all labeled "S Class,"" from large luxury sedans to high-performance sports cars; one sub-category of S class has even served as the safety car in Formula 1 Races.  Moreover, individual submodels involve cars with many different features.  This extreme diversity---unusual for a single model of car---makes it difficult to provide accurate pricing predictions to consumers.
+The data in [sclass.csv](sclass.csv) contains data on over 29,000 Mercedes S Class vehicles---essentially every such car in this class that was advertised on the secondary automobile market during 2014.  For websites like Cars.com or Truecar that aim to provide market-based pricing information to consumers, the Mercedes S class is a notoriously difficult case.  There is a huge range of sub-models that are all labeled "S Class,"" from large luxury sedans to high-performance sports cars; one sub-category of S class has even served as the safety car in Formula 1 Races.  Moreover, individual submodels involve cars with many different features.  This extreme diversity---unusual for a single model of car---makes it difficult to provide accurate pricing predictions to consumers.
 
 We'll revisit this data set later in the semester when we've got a larger toolkit for building predictive models.  For now, let's focus on three variables in particular:
 - trim: categorical variable for car's trim level, e.g. 350, 63 AMG, etc.  The trim is like a sub-model designation.  
