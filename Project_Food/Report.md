@@ -111,6 +111,13 @@ binary variable `breakfast_or_not`, because having breakfast may
 indicate going out, and its food pattern may be different from staying
 at home.
 
+Visiting sports facilities may indicate certain life patterns, though
+patterns may differ between on-campus gyms and off-campus fields. I
+obtain my visiting records of sports facilities from [UT Recreational
+Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary
+variable `gym_or_not`, measuring whether I visit sports facilities on a
+day.
+
 I convert the data frame from wide format to long format.
 
 I am interested in estimating and predicting my food pattern. For ease
@@ -129,16 +136,17 @@ Here is the data after all processing:
 
 <table style="width:100%;">
 <colgroup>
-<col style="width: 9%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 6%" />
+<col style="width: 8%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 5%" />
 <col style="width: 7%" />
-<col style="width: 10%" />
+<col style="width: 9%" />
 <col style="width: 3%" />
-<col style="width: 14%" />
+<col style="width: 13%" />
+<col style="width: 8%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -152,6 +160,7 @@ Here is the data after all processing:
 <th style="text-align: left;">week_of_sem</th>
 <th style="text-align: left;">dow</th>
 <th style="text-align: left;">breakfast_or_not</th>
+<th style="text-align: left;">gym_or_not</th>
 </tr>
 </thead>
 <tbody>
@@ -166,6 +175,7 @@ Here is the data after all processing:
 <td style="text-align: left;">0</td>
 <td style="text-align: left;">Fri</td>
 <td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
@@ -177,6 +187,7 @@ Here is the data after all processing:
 <td style="text-align: left;">summer</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: left;">Sat</td>
+<td style="text-align: left;">0</td>
 <td style="text-align: left;">0</td>
 </tr>
 <tr class="odd">
@@ -190,6 +201,7 @@ Here is the data after all processing:
 <td style="text-align: left;">0</td>
 <td style="text-align: left;">Sat</td>
 <td style="text-align: left;">0</td>
+<td style="text-align: left;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
@@ -202,6 +214,7 @@ Here is the data after all processing:
 <td style="text-align: left;">0</td>
 <td style="text-align: left;">Sun</td>
 <td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
@@ -214,6 +227,7 @@ Here is the data after all processing:
 <td style="text-align: left;">1</td>
 <td style="text-align: left;">Mon</td>
 <td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">other</td>
@@ -226,6 +240,7 @@ Here is the data after all processing:
 <td style="text-align: left;">1</td>
 <td style="text-align: left;">Tue</td>
 <td style="text-align: left;">1</td>
+<td style="text-align: left;">0</td>
 </tr>
 </tbody>
 </table>
@@ -245,15 +260,15 @@ any analysis, here is the number of observations in each category:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">93</td>
+<td style="text-align: right;">101</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">217</td>
+<td style="text-align: right;">227</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">66</td>
+<td style="text-align: right;">68</td>
 </tr>
 </tbody>
 </table>
@@ -270,10 +285,10 @@ data, and compare the predicted outcomes to the actual outcomes.
 I include all features and most of their interactions in logistic
 regression. The reason for including interactions is, for example, a
 lunch on Monday may differ from one on Saturday, depending on my class
-schedule. For easy computation, I omit the interaction between
-`week_of_sem` and `dow`, and the interaction between `semester` and
-`week_of_sem`. I use softmax function to handle 3 classes in the outcome
-variable.
+schedule. For easy computation, I omit 4 interactions:
+`food_class_l4 * week_of_sem`, `week_of_sem * dow`,
+`semester * week_of_sem`, and `semester * dow`. I use softmax function
+to handle 3 classes in the outcome variable.
 
 #### Lasso regularization
 
@@ -328,27 +343,27 @@ Find dominant features among all features and their interactions.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Logistic regression</td>
-<td style="text-align: right;">0.6486</td>
+<td style="text-align: right;">0.7564</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Lasso regularization</td>
-<td style="text-align: right;">0.6892</td>
+<td style="text-align: right;">0.7179</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Naive Bayes</td>
-<td style="text-align: right;">0.6486</td>
+<td style="text-align: right;">0.7821</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">KNN</td>
-<td style="text-align: right;">0.7027</td>
+<td style="text-align: right;">0.8077</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Random forest</td>
-<td style="text-align: right;">0.7568</td>
+<td style="text-align: right;">0.7821</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CatBoost</td>
-<td style="text-align: right;">0.7568</td>
+<td style="text-align: right;">0.8077</td>
 </tr>
 </tbody>
 </table>
@@ -379,21 +394,21 @@ Logistic regression:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">32</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">34</td>
+<td style="text-align: right;">0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">6</td>
+<td style="text-align: right;">12</td>
 </tr>
 </tbody>
 </table>
@@ -412,21 +427,21 @@ Lasso regularization:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">6</td>
 <td style="text-align: right;">1</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">36</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">2</td>
 <td style="text-align: right;">6</td>
+<td style="text-align: right;">11</td>
 </tr>
 </tbody>
 </table>
@@ -445,21 +460,21 @@ Naive Bayes:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
+<td style="text-align: right;">16</td>
 <td style="text-align: right;">7</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">37</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>
@@ -478,21 +493,21 @@ KNN:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">7</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">14</td>
 <td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">41</td>
 <td style="text-align: right;">6</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">1</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
 </tr>
 </tbody>
 </table>
@@ -511,21 +526,21 @@ Random forest:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">41</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">39</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
 </tr>
 </tbody>
 </table>

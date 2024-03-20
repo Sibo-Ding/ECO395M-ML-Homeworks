@@ -12,6 +12,7 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 
 library(dplyr)
+library(lubridate)
 library(tidyr)
 library(caret)
 library(nnet)  # Multinomial logistic regression
@@ -53,7 +54,7 @@ During this time, I am studying at The University of Texas at Austin, so my life
 For the same reason, I create a categorical variable `week_of_sem`, where the first week of a semester is 1, the second is 2, etc. Every week starts on Monday or the first day of a semester if that day is not a Monday. I set non-school days as 0, including spring break and days before or after each semester.  
 
 The variation in `breakfast` is close to zero as I eat at home most of the time. To extract useful information, I convert `breakfast` to a binary variable `breakfast_or_not`, because having breakfast may indicate going out, and its food pattern may be different from staying at home.  
-```{r Data wrangling 1}
+```{r Cleaning 1: create breakfast}
 # Create a categorical column
 df <- df |>
   mutate(breakfast_or_not = case_when(
@@ -61,8 +62,22 @@ df <- df |>
     TRUE ~ 1) |> factor())
 ```
 
+Visiting sports facilities may indicate certain life patterns, though patterns may differ between on-campus gyms and off-campus fields. I obtain my visiting records of sports facilities from [UT Recreational Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary variable `gym_or_not`, measuring whether I visit sports facilities on a day.  
+```{r Cleaning 2: create gym}
+gym <- read.csv("GymVisit.csv")
+gym1 <- data.frame(date = as.Date(mdy_hms(gym$time)),
+                   gym_or_not = 1)
+
+# Merge `df` with `gym`
+df <- df |> mutate(date = mdy(date))
+df <- df |>
+  left_join(gym1, by = "date") |>
+  replace_na(list(gym_or_not = 0)) |>
+  mutate(gym_or_not = factor(gym_or_not))
+```
+
 I convert the data frame from wide format to long format.  
-```{r Data wrangling 2}
+```{r Cleaning 3: wide to long}
 # Convert wide data to long data
 # Drop N/A in `food`
 df <- df |>
@@ -73,7 +88,7 @@ df <- df |>
 ```
 
 I am interested in estimating and predicting my food pattern. For ease of implementation, I create a categorical variable `food_class` representing 3 `food` categories: *home*, *canteen* (including *J2 Dining*, *Jester City Limits*, and *Kins Dining*), and *other*.  
-```{r Data wrangling 3}
+```{r Cleaning 4: create food class}
 # Create a categorical column
 df <- df |>
   mutate(food_class = case_when(
@@ -83,7 +98,7 @@ df <- df |>
 ```
 
 Previous meals have impacts on the choice of the next meal. On one hand, I may get bored with previous meals (diminishing marginal return). On the other hand, I may be reluctant or constrained to change life and food patterns. Therefore, I create four lagging variables of `food_class`. I drop the first four observations and the first four observations after winter break.  
-```{r Data wrangling 4}
+```{r Cleaning 5: create lags of food class}
 # Create 4 lags of `food_class`
 df <- df |>
   mutate(food_class_l1 = lag(food_class)) |>
@@ -97,12 +112,13 @@ df <- df |>
 ```
 
 Here is the data after all processing:
-```{r Data wrangling 5}
+```{r Cleaning 6}
 df1 <- df |>
   # Select columns
   select(food_class,
          food_class_l1, food_class_l2, food_class_l3, food_class_l4,
-         meal, semester, week_of_sem, dow, breakfast_or_not) |>
+         meal, semester, week_of_sem, dow, breakfast_or_not,
+         gym_or_not) |>
   # Convert data types of columns
   mutate(across(
     c(meal, semester, week_of_sem, dow), as.factor))
@@ -125,7 +141,7 @@ I do not scale or normalize the data, as all features (x variables) are categori
 I set 80% of the observations as training data, and 20% as test data. I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.
 ```{r Train-test split}
 set.seed(123)
-index <- createDataPartition(df1$food_class ,
+index <- createDataPartition(df1$food_class,
                              p = 0.8, list = FALSE)
 train <- df1[index, ]
 test <- df1[-index, ]
@@ -133,11 +149,13 @@ test <- df1[-index, ]
 
 
 #### Logistic regression
-I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit the interaction between `week_of_sem` and `dow`, and the interaction between `semester` and `week_of_sem`. I use softmax function to handle 3 classes in the outcome variable.
+I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit 4 interactions: `food_class_l4 * week_of_sem`, `week_of_sem * dow`, `semester * week_of_sem`, and `semester * dow`. I use softmax function to handle 3 classes in the outcome variable.
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~
-                    . ^2 - week_of_sem*dow - semester*week_of_sem,
+                    . ^2 - food_class_l4*week_of_sem - 
+                    week_of_sem*dow - semester*week_of_sem -
+                    semester*dow,
                   data = train)
 # Predict classes
 logit_pred <- predict(logit, test)
@@ -153,7 +171,9 @@ ctrl <- trainControl(method = "cv", number = 10)
 
 set.seed(12)
 lasso <- train(food_class ~
-                 . ^2 - week_of_sem*dow - semester*week_of_sem,
+                 . ^2 - food_class_l4*week_of_sem - 
+                    week_of_sem*dow - semester*week_of_sem -
+                    semester*dow,
                data = train,
                method = "multinom",
                trControl = ctrl,
@@ -196,8 +216,8 @@ CatBoost is a gradient boosting model for handling categorical features. I inclu
 
 ```{r CatBoost 1, eval=FALSE}
 # Output training and test data and fit CatBoost in Python
-write.csv(train, "train.csv")
-write.csv(test, "test.csv")
+write.csv(train, "train.csv", row.names = FALSE)
+write.csv(test, "test.csv", row.names = FALSE)
 ```
 
 ### Driving factors of my food pattern
@@ -234,7 +254,7 @@ data.frame(
     nb_cm$overall[1],
     knn_cm$overall[1],
     rf_cm$overall[1],
-    0.7568) |> round(4)
+    0.8077) |> round(4)
 ) |>
   knitr::kable()
 
