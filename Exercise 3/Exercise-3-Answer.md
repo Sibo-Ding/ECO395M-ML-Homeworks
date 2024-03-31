@@ -16,7 +16,7 @@
     fewer victims on high alert days. Metro ridership captures the
     number of victims.
 
-4.  a  
+4.  
     crime = *β*<sub>0</sub> + *β*<sub>1</sub> × High Alert × District 1 + *β*<sub>2</sub> × High Alert × Other Districts + *β*<sub>3</sub> × log (midday ridership)
 
 ## Tree modeling: dengue cases

@@ -2,7 +2,9 @@
 title: "ECO395M DM&SL Exercise 3"
 author: "Sibo Ding"
 date: "Spring 2024"
-output: md_document
+output:
+  md_document:
+    variant: markdown_github
 ---
 
 ```{r setup, include=FALSE}
@@ -23,7 +25,7 @@ Regression results: The total number of crimes in D.C. decreased by 7.32 on a hi
 
 3. They wanted to know whether the decrease in crime was caused by fewer victims on high alert days. Metro ridership captures the number of victims.
 
-4. a  
+4. 
 $$
 \text{crime} = \beta_0 + \beta_1 \times \text{High Alert} \times \text{District 1} + \beta_2 \times \text{High Alert} \times \text{Other Districts} + \beta_3 \times \log(\text{midday ridership})
 $$
