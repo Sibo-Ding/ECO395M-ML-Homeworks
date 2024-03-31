@@ -27,7 +27,8 @@ Regression results: The total number of crimes in D.C. decreased by 7.32 on a hi
 $$
 \text{crime} = \beta_0 + \beta_1 \times \text{High Alert} \times \text{District 1} + \beta_2 \times \text{High Alert} \times \text{Other Districts} + \beta_3 \times \log(\text{midday ridership}) + u
 $$
-In the first police district area ($$\text{District 1} = 1$$), the total number of crimes decreased by 2.621 on high alert days ($$\text{High Alert} = 1$$). In other districts, the total number of crimes did not significantly change on high alert days.
+
+In the first police district area ($\text{District 1} = 1$), the total number of crimes decreased by 2.621 on high alert days ($\text{High Alert} = 1$). In other districts, the total number of crimes did not significantly change on high alert days.
 
 ## Tree modeling: dengue cases
 ```{r}
