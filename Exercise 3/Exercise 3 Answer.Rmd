@@ -25,7 +25,7 @@ Regression results: The total number of crimes in D.C. decreased by 7.32 on a hi
 
 4. a  
 $$
-crime = \beta_0 + \beta_1 \times High Alert \times District 1 + \beta_2 \times High Alert \times Other Districts + \beta_3 \times Log(midday ridership)
+\text{crime} = \beta_0 + \beta_1 \times \text{High Alert} \times \text{District 1} + \beta_2 \times \text{High Alert} \times \text{Other Districts} + \beta_3 \times \log(\text{midday ridership})
 $$
 
 

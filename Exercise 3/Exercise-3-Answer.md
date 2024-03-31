@@ -17,7 +17,7 @@
     number of victims.
 
 4.  a  
-    *c**r**i**m**e* = *β*<sub>0</sub> + *β*<sub>1</sub> × *H**i**g**h**A**l**e**r**t* × *D**i**s**t**r**i**c**t*1 + *β*<sub>2</sub> × *H**i**g**h**A**l**e**r**t* × *O**t**h**e**r**D**i**s**t**r**i**c**t**s* + *β*<sub>3</sub> × *L**o**g*(*m**i**d**d**a**y**r**i**d**e**r**s**h**i**p*)
+    crime = *β*<sub>0</sub> + *β*<sub>1</sub> × High Alert × District 1 + *β*<sub>2</sub> × High Alert × Other Districts + *β*<sub>3</sub> × log (midday ridership)
 
 ## Tree modeling: dengue cases
 
