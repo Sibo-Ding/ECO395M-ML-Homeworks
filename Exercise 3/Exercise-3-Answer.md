@@ -18,11 +18,11 @@
 
 4.  
     crime = *β*<sub>0</sub> + *β*<sub>1</sub> × High Alert × District 1 + *β*<sub>2</sub> × High Alert × Other Districts + *β*<sub>3</sub> × log (midday ridership) + *u*
-
-In the first police district area (District 1 = 1), the total number of
-crimes decreased by 2.621 on high alert days (High Alert = 1). In other
-districts, the total number of crimes did not significantly change on
-high alert days.
+      
+    In the first police district area (District 1 = 1), the total number
+    of crimes decreased by 2.621 on high alert days (High Alert = 1). In
+    other districts, the total number of crimes did not significantly
+    change on high alert days.
 
 ## Tree modeling: dengue cases
 
