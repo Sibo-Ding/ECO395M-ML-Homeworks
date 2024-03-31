@@ -16,10 +16,17 @@ library(caret)
 ```
 
 ## What causes what?
+1. Crime and police is a pair of simultaneity. More crime causes more police, but meanwhile more police causes less crime. Regressing crime on police cannot identify the causal effect of police on crime.
 
+2. They used terrorism alert level as an instrumental variable. On high alert days, there were more police neglecting the level of street crime.  
+Regression results: The total number of crimes in D.C. decreased by 7.32 on a high alert day. Controlling for Metro ridership, the total number of crimes in D.C. decreased by 6.05 on a high alert day.
 
+3. They wanted to know whether the decrease in crime was caused by fewer victims on high alert days. Metro ridership captures the number of victims.
 
-
+4. a  
+$$
+crime = \beta_0 + \beta_1 \times High Alert \times District 1 + \beta_2 \times High Alert \times Other Districts + \beta_3 \times Log(midday ridership)
+$$
 
 
 ## Tree modeling: dengue cases
