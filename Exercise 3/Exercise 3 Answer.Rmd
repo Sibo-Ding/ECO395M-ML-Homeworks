@@ -16,6 +16,7 @@ library(caret)
 library(rpart)  # Tree
 library(randomForest)
 library(gbm)
+library(glmnet)  # Lasso
 ```
 
 ## What causes what?
@@ -34,17 +35,17 @@ In the first police district area ($\text{District 1} = 1$), the total number of
 
 ## Tree modeling: dengue cases
 I use *CART*, *random forests*, and *gradient-boosted trees* to predict dengue cases.  
-```{r}
+```{r Preprocess 1}
 dengue <- read.csv("dengue.csv")
 dengue <- na.omit(dengue)  # Drop N/A
 # Change strings into factors
 dengue$city <- factor(dengue$city)
-dengue$season <- factor(dengue$season)
+dengue$season <- factor(dengue$season,
+                        levels = c("spring", "summer", "fall", "winter"))
 ```
 
 I split data into training set and test set.  
-```{r}
-# Train-test split
+```{r Train-test split 1}
 set.seed(123)
 index <- createDataPartition(dengue$total_cases,
                              p = 0.8, list = FALSE)
@@ -53,7 +54,7 @@ den_test <- dengue[-index, ]
 ```
 
 I include all features in CART. I use 10-fold cross validation on the training set to find the optimal complexity parameter.  
-```{r}
+```{r CART}
 # 10-fold cross validation
 ctrl <- trainControl(method = "cv", number = 10)
 
@@ -63,17 +64,19 @@ den_cart <- train(total_cases ~ .,
                   method = "rpart",
                   trControl = ctrl)
 den_cart_pred <- predict(den_cart, den_test)
+den_cart_rmse <- RMSE(den_cart_pred, den_test$total_cases)
 ```
 
 I include all features in random forest.  
-```{r}
+```{r Random forest 1}
 set.seed(250)
 den_rf <- randomForest(total_cases ~ ., data = den_train)
 den_rf_pred <- predict(den_rf, den_test)
+den_rf_rmse <- RMSE(den_rf_pred, den_test$total_cases)
 ```
 
 I include all features in gradient-boosted trees. I manually tune several parameters.  
-```{r}
+```{r GBM 1}
 set.seed(250)
 den_gbm <- gbm(total_cases ~ .,
                data = den_train,
@@ -82,26 +85,23 @@ den_gbm <- gbm(total_cases ~ .,
                interaction.depth = 10,
                shrinkage = 0.01)
 den_gbm_pred <- predict(den_gbm, den_test)
+den_gbm_rmse <- RMSE(den_gbm_pred, den_test$total_cases)
 ```
 
 Out-of-sample RMSE:
-```{r}
+```{r RMSE 1}
 data.frame(Model = c("CART", "Random forest", "Gradient-boosted trees"),
-           RMSE = c(
-             RMSE(den_cart_pred, den_test$total_cases),
-             RMSE(den_rf_pred, den_test$total_cases),
-             RMSE(den_gbm_pred, den_test$total_cases)
-           )) |>
+           RMSE = c(den_cart_rmse, den_rf_rmse, den_gbm_rmse)) |>
   knitr::kable()
 ```
 
 Random forest performs best with the lowest RMSE.  
 
-Partial dependence plots of random forest:
+Partial dependence plots of 3 variables in the random forest model:
 ```{r Partial dependence plots}
-partialPlot(den_rf, den_test, 'specific_humidity', las=1)
-partialPlot(den_rf, den_test, 'precipitation_amt', las=1)
-partialPlot(den_rf, den_test, 'season', las=1)
+partialPlot(den_rf, den_test, "specific_humidity", las=1)
+partialPlot(den_rf, den_test, "precipitation_amt", las=1)
+partialPlot(den_rf, den_test, "season", las=1)
 ```
 
 ## Predictive model building: green certification
@@ -118,15 +118,98 @@ green <- read.csv("greenbuildings.csv")
 
 
 ## Predictive model building: California housing
-```{r}
+I want to predict the median housing value in California. The outcome variable is continuous, so it is a regression problem. I standardize all features as they are continuous.  
+```{r Preprocess 3}
 house <- read.csv("CAhousing.csv")
+house[, 1:8] <- scale(house[, 1:8])  # Standardization
 ```
 
+I split data into training data and test data. I fit regression models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.  
+```{r Train-test split 3}
+set.seed(123)
+index <- createDataPartition(house$medianHouseValue,
+                             p = 0.8, list = FALSE)
+house_train <- house[index, ]
+house_test <- house[-index, ]
+```
 
+I include all features and their interactions in linear regression.  
+```{r Linear regression 3}
+house_lm <- lm(medianHouseValue ~ .^2, data = house_train)
+house_lm_pred <- predict(house_lm, house_test)
+house_lm_rmse <- RMSE(house_lm_pred, house_test$medianHouseValue)
+```
 
+Linear regression with too many features may result in overfitting. Thus, I use lasso to regularize the above model. I use 10-fold cross validation in the training data to find the optimal regularization parameter $\lambda$.  
+```{r Lasso regularization 3}
+house_train_x <- model.matrix(~ .^2, house_train[, 1:8])
+house_train_y <- house_train$medianHouseValue
+house_test_x <- model.matrix(~ .^2, house_test[, 1:8])
 
+# 10-fold CV to find optimal lambda
+set.seed(12)
+cvfit <- cv.glmnet(house_train_x, house_train_y, alpha = 1, nfolds = 10)
+optimal_lambda <- cvfit$lambda.min
 
+house_lasso <- glmnet(house_train_x, house_train_y,
+                      alpha = 1, lambda = optimal_lambda)
+house_lasso_pred <- predict(house_lasso, house_test_x)
+house_lasso_rmse <- RMSE(house_lasso_pred, house_test$medianHouseValue)
+```
 
+I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.  
+```{r KNN 3}
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
+
+set.seed(12)
+house_knn <- train(medianHouseValue ~ .,
+                   data = house_train,
+                   method = "knn",
+                   trControl = ctrl)
+house_knn_pred <- predict(house_knn, house_test)
+house_knn_rmse <- RMSE(house_knn_pred, house_test$medianHouseValue)
+```
+
+I include all features in random forest.  
+```{r Random forest 3}
+set.seed(12)
+house_rf <- randomForest(medianHouseValue ~ ., data = house_train)
+house_rf_pred <- predict(house_rf, house_test)
+house_rf_rmse <- RMSE(house_rf_pred, house_test$medianHouseValue)
+```
+
+I include all features in gradient-boosted trees. I manually tune several parameters.  
+```{r GBM 3}
+set.seed(12)
+house_gbm <- gbm(medianHouseValue ~ .,
+               data = house_train,
+               distribution = "gaussian",
+               n.trees = 500,
+               interaction.depth = 49,
+               shrinkage = 0.05)
+house_gbm_pred <- predict(house_gbm, house_test)
+house_gbm_rmse <- RMSE(house_gbm_pred, house_test$medianHouseValue)
+```
+
+Out-of-sample RMSE:
+```{r RMSE 3}
+data.frame(Model = c(
+             "Linear regression",
+             "Lasso",
+             "KNN",
+             "Random forest",
+             "Gradient-boosted trees"),
+           RMSE = c(
+             house_lm_rmse, 
+             house_lasso_rmse,
+             house_knn_rmse,
+             house_rf_rmse,
+             house_gbm_rmse)) |>
+  knitr::kable()
+```
+
+It can be seen that gradient-boosted trees performs best with the lowest RMSE.  
 
 
 
