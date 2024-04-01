@@ -4,7 +4,7 @@ author: "Sibo Ding"
 output: md_document
 ---
 
-# Estimate and Predict my Food Pattern in Austin Using Data Wrangling and Machine Learning
+# Estimate and Predict my Food Pattern in Austin Using Data Mining and Machine Learning
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -33,12 +33,18 @@ library(randomForest)
 ## Introduction
 I started to record my everyday meals in July 2022 by a very incidental chance. Since then, I spent most of my time in Hong Kong until I moved to Austin in July 2023. From my experience in Hong Kong, I was wondering whether people tend to eat better (to relax or to compensate) or simpler (to save time) when they are busy. However, my life and food patterns in Hong Kong were too complicated and unpredictable to verify this hypothesis. Considering the feasibility, I decide to estimate and predict my life and food patterns in Austin.  
 
+## Why predicting food patterns is important? At least to me?  
+
+
+
+
+
 When recording meals, there are potential discrepancies and biases due to my discretion. For example, if I have a brunch (at 10:00) and an afternoon tea (at 16:00), sometimes I may record them as breakfast and lunch, but I may also record them as lunch and dinner. Another discrepancy is the vague distinction between snacks and meals. If I consider 10 g popcorn as a snack, should I consider 11 g as a meal? If so, then what about 10.1 g, 10.11 g, or 10 g rice, etc.?  
 
 Beyond the discrepancies, I am not very confident in the predictive accuracy for two additional reasons. First, the data set is small. Second, although my life in Austin is simple due to some constraints, the data is from a real human with certain flexibility and unpredictability. However, it is still fun to know the driving factors of my life and food patterns.  
 
 ## Methods
-### Data wrangling
+### Data mining
 I keep `date` when I am in Austin: after Jul 4, 2023 (inclusive), exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive) and winter vacation (from Dec 12, 2023 to Jan 11, 2024, both inclusive). The initial data looks like this:
 ```{r Read and display data}
 df <- read.csv("Food.csv", na.strings = "")
@@ -62,7 +68,7 @@ df <- df |>
     TRUE ~ 1) |> factor())
 ```
 
-Visiting sports facilities may signal certain life patterns, though patterns may differ between on-campus gyms and off-campus fields. I obtain my visiting records of sports facilities from [UT Recreational Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary variable `gym_or_not`, measuring whether I visit sports facilities on a day.  
+Sport is an important part of my life. Visiting sports facilities may signal certain life patterns, though patterns may differ between on-campus gyms and off-campus fields. I obtain my visiting records of sports facilities from [UT Recreational Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary variable `gym_or_not`, indicating whether I visit sports facilities on a day.  
 ```{r Cleaning 2: create gym}
 gym <- read.csv("GymVisit.csv")
 gym1 <- data.frame(date = as.Date(mdy_hms(gym$time)),
@@ -128,7 +134,7 @@ head(df1) |> knitr::kable()
 
 ### Predict my food pattern using classification models
 The outcome variable (y variable) `food_class` is categorical. Before any analysis, here is the number of observations in each category:
-```{r}
+```{r Summary of outcome variable}
 df1 |>
   group_by(food_class) |>
   count() |>
@@ -138,7 +144,7 @@ df1 |>
 
 I do not scale or normalize the data, as all features (x variables) are categorical.  
 
-I set 80% of the observations as training data, and 20% as test data. I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.
+I set 80% of the observations as training data, and 20% as test data. I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.  
 ```{r Train-test split}
 set.seed(123)
 index <- createDataPartition(df1$food_class,
@@ -147,13 +153,14 @@ train <- df1[index, ]
 test <- df1[-index, ]
 ```
 
+I try 6 models: logidtic regression, lasso, Naive Bayes, KNN, random forest, and CatBoost.  
 
 #### Logistic regression
 I include all features and most of their interactions in logistic regression. The reason for including interactions is, for example, a lunch on Monday may differ from one on Saturday, depending on my class schedule. For easy computation, I omit four interactions: `food_class_l4 * week_of_sem`, `semester * dow`, `week_of_sem * dow`, and `semester * week_of_sem`. I use softmax function to handle three classes in the outcome variable.
 ```{r Logistic regression 1, results='hide'}
 # Fit multinomial logistic regression
 logit <- multinom(food_class ~
-                    . ^2 - food_class_l4*week_of_sem - semester*dow -
+                    .^2 - food_class_l4*week_of_sem - semester*dow -
                     week_of_sem*dow - semester*week_of_sem,
                   data = train)
 # Predict classes
@@ -170,7 +177,7 @@ ctrl <- trainControl(method = "cv", number = 10)
 
 set.seed(12)
 lasso <- train(food_class ~
-                 . ^2 - food_class_l4*week_of_sem - semester*dow -
+                 .^2 - food_class_l4*week_of_sem - semester*dow -
                  week_of_sem*dow - semester*week_of_sem,
                data = train,
                method = "multinom",
@@ -181,7 +188,7 @@ lasso_cm <- confusionMatrix(lasso_pred, test$food_class)
 ```
 
 #### Naive Bayes
-Naive Bayes assumes every feature is independent of all other features, conditional on the class labels of the outcome variable. This assumption contradicts the assumption of interactions in the logistic regression section above. However, it is still worth a try to fit a Naive Bayes model with all features.
+Naive Bayes assumes every feature is independent of all other features, conditional on the class labels of the outcome variable. This assumption contradicts the assumption of interactions in the logistic regression section above. However, it is still worth a try to fit Naive Bayes with all features.
 ```{r Naive Bayes 1}
 nb <- naiveBayes(food_class ~ ., data = train)
 nb_pred <- predict(nb, test)
@@ -189,7 +196,7 @@ nb_cm <- confusionMatrix(nb_pred, test$food_class)
 ```
 
 #### KNN
-KNN measures "distances" between features, which is not strictly appropriate for this data set with categorical features since the distances between categories are not clear. However, it is still worth a try to fit a KNN model with all features. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
+KNN measures "distances" between features, which is not strictly appropriate for this data set with categorical features since the distances between categories are not clear. However, it is still worth a try to fit KNN with all features. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.
 ```{r KNN 1}
 # 10-fold cross validation is in Lasso chunk
 set.seed(12)
@@ -204,6 +211,7 @@ knn_cm <- confusionMatrix(knn_pred, test$food_class)
 #### Random forest
 I include all features in random forest.
 ```{r Random forest 1}
+set.seed(12)
 rf <- randomForest(food_class ~ ., data = train)
 rf_pred <- predict(rf, test)
 rf_cm <- confusionMatrix(rf_pred, test$food_class)
@@ -211,7 +219,6 @@ rf_cm <- confusionMatrix(rf_pred, test$food_class)
 
 #### CatBoost
 CatBoost is a gradient boosting model for handling categorical features. I include all features in CatBoost.
-
 ```{r CatBoost 1, eval=FALSE}
 # Output training and test data and fit CatBoost in Python
 write.csv(train, "train.csv", row.names = FALSE)
@@ -227,11 +234,16 @@ tree <- rpart(food_class ~ . - week_of_sem, data = df1, maxdepth = 5)
 rpart.plot(tree, type = 3, extra = 1, cex = 0.5)
 ```
 
+Best subset selection
+
+variable importance plot showing when we leave out a variable, how much does that increase mean squared error
+```{r}
+varImpPlot(rf)
+```
 
 
 
 
-### Comments on unsupervised learning
 
 
 
@@ -252,7 +264,8 @@ data.frame(
     nb_cm$overall[1],
     knn_cm$overall[1],
     rf_cm$overall[1],
-    0.8077) |> round(4)
+    0.8077) |>
+    round(4)
 ) |>
   knitr::kable()
 ```
@@ -301,17 +314,16 @@ rf_cm$table |> knitr::kable()
 
 CatBoost:
 ```{r CatBoost 2}
-cboost_cm <- matrix(c(
+matrix(c(
   "", "canteen", "home", "other",
   "canteen", 0, 0, 0,
   "home", 0, 0, 0,
   "other", 0, 0, 0),
   nrow = 4,
-  ncol = 4) |> as.table()
-dimnames(cboost_cm) <- list(NULL, NULL)
-cboost_cm |> knitr::kable()
+  ncol = 4) |> knitr::kable()
 ```
 
+sklearn is the transpose of caret
 
 
 

@@ -1,4 +1,4 @@
-# Estimate and Predict my Food Pattern in Austin Using Data Wrangling and Machine Learning
+# Estimate and Predict my Food Pattern in Austin Using Data Mining and Machine Learning
 
 ## Abstract
 
@@ -12,6 +12,8 @@ whether people tend to eat better (to relax or to compensate) or simpler
 Hong Kong were too complicated and unpredictable to verify this
 hypothesis. Considering the feasibility, I decide to estimate and
 predict my life and food patterns in Austin.
+
+## Why predicting food patterns is important? At least to me?
 
 When recording meals, there are potential discrepancies and biases due
 to my discretion. For example, if I have a brunch (at 10:00) and an
@@ -30,7 +32,7 @@ of my life and food patterns.
 
 ## Methods
 
-### Data wrangling
+### Data mining
 
 I keep `date` when I am in Austin: after Jul 4, 2023 (inclusive),
 exclude the Thanksgiving holiday (from Nov 20 to Nov 26, both inclusive)
@@ -111,11 +113,12 @@ binary variable `breakfast_or_not`, because having breakfast may
 indicate going out, and its food pattern may be different from staying
 at home.
 
-Visiting sports facilities may signal certain life patterns, though
-patterns may differ between on-campus gyms and off-campus fields. I
-obtain my visiting records of sports facilities from [UT Recreational
+Sport is an important part of my life. Visiting sports facilities may
+signal certain life patterns, though patterns may differ between
+on-campus gyms and off-campus fields. I obtain my visiting records of
+sports facilities from [UT Recreational
 Sports](https://secure.rs.utexas.edu/store/index.php). I create a binary
-variable `gym_or_not`, measuring whether I visit sports facilities on a
+variable `gym_or_not`, indicating whether I visit sports facilities on a
 day.
 
 I convert the data frame from wide format to long format.
@@ -260,15 +263,15 @@ any analysis, here is the number of observations in each category:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">101</td>
+<td style="text-align: right;">105</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">227</td>
+<td style="text-align: right;">234</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">68</td>
+<td style="text-align: right;">76</td>
 </tr>
 </tbody>
 </table>
@@ -279,6 +282,9 @@ categorical.
 I set 80% of the observations as training data, and 20% as test data. I
 fit classification models with training data, predict outcomes on test
 data, and compare the predicted outcomes to the actual outcomes.
+
+I try 6 models: logidtic regression, lasso, Naive Bayes, KNN, random
+forest, and CatBoost.
 
 #### Logistic regression
 
@@ -302,16 +308,16 @@ parameter *λ*.
 Naive Bayes assumes every feature is independent of all other features,
 conditional on the class labels of the outcome variable. This assumption
 contradicts the assumption of interactions in the logistic regression
-section above. However, it is still worth a try to fit a Naive Bayes
-model with all features.
+section above. However, it is still worth a try to fit Naive Bayes with
+all features.
 
 #### KNN
 
 KNN measures “distances” between features, which is not strictly
 appropriate for this data set with categorical features since the
 distances between categories are not clear. However, it is still worth a
-try to fit a KNN model with all features. I use 10-fold cross validation
-in the training data to find the optimal number of neighbors *k*.
+try to fit KNN with all features. I use 10-fold cross validation in the
+training data to find the optimal number of neighbors *k*.
 
 #### Random forest
 
@@ -325,9 +331,13 @@ I include all features in CatBoost.
 ### Driving factors of my food pattern
 
 Find dominant features among all features and their interactions.
-![](Report_files/figure-markdown_strict/unnamed-chunk-2-1.png)
+![](Report_files/figure-markdown_strict/unnamed-chunk-1-1.png)
 
-### Comments on unsupervised learning
+Best subset selection
+
+variable importance plot showing when we leave out a variable, how much
+does that increase mean squared error
+![](Report_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
 ## Results
 
@@ -343,23 +353,23 @@ Find dominant features among all features and their interactions.
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Logistic regression</td>
-<td style="text-align: right;">0.7564</td>
+<td style="text-align: right;">0.6098</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Lasso regularization</td>
-<td style="text-align: right;">0.7179</td>
+<td style="text-align: right;">0.6951</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Naive Bayes</td>
-<td style="text-align: right;">0.7821</td>
+<td style="text-align: right;">0.7683</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">KNN</td>
-<td style="text-align: right;">0.8077</td>
+<td style="text-align: right;">0.7927</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Random forest</td>
-<td style="text-align: right;">0.7821</td>
+<td style="text-align: right;">0.8049</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CatBoost</td>
@@ -394,21 +404,21 @@ Logistic regression:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">34</td>
-<td style="text-align: right;">0</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">31</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">12</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">9</td>
 </tr>
 </tbody>
 </table>
@@ -427,21 +437,21 @@ Lasso regularization:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">12</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
 <td style="text-align: right;">7</td>
-<td style="text-align: right;">33</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">11</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">7</td>
 </tr>
 </tbody>
 </table>
@@ -460,21 +470,21 @@ Naive Bayes:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">16</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">6</td>
 <td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
 <td style="text-align: right;">3</td>
 <td style="text-align: right;">37</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">9</td>
 </tr>
 </tbody>
 </table>
@@ -493,21 +503,21 @@ KNN:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">14</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">1</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">2</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
 <td style="text-align: right;">6</td>
-<td style="text-align: right;">42</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">7</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
 <td style="text-align: right;">0</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">5</td>
 </tr>
 </tbody>
 </table>
@@ -526,14 +536,14 @@ Random forest:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">2</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">39</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">45</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
@@ -575,3 +585,5 @@ CatBoost:
 </tr>
 </tbody>
 </table>
+
+sklearn is the transpose of caret
