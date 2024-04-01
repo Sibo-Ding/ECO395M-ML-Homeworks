@@ -24,16 +24,16 @@ library(glmnet)  # Lasso
 ## What causes what?
 1. Crime and police is a pair of simultaneity. More crime causes more police, but meanwhile more police causes less crime. Regressing crime on police cannot identify the causal effect of police on crime.
 
-2. The researchers used terrorism alert level as an instrumental variable. On high terrorist alert days, there were more police neglecting the level of street crime.  
-Regression results: The total number of crimes in D.C. decreased by 7.316 on a high alert day. Controlling for Metro ridership, the total number of crimes in D.C. decreased by 6.046 on a high alert day.
+2. The researchers used terrorism alert level as an instrumental variable. On high terrorist alert days, there were more police neglecting the level of street crime. Then, they could estimate the causal effect of "extra" police on crime on those days.  
+Regression results: The daily number of crimes in D.C. decreased by 7.316 on high alert days. Controlling for Metro ridership, the daily number of crimes in D.C. decreased by 6.046 on high alert days.
 
-3. The researchers wanted to know whether the decrease in crime was caused by fewer victims on high alert days (as they were scared to go out). Metro ridership captures the number of victims.
+3. The researchers wanted to know whether the decrease in crime was caused by fewer victims on the street on high alert days (as they were scared to go out). Metro ridership captures the number of victims.
 
 4. 
 $$
 \text{crime} = \beta_0 + \beta_1 \times \text{High Alert} \times \text{District 1} + \beta_2 \times \text{High Alert} \times \text{Other Districts} + \beta_3 \times \log(\text{midday ridership}) + u
 $$  
-In the first police district area ($\text{District 1} = 1$), the total number of crimes decreased by 2.621 on high alert days ($\text{High Alert} = 1$). In other districts, the total number of crimes did not significantly change on high alert days.
+In the first police district area ($\text{District 1} = 1$), the daily number of crimes decreased by 2.621 on high alert days ($\text{High Alert} = 1$). In other districts, the daily number of crimes did not significantly change on high alert days.
 
 ## Tree modeling: dengue cases
 I use *CART*, *random forests*, and *gradient-boosted trees* to predict dengue cases. The outcome variable is continuous, so it is a regression problem. I convert `city` and `season` from strings to categories.  
@@ -107,8 +107,11 @@ partialPlot(den_rf, den_test, "precipitation_amt", las=1)
 partialPlot(den_rf, den_test, "season", las=1)
 ```
 
+From the plots, dengue is more prevalent on more humid days and in autumn.
+
 ## Predictive model building: green certification
 I want to predict rental revenue per square foot per calendar year for commercial properties in the US. The outcome variable is continuous, so it is a regression problem. I calculate revenue per foot year as the product of `Rent` and `leasing_rate`. After that, I drop `Rent`, `leasing_rate` and two identifiers.  
+
 I convert 8 features from continuous to categorical, which are `renovated`, `class_a`, `class_b`, `LEED`, `Energystar`, `green_rating`, `net`, and `amenities`. I standardize the remaining continuous features.  
 ```{r Preprocess 2}
 green <- read.csv("greenbuildings.csv")
@@ -135,6 +138,8 @@ index <- createDataPartition(green$revenue_per_sqft,
 green_train <- green[index, ]
 green_test <- green[-index, ]
 ```
+
+I try 5 models: linear regression, lasso, KNN, random forest, gradient-boosted trees.  
 
 I include all features and their interactions in linear regression.  
 ```{r Linear regression 2}
@@ -212,7 +217,7 @@ data.frame(Model = c(
 
 Random performs best with the lowest RMSE 807.75.  
 
-I am interested in the average change in revenue per square foot associated with green certification, holding other features constant. Thus, I plot partial dependence plots of 2 variables in the random forest model (note the y-axis does not start from 0):
+I am interested in the average change in revenue per square foot associated with green certification, holding other features constant. Thus, I plot partial dependence plots of 2 variables in the random forest model (note the y-axis does not start from 0):  
 ```{r Partial dependence plots 2}
 partialPlot(green_rf, green_test, "LEED", las=1, ylim = c(2400, 2500))
 partialPlot(green_rf, green_test, "Energystar", las=1, ylim = c(2400, 2500))
@@ -229,6 +234,7 @@ house <- house |>
          totalBedrooms = totalBedrooms / households) |>
   rename(rooms = totalRooms,
          bedrooms = totalBedrooms)
+house_unscale <- house
 house[, 1:8] <- scale(house[, 1:8])  # Standardization
 ```
 
@@ -318,5 +324,48 @@ data.frame(Model = c(
 
 Gradient-boosted trees performs best with the lowest RMSE 45162.71.  
 
+Then I predict entire data (training + test) using gradient-boosted trees. I plot `medianHouseValue`, predicted `medianHouseValue`, and prediction errors on a California map.  
 
+Below is the plot for actual house value. Expensive houses (darker points) are along the coast, from San Francisco to Los Angeles or San Diego.  
+```{r Map plot Real data}
+# Predict entire data (training + test) using GBM
+house_unscale <- house_unscale |>
+  mutate(value_pred = predict(house_gbm, house),
+         value_error = medianHouseValue - value_pred)
 
+california_map <- map_data("state", region = "california")
+
+# Real house value
+ggplot() +
+  geom_polygon(data = california_map, aes(long, lat), fill = "lightblue") +
+  geom_point(data = house_unscale, aes(longitude, latitude, col = medianHouseValue)) +
+  scale_color_gradient(low = "#FFFFE0", high = "black") +
+  labs(x = "Longitude",
+       y = "Latitude",
+       title = "Median Housing Value in California",
+       col = NULL)
+```
+
+Below is the plot for predicted house value. The pattern mostly aligns with the actual data.  
+```{r Map plot Prediction}
+ggplot() +
+  geom_polygon(data = california_map, aes(long, lat), fill = "lightblue") +
+  geom_point(data = house_unscale, aes(longitude, latitude, col = value_pred)) +
+  scale_color_gradient(low = "#FFFFE0", high = "black") +
+  labs(x = "Longitude",
+       y = "Latitude",
+       title = "Predicted Median Housing Value in California",
+       col = NULL)
+```
+
+Below is the plot for prediction errors. Errors seem larger (darker points) near Santa Barbara (34.5N, 120W).  
+```{r Map plot Error}
+ggplot() +
+  geom_polygon(data = california_map, aes(long, lat), fill = "lightblue") +
+  geom_point(data = house_unscale, aes(longitude, latitude, col = value_error)) +
+  scale_color_gradient(low = "#FFFFE0", high = "black") +
+  labs(x = "Longitude",
+       y = "Latitude",
+       title = "Predicted Errors of Median Housing Value in California",
+       col = NULL)
+```
