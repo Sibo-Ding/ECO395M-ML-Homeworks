@@ -13,13 +13,16 @@ knitr::opts_chunk$set(message = FALSE)
 library(dplyr)
 library(ggplot2)
 library(caret)
+library(rpart)  # Tree
+library(randomForest)
+library(gbm)
 ```
 
 ## What causes what?
 1. Crime and police is a pair of simultaneity. More crime causes more police, but meanwhile more police causes less crime. Regressing crime on police cannot identify the causal effect of police on crime.
 
-2. They used terrorism alert level as an instrumental variable. On high terrorist alert days, there were more police neglecting the level of street crime.  
-Regression results: The total number of crimes in D.C. decreased by 7.32 on a high alert day. Controlling for Metro ridership, the total number of crimes in D.C. decreased by 6.05 on a high alert day.
+2. The researchers used terrorism alert level as an instrumental variable. On high terrorist alert days, there were more police neglecting the level of street crime.  
+Regression results: The total number of crimes in D.C. decreased by 7.316 on a high alert day. Controlling for Metro ridership, the total number of crimes in D.C. decreased by 6.046 on a high alert day.
 
 3. They wanted to know whether the decrease in crime was caused by fewer victims on high alert days. Metro ridership captures the number of victims.
 
@@ -30,18 +33,76 @@ $$
 In the first police district area ($\text{District 1} = 1$), the total number of crimes decreased by 2.621 on high alert days ($\text{High Alert} = 1$). In other districts, the total number of crimes did not significantly change on high alert days.
 
 ## Tree modeling: dengue cases
+I use *CART*, *random forests*, and *gradient-boosted trees* to predict dengue cases.  
 ```{r}
 dengue <- read.csv("dengue.csv")
+dengue <- na.omit(dengue)  # Drop N/A
+# Change strings into factors
+dengue$city <- factor(dengue$city)
+dengue$season <- factor(dengue$season)
 ```
 
+I split data into training set and test set.  
+```{r}
+# Train-test split
+set.seed(123)
+index <- createDataPartition(dengue$total_cases,
+                             p = 0.8, list = FALSE)
+den_train <- dengue[index, ]
+den_test <- dengue[-index, ]
+```
 
+I include all features in CART. I use 10-fold cross validation on the training set to find the optimal complexity parameter.  
+```{r}
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
 
+set.seed(250)
+den_cart <- train(total_cases ~ .,
+                  data = den_train,
+                  method = "rpart",
+                  trControl = ctrl)
+den_cart_pred <- predict(den_cart, den_test)
+```
 
+I include all features in random forest.  
+```{r}
+set.seed(250)
+den_rf <- randomForest(total_cases ~ ., data = den_train)
+den_rf_pred <- predict(den_rf, den_test)
+```
 
+I include all features in gradient-boosted trees. I manually tune several parameters.  
+```{r}
+set.seed(250)
+den_gbm <- gbm(total_cases ~ .,
+               data = den_train,
+               distribution = "gaussian",
+               n.trees = 200,
+               interaction.depth = 10,
+               shrinkage = 0.01)
+den_gbm_pred <- predict(den_gbm, den_test)
+```
 
+Out-of-sample RMSE:
+```{r}
+data.frame(Model = c("CART", "Random forest", "Gradient-boosted trees"),
+           RMSE = c(
+             RMSE(den_cart_pred, den_test$total_cases),
+             RMSE(den_rf_pred, den_test$total_cases),
+             RMSE(den_gbm_pred, den_test$total_cases)
+           )) |>
+  knitr::kable()
+```
 
+Random forest performs best with the lowest RMSE.  
 
-
+Partial dependence plots of random forest:
+```{r Partial dependence plots}
+partialPlot(den_rf, den_test, 'specific_humidity', las=1)
+partialPlot(den_rf, den_test, 'precipitation_amt', las=1)
+partialPlot(den_rf, den_test, 'season', las=1)
+```
 
 ## Predictive model building: green certification
 ```{r}
