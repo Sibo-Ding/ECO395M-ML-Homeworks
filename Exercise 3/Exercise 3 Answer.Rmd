@@ -5,6 +5,8 @@ date: "Spring 2024"
 output: md_document
 ---
 
+This file takes 5 minutes to knit. Chunks `Random forest 2` and `Random forest 3` take some time to run.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
@@ -25,7 +27,7 @@ library(glmnet)  # Lasso
 2. The researchers used terrorism alert level as an instrumental variable. On high terrorist alert days, there were more police neglecting the level of street crime.  
 Regression results: The total number of crimes in D.C. decreased by 7.316 on a high alert day. Controlling for Metro ridership, the total number of crimes in D.C. decreased by 6.046 on a high alert day.
 
-3. They wanted to know whether the decrease in crime was caused by fewer victims on high alert days. Metro ridership captures the number of victims.
+3. The researchers wanted to know whether the decrease in crime was caused by fewer victims on high alert days (as they were scared to go out). Metro ridership captures the number of victims.
 
 4. 
 $$
@@ -34,7 +36,7 @@ $$
 In the first police district area ($\text{District 1} = 1$), the total number of crimes decreased by 2.621 on high alert days ($\text{High Alert} = 1$). In other districts, the total number of crimes did not significantly change on high alert days.
 
 ## Tree modeling: dengue cases
-I use *CART*, *random forests*, and *gradient-boosted trees* to predict dengue cases.  
+I use *CART*, *random forests*, and *gradient-boosted trees* to predict dengue cases. The outcome variable is continuous, so it is a regression problem. I convert `city` and `season` from strings to categories.  
 ```{r Preprocess 1}
 dengue <- read.csv("dengue.csv")
 dengue <- na.omit(dengue)  # Drop N/A
@@ -91,36 +93,142 @@ den_gbm_rmse <- RMSE(den_gbm_pred, den_test$total_cases)
 Out-of-sample RMSE:
 ```{r RMSE 1}
 data.frame(Model = c("CART", "Random forest", "Gradient-boosted trees"),
-           RMSE = c(den_cart_rmse, den_rf_rmse, den_gbm_rmse)) |>
+           RMSE = c(den_cart_rmse, den_rf_rmse, den_gbm_rmse) |>
+             round(2)) |>
   knitr::kable()
 ```
 
-Random forest performs best with the lowest RMSE.  
+Random forest performs best with the lowest RMSE 21.92.  
 
 Partial dependence plots of 3 variables in the random forest model:
-```{r Partial dependence plots}
+```{r Partial dependence plots 1}
 partialPlot(den_rf, den_test, "specific_humidity", las=1)
 partialPlot(den_rf, den_test, "precipitation_amt", las=1)
 partialPlot(den_rf, den_test, "season", las=1)
 ```
 
 ## Predictive model building: green certification
-```{r}
+I want to predict rental revenue per square foot per calendar year for commercial properties in the US. The outcome variable is continuous, so it is a regression problem. I calculate revenue per foot year as the product of `Rent` and `leasing_rate`. After that, I drop `Rent`, `leasing_rate` and two identifiers.  
+I convert 8 features from continuous to categorical, which are `renovated`, `class_a`, `class_b`, `LEED`, `Energystar`, `green_rating`, `net`, and `amenities`. I standardize the remaining continuous features.  
+```{r Preprocess 2}
 green <- read.csv("greenbuildings.csv")
+# Drop NA
+green <- na.omit(green)
+
+# Add and delect columns
+green <- green |>
+  mutate(revenue_per_sqft = Rent * leasing_rate) |>
+  select(-c(CS_PropertyID, cluster, Rent, leasing_rate))
+
+# Factor
+green[, 5:12] <- lapply(green[, 5:12], factor)
+
+# Standardization
+green[, c(1:4, 13:19)] <- scale(green[, c(1:4, 13:19)])
 ```
 
+I split data into training data and test data. I fit regression models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.  
+```{r Train-test split 2}
+set.seed(123)
+index <- createDataPartition(green$revenue_per_sqft,
+                             p = 0.8, list = FALSE)
+green_train <- green[index, ]
+green_test <- green[-index, ]
+```
 
+I include all features and their interactions in linear regression.  
+```{r Linear regression 2}
+green_lm <- lm(revenue_per_sqft ~ .^2, data = green_train)
+green_lm_pred <- predict(green_lm, green_test)
+green_lm_rmse <- RMSE(green_lm_pred, green_test$revenue_per_sqft)
+```
 
+Linear regression with too many features may result in overfitting. Thus, I use lasso to regularize the above model. I use 10-fold cross validation in the training data to find the optimal regularization parameter $\lambda$.  
+```{r Lasso regularization 2}
+green_train_x <- model.matrix(~ .^2, green_train[, 1:19])
+green_train_y <- green_train$revenue_per_sqft
+green_test_x <- model.matrix(~ .^2, green_test[, 1:19])
 
+# 10-fold CV to find optimal lambda
+set.seed(12)
+green_lasso <- cv.glmnet(green_train_x, green_train_y,
+                         alpha = 1, nfolds = 10)
+green_lasso_pred <- predict(green_lasso, green_test_x, s = "lambda.min")
+green_lasso_rmse <- RMSE(green_lasso_pred, green_test$revenue_per_sqft)
+```
 
+I include all features in KNN. I use 10-fold cross validation in the training data to find the optimal number of neighbors $k$.  
+```{r KNN 2}
+# 10-fold cross validation
+ctrl <- trainControl(method = "cv", number = 10)
 
+set.seed(12)
+green_knn <- train(revenue_per_sqft ~ .,
+                   data = green_train,
+                   method = "knn",
+                   trControl = ctrl)
+green_knn_pred <- predict(green_knn, green_test)
+green_knn_rmse <- RMSE(green_knn_pred, green_test$revenue_per_sqft)
+```
 
+I include all features in random forest.  
+```{r Random forest 2}
+set.seed(12)
+green_rf <- randomForest(revenue_per_sqft ~ ., data = green_train)
+green_rf_pred <- predict(green_rf, green_test)
+green_rf_rmse <- RMSE(green_rf_pred, green_test$revenue_per_sqft)
+```
 
+I include all features in gradient-boosted trees. I manually tune several parameters.  
+```{r GBM 2}
+set.seed(12)
+green_gbm <- gbm(revenue_per_sqft ~ .,
+                 data = green_train,
+                 distribution = "gaussian",
+                 n.trees = 500,
+                 interaction.depth = 45,
+                 shrinkage = 0.1)
+green_gbm_pred <- predict(green_gbm, green_test)
+green_gbm_rmse <- RMSE(green_gbm_pred, green_test$revenue_per_sqft)
+```
+
+Out-of-sample RMSE:
+```{r RMSE 2}
+data.frame(Model = c(
+             "Linear regression",
+             "Lasso",
+             "KNN",
+             "Random forest",
+             "Gradient-boosted trees"),
+           RMSE = c(
+             green_lm_rmse, 
+             green_lasso_rmse,
+             green_knn_rmse,
+             green_rf_rmse,
+             green_gbm_rmse) |>
+             round(2)) |>
+  knitr::kable()
+```
+
+Random performs best with the lowest RMSE 807.75.  
+
+I am interested in the average change in revenue per square foot associated with green certification, holding other features constant. Thus, I plot partial dependence plots of 2 variables in the random forest model (note the y-axis does not start from 0):
+```{r Partial dependence plots 2}
+partialPlot(green_rf, green_test, "LEED", las=1, ylim = c(2400, 2500))
+partialPlot(green_rf, green_test, "Energystar", las=1, ylim = c(2400, 2500))
+```
+
+From the graphs, green certification (either `LEED` = 1 or `EnergyStar` = 1) increases the revenue per square foot.
 
 ## Predictive model building: California housing
-I want to predict the median housing value in California. The outcome variable is continuous, so it is a regression problem. I standardize all features as they are continuous.  
+I want to predict the median housing value in California. The outcome variable is continuous, so it is a regression problem. I divide `totalRooms` and `totalBedrooms` by `households` to get the number of rooms/bedrooms per household. I standardize all features as they are continuous.  
 ```{r Preprocess 3}
 house <- read.csv("CAhousing.csv")
+house <- house |>
+  mutate(totalRooms = totalRooms / households,
+         totalBedrooms = totalBedrooms / households) |>
+  rename(rooms = totalRooms,
+         bedrooms = totalBedrooms)
 house[, 1:8] <- scale(house[, 1:8])  # Standardization
 ```
 
@@ -132,6 +240,8 @@ index <- createDataPartition(house$medianHouseValue,
 house_train <- house[index, ]
 house_test <- house[-index, ]
 ```
+
+I try 5 models: linear regression, lasso, KNN, random forest, gradient-boosted trees.  
 
 I include all features and their interactions in linear regression.  
 ```{r Linear regression 3}
@@ -148,12 +258,9 @@ house_test_x <- model.matrix(~ .^2, house_test[, 1:8])
 
 # 10-fold CV to find optimal lambda
 set.seed(12)
-cvfit <- cv.glmnet(house_train_x, house_train_y, alpha = 1, nfolds = 10)
-optimal_lambda <- cvfit$lambda.min
-
-house_lasso <- glmnet(house_train_x, house_train_y,
-                      alpha = 1, lambda = optimal_lambda)
-house_lasso_pred <- predict(house_lasso, house_test_x)
+house_lasso <- cv.glmnet(house_train_x, house_train_y,
+                         alpha = 1, nfolds = 10)
+house_lasso_pred <- predict(house_lasso, house_test_x, s = "lambda.min")
 house_lasso_rmse <- RMSE(house_lasso_pred, house_test$medianHouseValue)
 ```
 
@@ -183,11 +290,11 @@ I include all features in gradient-boosted trees. I manually tune several parame
 ```{r GBM 3}
 set.seed(12)
 house_gbm <- gbm(medianHouseValue ~ .,
-               data = house_train,
-               distribution = "gaussian",
-               n.trees = 500,
-               interaction.depth = 49,
-               shrinkage = 0.05)
+                 data = house_train,
+                 distribution = "gaussian",
+                 n.trees = 500,
+                 interaction.depth = 49,
+                 shrinkage = 0.05)
 house_gbm_pred <- predict(house_gbm, house_test)
 house_gbm_rmse <- RMSE(house_gbm_pred, house_test$medianHouseValue)
 ```
@@ -209,7 +316,7 @@ data.frame(Model = c(
   knitr::kable()
 ```
 
-It can be seen that gradient-boosted trees performs best with the lowest RMSE.  
+Gradient-boosted trees performs best with the lowest RMSE 45162.71.  
 
 
 
