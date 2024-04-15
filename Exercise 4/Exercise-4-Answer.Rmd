@@ -19,6 +19,8 @@ library(caret)
 ## Clustering and PCA
 ```{r}
 wine <- read.csv("wine.csv")
+
+prcomp(wine[, 1:11], scale. = TRUE, rank. = 1)
 ```
 
 
