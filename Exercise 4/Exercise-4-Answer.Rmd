@@ -13,22 +13,73 @@ knitr::opts_chunk$set(message = FALSE)
 library(dplyr)
 library(ggplot2)
 library(caret)
-
 ```
 
 ## Clustering and PCA
+I want to use unsupervised learning to distinguish: 1. whether a wine is red or white; 2.the quality of a wine. I first standardize 11 variables (chemical properties).  
 ```{r}
 wine <- read.csv("wine.csv")
+wine[, 1:11] <- scale(wine[, 1:11])  # Standardization
+```
+Remember in unsupervised learning, there is no features and outcomes, and there is no right or wrong, no accuracy.
 
-prcomp(wine[, 1:11], scale. = TRUE, rank. = 1)
+### Clustering
+To distinguish red wines from white wines, I use K-means to cluster data into 2 clusters. Then I count the number of reds and whites in each cluster. In the below table, each row is a cluster, and each column is whether a wine is red or white. The algorithm can distinguish reds from whites, as most whites are in cluster 1 and most reds are in cluster 2.
+```{r kmeans color}
+kmeans_2 <- kmeans(wine[, 1:11], centers = 2)
+table(kmeans_2$cluster, wine$color)
 ```
 
+As there are 7 levels of quality (3 - 9), I use K-means to cluster data into 7 clusters. Then I count the quality in each cluster. In the below table, each row is a cluster, and each column is the quality. The algorithm cannot distinguish the quality, as the quality spreads out among each cluster (row). There is no unique quality for each cluster.
+```{r kmeans quality 1}
+kmeans_7 <- kmeans(wine[, 1:11], centers = 7)
+table(kmeans_7$cluster, wine$quality)
+```
 
+Alternatively, I cluster data into 2 clusters to try to distinguish "high" vs. "low" quality. Similarly, the algorithm cannot distinguish the quality.
+```{r kmeans quality 2}
+table(kmeans_2$cluster, wine$quality)
+```
 
+### PCA
+I project 11 variables onto 3 principle components (PC). It is acceptable to have more PCs, as the $n+1$th PC will not affect all $n$ PCs. I calculate the projected values of observations on each PC.  
+```{r pca}
+pca_res <- prcomp(wine[, 1:11], rank. = 3)
+# Projected values of observations on each principle component
+pp <- cbind(wine[, 12:13], pca_res$x)
+```
 
+I create a box plot of the projected values on PC1 for reds and whites. The algorithm can distinguish reds from whites, as the projection for reds are mostly lower than those for whites.
+```{r pca color plot}
+ggplot(pp) +
+  geom_boxplot(aes(color, PC1)) +
+  ylab("Projection on PC1")
+```
 
+More rigorously, I conduct a t-test to compare the mean projection of reds and whites. Reds are significantly lower than whites.
+```{r pca color t.test}
+pc1_red <- pp |> filter(color == "red") |> select(PC1)
+pc1_white <- pp |> filter(color == "white") |> select(PC1)
+t.test(pc1_red, pc1_white)
+```
 
+I create a box plot of the projections on PC1 for different qualities. The algorithm cannot distinguish different qualities, as the projections are similar across them. Results are similar on PC2 and PC3.
+```{r pca quality 1}
+ggplot(pp) +
+  geom_boxplot(aes(factor(quality), PC1)) +
+  xlab("quality") +
+  ylab("Projection on PC1")
+```
 
+Alternatively, I define the quality as "high" if it is greater than 5 and "low" otherwise. Then, I create a box plot of the projections on PC1 for high and low qualities. Similarly, the algorithm cannot distinguish the quality.
+```{r pca quality 2}
+pp <- pp |> mutate(qual_hl = ifelse(quality > 5, "high", "low"))
+
+ggplot(pp) +
+  geom_boxplot(aes(qual_hl, PC1)) +
+  xlab("quality") +
+  ylab("Projection on PC1")
+```
 
 ## Market segmentation
 ```{r}
