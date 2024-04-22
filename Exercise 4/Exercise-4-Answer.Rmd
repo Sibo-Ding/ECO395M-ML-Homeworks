@@ -16,22 +16,24 @@ library(caret)
 ```
 
 ## Clustering and PCA
-I want to use unsupervised learning to distinguish: 1. whether a wine is red or white; 2.the quality of a wine. I first standardize 11 variables (chemical properties).  
-```{r}
+I want to use unsupervised learning to distinguish: 1. whether a wine is red or white; 2. the quality of a wine. I first standardize 11 variables (chemical properties).  
+```{r standardize}
 wine <- read.csv("wine.csv")
 wine[, 1:11] <- scale(wine[, 1:11])  # Standardization
 ```
-Remember in unsupervised learning, there is no features and outcomes, and there is no right or wrong, no accuracy.
+Remember in unsupervised learning, there is no features (x) and outcomes (y), no right or wrong, no accuracy.
 
 ### Clustering
 To distinguish red wines from white wines, I use K-means to cluster data into 2 clusters. Then I count the number of reds and whites in each cluster. In the below table, each row is a cluster, and each column is whether a wine is red or white. The algorithm can distinguish reds from whites, as most whites are in cluster 1 and most reds are in cluster 2.
 ```{r kmeans color}
+set.seed(42)
 kmeans_2 <- kmeans(wine[, 1:11], centers = 2)
 table(kmeans_2$cluster, wine$color)
 ```
 
-As there are 7 levels of quality (3 - 9), I use K-means to cluster data into 7 clusters. Then I count the quality in each cluster. In the below table, each row is a cluster, and each column is the quality. The algorithm cannot distinguish the quality, as the quality spreads out among each cluster (row). There is no unique quality for each cluster.
+As there are 7 levels of quality (3 - 9), I use K-means to cluster data into 7 clusters. Then I count the quality in each cluster. In the below table, each row is a cluster, and each column is a quality level. The algorithm cannot distinguish the quality, as the quality spreads out among each cluster (row). There is no unique quality for each cluster.
 ```{r kmeans quality 1}
+set.seed(42)
 kmeans_7 <- kmeans(wine[, 1:11], centers = 7)
 table(kmeans_7$cluster, wine$quality)
 ```
@@ -42,14 +44,14 @@ table(kmeans_2$cluster, wine$quality)
 ```
 
 ### PCA
-I project 11 variables onto 3 principle components (PC). It is acceptable to have more PCs, as the $n+1$th PC will not affect all $n$ PCs. I calculate the projected values of observations on each PC.  
-```{r pca}
+I project 11 variables onto 3 principle components (PC). It is acceptable to have more PCs, as the $(n+1)$-th PC will not affect all $n$ PCs. I calculate the projected values of all observations on each PC.  
+```{r pca 1}
 pca_res <- prcomp(wine[, 1:11], rank. = 3)
 # Projected values of observations on each principle component
 pp <- cbind(wine[, 12:13], pca_res$x)
 ```
 
-I create a box plot of the projected values on PC1 for reds and whites. The algorithm can distinguish reds from whites, as the projection for reds are mostly lower than those for whites.
+I create a box plot of the projections on PC1 for reds and whites. The algorithm can distinguish reds from whites, as the projection for reds are mostly lower than those for whites.
 ```{r pca color plot}
 ggplot(pp) +
   geom_boxplot(aes(color, PC1)) +
@@ -63,7 +65,7 @@ pc1_white <- pp |> filter(color == "white") |> select(PC1)
 t.test(pc1_red, pc1_white)
 ```
 
-I create a box plot of the projections on PC1 for different qualities. The algorithm cannot distinguish different qualities, as the projections are similar across them. Results are similar on PC2 and PC3.
+I create a box plot of the projections on PC1 for different qualities. The algorithm cannot distinguish different qualities, as the projections are similar across them. Results are similar for PC2 and PC3.
 ```{r pca quality 1}
 ggplot(pp) +
   geom_boxplot(aes(factor(quality), PC1)) +
@@ -82,9 +84,53 @@ ggplot(pp) +
 ```
 
 ## Market segmentation
-```{r}
-mkt <- read.csv("social_marketing.csv")
+I want to separate 7882 users into several market segments, based on the categories of their Twitter posts. From the below data summary, most third quantiles are 1, and most maximums are above 10, meaning variables are highly right-skewed.
+```{r data summary}
+mkt <- read.csv("social_marketing.csv", row.names = 1)
+summary(mkt)
 ```
+
+Next, from the below correlation plot, there are 8 or 9 highly-correlated groups.  
+```{r corr plot}
+ggcorrplot::ggcorrplot(cor(mkt), hc.order = TRUE)
+```
+
+The information in 36 right-skewed categories is too sparse. Thus, I use PCA to summarize them into 3 PCs. There is no right or wrong for selecting the number of PCs, and you can try others if you want. I standardize 36 variables here.  
+```{r pca 2}
+pca_res1 <- prcomp(mkt, center = TRUE, scale. = TRUE, rank. = 3)
+```
+
+Then, I use K-means to cluster 3 projections of observations into 2 cluster. Again, there is no right or wrong for selecting the number of clusters. In practice, people often select the number of clusters based on their business problems.  
+```{r kmeans}
+# pca_res1$x: Projections of observations on each principle component
+set.seed(42)
+kmeans_res1 <- kmeans(pca_res1$x, centers = 2)
+
+mkt <- mkt |>
+  cbind(kmeans_res1$cluster) |>
+  rename(cluster = "kmeans_res1$cluster")
+```
+
+I compare the average interests of all categories of two clusters. All interests for cluster 1 are higher than those for cluster 2, meaning they are more active users on Twitter.
+```{r kmeans mean}
+mkt |>
+  group_by(cluster) |>
+  summarize_all(mean) |>
+  round(2) 
+#|> knitr::kable()
+```
+
+Below is the number of users in each cluster:
+```{r}
+mkt |>
+  group_by(cluster) |>
+  count()
+```
+
+
+
+
+
 
 
 
