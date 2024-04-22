@@ -11,9 +11,9 @@ Remember in unsupervised learning, there is no features (x) and outcomes
 
 To distinguish red wines from white wines, I use K-means to cluster data
 into 2 clusters. Then I count the number of reds and whites in each
-cluster. In the below table, each row is a cluster, and each column is
-whether a wine is red or white. The algorithm can distinguish reds from
-whites, as most whites are in cluster 1 and most reds are in cluster 2.
+cluster. In the below table, each row is a cluster, and each column is a
+color of wine. The algorithm can distinguish reds from whites, as most
+whites are in cluster 1 and most reds are in cluster 2.
 
     ##    
     ##      red white
@@ -24,7 +24,7 @@ As there are 7 levels of quality (3 - 9), I use K-means to cluster data
 into 7 clusters. Then I count the quality in each cluster. In the below
 table, each row is a cluster, and each column is a quality level. The
 algorithm cannot distinguish the quality, as the quality spreads out
-among each cluster (row). There is no unique quality for each cluster.
+among each cluster (row). There is no dominant quality for each cluster.
 
     ##    
     ##       3   4   5   6   7   8   9
@@ -155,7 +155,9 @@ variables are highly right-skewed.
     ##  Max.   :18.0000   Max.   :6.0000   Max.   :2.00000   Max.   :26.0000
 
 Next, from the below correlation plot, there are 8 or 9
-highly-correlated groups.  
+highly-correlated groups. However, it is not very informative and
+intuitive. For example, `food` is not highly correlated with
+`cooking`.  
 ![](Exercise-4-Answer_files/figure-markdown_strict/corr%20plot-1.png)
 
 The information in 36 right-skewed categories is too sparse. Thus, I use
@@ -361,8 +363,8 @@ Below is the number of users in each cluster:
 
 I want to find association rules for customers’ groceries shopping
 basket. That means to find associated groceries that customers are
-likely to buy, if they buy a grocery. I preprocess the data to fit into
-`arules` package.
+likely to buy, if they buy a certain grocery. I preprocess the data to
+fit into `arules` package.
 
 When finding association rules, I choose the minimum *support* as 0.005
 and the minimum *confidence* as 0.25. So *lift* = *confidence* /

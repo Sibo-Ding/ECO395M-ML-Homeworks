@@ -29,14 +29,14 @@ wine[, 1:11] <- scale(wine[, 1:11])
 Remember in unsupervised learning, there is no features (x) and outcomes (y), no prediction, no right or wrong, no accuracy.
 
 ### Clustering
-To distinguish red wines from white wines, I use K-means to cluster data into 2 clusters. Then I count the number of reds and whites in each cluster. In the below table, each row is a cluster, and each column is whether a wine is red or white. The algorithm can distinguish reds from whites, as most whites are in cluster 1 and most reds are in cluster 2.
+To distinguish red wines from white wines, I use K-means to cluster data into 2 clusters. Then I count the number of reds and whites in each cluster. In the below table, each row is a cluster, and each column is a color of wine. The algorithm can distinguish reds from whites, as most whites are in cluster 1 and most reds are in cluster 2.
 ```{r kmeans color}
 set.seed(42)
 kmeans_2 <- kmeans(wine[, 1:11], centers = 2)
 table(kmeans_2$cluster, wine$color)
 ```
 
-As there are 7 levels of quality (3 - 9), I use K-means to cluster data into 7 clusters. Then I count the quality in each cluster. In the below table, each row is a cluster, and each column is a quality level. The algorithm cannot distinguish the quality, as the quality spreads out among each cluster (row). There is no unique quality for each cluster.
+As there are 7 levels of quality (3 - 9), I use K-means to cluster data into 7 clusters. Then I count the quality in each cluster. In the below table, each row is a cluster, and each column is a quality level. The algorithm cannot distinguish the quality, as the quality spreads out among each cluster (row). There is no dominant quality for each cluster.
 ```{r kmeans quality 1}
 set.seed(42)
 kmeans_7 <- kmeans(wine[, 1:11], centers = 7)
@@ -95,7 +95,7 @@ mkt <- read.csv("social_marketing.csv", row.names = 1)
 summary(mkt)
 ```
 
-Next, from the below correlation plot, there are 8 or 9 highly-correlated groups.  
+Next, from the below correlation plot, there are 8 or 9 highly-correlated groups. However, it is not very informative and intuitive. For example, `food` is not highly correlated with `cooking`.  
 ```{r corr plot, fig.height=7, fig.width=7}
 ggcorrplot::ggcorrplot(cor(mkt), hc.order = TRUE)
 ```
@@ -135,7 +135,7 @@ mkt |>
 ```
 
 ## Association rules for grocery purchases
-I want to find association rules for customers' groceries shopping basket. That means to find associated groceries that customers are likely to buy, if they buy a grocery. I preprocess the data to fit into `arules` package.  
+I want to find association rules for customers' groceries shopping basket. That means to find associated groceries that customers are likely to buy, if they buy a certain grocery. I preprocess the data to fit into `arules` package.  
 ```{r arules preprocess}
 groc <- read.csv("groceries.txt", header = FALSE)
 
