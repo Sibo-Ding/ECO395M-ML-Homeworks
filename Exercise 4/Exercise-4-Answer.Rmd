@@ -84,18 +84,18 @@ ggplot(pp) +
 ```
 
 ## Market segmentation
-I want to separate 7882 users into several market segments, based on the categories of their Twitter posts. From the below data summary, most third quantiles are 1, and most maximums are above 10, meaning variables are highly right-skewed.
+I want to separate 7882 users into several market segments, based on interest categories of their Twitter posts. From the data summary below, most third quantiles are 1 or 2, and most maximums are above 10, meaning variables are highly right-skewed.
 ```{r data summary}
 mkt <- read.csv("social_marketing.csv", row.names = 1)
 summary(mkt)
 ```
 
 Next, from the below correlation plot, there are 8 or 9 highly-correlated groups.  
-```{r corr plot}
+```{r corr plot, fig.height=7, fig.width=7}
 ggcorrplot::ggcorrplot(cor(mkt), hc.order = TRUE)
 ```
 
-The information in 36 right-skewed categories is too sparse. Thus, I use PCA to summarize them into 3 PCs. There is no right or wrong for selecting the number of PCs, and you can try others if you want. I standardize 36 variables here.  
+The information in 36 right-skewed categories is too sparse. Thus, I use PCA to summarize them into 3 PCs. There is no right or wrong for selecting the number of PCs, so you can try others if you want. I standardize 36 variables here.  
 ```{r pca 2}
 pca_res1 <- prcomp(mkt, center = TRUE, scale. = TRUE, rank. = 3)
 ```
@@ -116,15 +116,16 @@ I compare the average interests of all categories of two clusters. All interests
 mkt |>
   group_by(cluster) |>
   summarize_all(mean) |>
-  round(2) 
-#|> knitr::kable()
+  round(2) |>
+  knitr::kable()
 ```
 
 Below is the number of users in each cluster:
 ```{r}
 mkt |>
   group_by(cluster) |>
-  count()
+  count() |>
+  knitr::kable()
 ```
 
 

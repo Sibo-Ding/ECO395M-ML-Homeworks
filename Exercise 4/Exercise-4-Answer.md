@@ -85,10 +85,10 @@ the quality.
 
 ## Market segmentation
 
-I want to separate 7882 users into several market segments, based on the
-categories of their Twitter posts. From the below data summary, most
-third quantiles are 1, and most maximums are above 10, meaning variables
-are highly right-skewed.
+I want to separate 7882 users into several market segments, based on
+interest categories of their Twitter posts. From the data summary below,
+most third quantiles are 1 or 2, and most maximums are above 10, meaning
+variables are highly right-skewed.
 
     ##     chatter       current_events      travel       photo_sharing   
     ##  Min.   : 0.000   Min.   :0.000   Min.   : 0.000   Min.   : 0.000  
@@ -160,7 +160,7 @@ highly-correlated groups.
 
 The information in 36 right-skewed categories is too sparse. Thus, I use
 PCA to summarize them into 3 PCs. There is no right or wrong for
-selecting the number of PCs, and you can try others if you want. I
+selecting the number of PCs, so you can try others if you want. I
 standardize 36 variables here.
 
 Then, I use K-means to cluster 3 projections of observations into 2
@@ -172,26 +172,188 @@ I compare the average interests of all categories of two clusters. All
 interests for cluster 1 are higher than those for cluster 2, meaning
 they are more active users on Twitter.
 
-    ## # A tibble: 2 × 37
-    ##   cluster chatter current_events travel photo_sharing uncategorized tv_film
-    ##     <dbl>   <dbl>          <dbl>  <dbl>         <dbl>         <dbl>   <dbl>
-    ## 1       1    5.69           1.83   2.27          4.16          1.05    1.54
-    ## 2       2    3.87           1.4    1.31          2.1           0.72    0.88
-    ## # ℹ 30 more variables: sports_fandom <dbl>, politics <dbl>, food <dbl>,
-    ## #   family <dbl>, home_and_garden <dbl>, music <dbl>, news <dbl>,
-    ## #   online_gaming <dbl>, shopping <dbl>, health_nutrition <dbl>,
-    ## #   college_uni <dbl>, sports_playing <dbl>, cooking <dbl>, eco <dbl>,
-    ## #   computers <dbl>, business <dbl>, outdoors <dbl>, crafts <dbl>,
-    ## #   automotive <dbl>, art <dbl>, religion <dbl>, beauty <dbl>, parenting <dbl>,
-    ## #   dating <dbl>, school <dbl>, personal_fitness <dbl>, fashion <dbl>, …
+<table>
+<colgroup>
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 1%" />
+<col style="width: 3%" />
+<col style="width: 3%" />
+<col style="width: 2%" />
+<col style="width: 3%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+<col style="width: 4%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+<col style="width: 3%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 3%" />
+<col style="width: 4%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 3%" />
+<col style="width: 1%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 2%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+<col style="width: 4%" />
+<col style="width: 2%" />
+<col style="width: 4%" />
+<col style="width: 1%" />
+<col style="width: 1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">cluster</th>
+<th style="text-align: right;">chatter</th>
+<th style="text-align: right;">current_events</th>
+<th style="text-align: right;">travel</th>
+<th style="text-align: right;">photo_sharing</th>
+<th style="text-align: right;">uncategorized</th>
+<th style="text-align: right;">tv_film</th>
+<th style="text-align: right;">sports_fandom</th>
+<th style="text-align: right;">politics</th>
+<th style="text-align: right;">food</th>
+<th style="text-align: right;">family</th>
+<th style="text-align: right;">home_and_garden</th>
+<th style="text-align: right;">music</th>
+<th style="text-align: right;">news</th>
+<th style="text-align: right;">online_gaming</th>
+<th style="text-align: right;">shopping</th>
+<th style="text-align: right;">health_nutrition</th>
+<th style="text-align: right;">college_uni</th>
+<th style="text-align: right;">sports_playing</th>
+<th style="text-align: right;">cooking</th>
+<th style="text-align: right;">eco</th>
+<th style="text-align: right;">computers</th>
+<th style="text-align: right;">business</th>
+<th style="text-align: right;">outdoors</th>
+<th style="text-align: right;">crafts</th>
+<th style="text-align: right;">automotive</th>
+<th style="text-align: right;">art</th>
+<th style="text-align: right;">religion</th>
+<th style="text-align: right;">beauty</th>
+<th style="text-align: right;">parenting</th>
+<th style="text-align: right;">dating</th>
+<th style="text-align: right;">school</th>
+<th style="text-align: right;">personal_fitness</th>
+<th style="text-align: right;">fashion</th>
+<th style="text-align: right;">small_business</th>
+<th style="text-align: right;">spam</th>
+<th style="text-align: right;">adult</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">5.69</td>
+<td style="text-align: right;">1.83</td>
+<td style="text-align: right;">2.27</td>
+<td style="text-align: right;">4.16</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.54</td>
+<td style="text-align: right;">3.06</td>
+<td style="text-align: right;">2.77</td>
+<td style="text-align: right;">2.71</td>
+<td style="text-align: right;">1.56</td>
+<td style="text-align: right;">0.75</td>
+<td style="text-align: right;">1.05</td>
+<td style="text-align: right;">1.87</td>
+<td style="text-align: right;">1.78</td>
+<td style="text-align: right;">2.09</td>
+<td style="text-align: right;">4.22</td>
+<td style="text-align: right;">2.37</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">3.91</td>
+<td style="text-align: right;">0.81</td>
+<td style="text-align: right;">1.10</td>
+<td style="text-align: right;">0.68</td>
+<td style="text-align: right;">1.29</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">1.28</td>
+<td style="text-align: right;">1.20</td>
+<td style="text-align: right;">2.46</td>
+<td style="text-align: right;">1.49</td>
+<td style="text-align: right;">2.00</td>
+<td style="text-align: right;">1.24</td>
+<td style="text-align: right;">1.61</td>
+<td style="text-align: right;">2.45</td>
+<td style="text-align: right;">2.01</td>
+<td style="text-align: right;">0.55</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.52</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3.87</td>
+<td style="text-align: right;">1.40</td>
+<td style="text-align: right;">1.31</td>
+<td style="text-align: right;">2.10</td>
+<td style="text-align: right;">0.72</td>
+<td style="text-align: right;">0.88</td>
+<td style="text-align: right;">0.99</td>
+<td style="text-align: right;">1.39</td>
+<td style="text-align: right;">0.86</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.94</td>
+<td style="text-align: right;">0.98</td>
+<td style="text-align: right;">1.10</td>
+<td style="text-align: right;">1.89</td>
+<td style="text-align: right;">1.21</td>
+<td style="text-align: right;">0.49</td>
+<td style="text-align: right;">1.22</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.47</td>
+<td style="text-align: right;">0.32</td>
+<td style="text-align: right;">0.57</td>
+<td style="text-align: right;">0.34</td>
+<td style="text-align: right;">0.65</td>
+<td style="text-align: right;">0.53</td>
+<td style="text-align: right;">0.54</td>
+<td style="text-align: right;">0.39</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">0.50</td>
+<td style="text-align: right;">0.43</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">0.58</td>
+<td style="text-align: right;">0.25</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+</tbody>
+</table>
 
 Below is the number of users in each cluster:
 
-    ## # A tibble: 2 × 2
-    ## # Groups:   cluster [2]
-    ##   cluster     n
-    ##     <int> <int>
-    ## 1       1  2282
-    ## 2       2  5600
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">cluster</th>
+<th style="text-align: right;">n</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2282</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">5600</td>
+</tr>
+</tbody>
+</table>
 
 ## Association rules for grocery purchases
