@@ -91,7 +91,7 @@ summary(mkt)
 ```
 
 Next, from the below correlation plot, there are 8 or 9 highly-correlated groups.  
-```{r corr plot, fig.height=7, fig.width=7}
+```{r corr plot, fig.height=8, fig.width=8}
 ggcorrplot::ggcorrplot(cor(mkt), hc.order = TRUE)
 ```
 
@@ -111,7 +111,7 @@ mkt <- mkt |>
   rename(cluster = "kmeans_res1$cluster")
 ```
 
-I compare the average interests of all categories of two clusters. All interests for cluster 1 are higher than those for cluster 2, meaning they are more active users on Twitter.
+I compare the average interests of all categories of two clusters. All interests for cluster 1 are higher than those for cluster 2, meaning users in cluster 1 are more active on Twitter.
 ```{r kmeans mean}
 mkt |>
   group_by(cluster) |>
@@ -125,23 +125,25 @@ Below is the number of users in each cluster:
 mkt |>
   group_by(cluster) |>
   count() |>
+  rename(count = n) |>
   knitr::kable()
 ```
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## Association rules for grocery purchases
 ```{r}
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
 

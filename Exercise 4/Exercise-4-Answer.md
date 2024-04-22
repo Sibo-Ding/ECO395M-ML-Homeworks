@@ -170,7 +170,7 @@ on their business problems.
 
 I compare the average interests of all categories of two clusters. All
 interests for cluster 1 are higher than those for cluster 2, meaning
-they are more active users on Twitter.
+users in cluster 1 are more active on Twitter.
 
 <table>
 <colgroup>
@@ -341,7 +341,7 @@ Below is the number of users in each cluster:
 <thead>
 <tr class="header">
 <th style="text-align: right;">cluster</th>
-<th style="text-align: right;">n</th>
+<th style="text-align: right;">count</th>
 </tr>
 </thead>
 <tbody>
