@@ -360,19 +360,21 @@ Below is the number of users in each cluster:
 ## Association rules for grocery purchases
 
 I want to find association rules for customers’ groceries shopping
-basket. That is to find associated groceries that customers are likely
-to buy, if they buy a grocery. I preprocess the data to fit into
-“arules” package.
+basket. That means to find associated groceries that customers are
+likely to buy, if they buy a grocery. I preprocess the data to fit into
+`arules` package.
 
 When finding association rules, I choose the minimum *support* as 0.005
 and the minimum *confidence* as 0.25. So *lift* = *confidence* /
 *support* = 50.  
 - *Support* is the probability (proportion) of buying each grocery among
 all purchases. I choose a relatively low threshold to include more
-potential groceries. - *Confidence* is the conditional probability of
-buying a grocery, given buying another grocery. I choose a relatively
-high threshold to focus on major associations. - *Lift* measures the
-increased probability of buying a grocery, given buying another grocery.
+potential groceries.  
+- *Confidence* is the conditional probability of buying a grocery, given
+buying another grocery. I choose a relatively high threshold to focus on
+major associations.  
+- *Lift* measures the increased probability of buying a grocery, given
+buying another grocery.  
 For example, a toothbrush is purchased 5% of the time in general, and
 40% of the time when customers purchase a toothpaste. Then the *support*
 for toothbrush is 5%, the *confidence* is 40%, the *lift* is 8.
@@ -386,6 +388,6 @@ center. Dairy products are associated with *whole milk*, and meats are
 associated with *other vegetables*.  
 ![](Exercise-4-Answer_files/figure-markdown_strict/plot%20network-1.png)
 
-## Association rules for grocery purchases
+## Image classification with neural networks
 
 See Jupyter Notebook
