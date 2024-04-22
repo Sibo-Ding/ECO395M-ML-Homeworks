@@ -12,16 +12,21 @@ knitr::opts_chunk$set(message = FALSE)
 
 library(dplyr)
 library(ggplot2)
-library(caret)
+library(tidyr)
+
+library(igraph)
+library(arules)  # Association
+library(arulesViz)
 ```
 
 ## Clustering and PCA
 I want to use unsupervised learning to distinguish: 1. whether a wine is red or white; 2. the quality of a wine. I first standardize 11 variables (chemical properties).  
 ```{r standardize}
 wine <- read.csv("wine.csv")
-wine[, 1:11] <- scale(wine[, 1:11])  # Standardization
+# Standardization
+wine[, 1:11] <- scale(wine[, 1:11])
 ```
-Remember in unsupervised learning, there is no features (x) and outcomes (y), no right or wrong, no accuracy.
+Remember in unsupervised learning, there is no features (x) and outcomes (y), no prediction, no right or wrong, no accuracy.
 
 ### Clustering
 To distinguish red wines from white wines, I use K-means to cluster data into 2 clusters. Then I count the number of reds and whites in each cluster. In the below table, each row is a cluster, and each column is whether a wine is red or white. The algorithm can distinguish reds from whites, as most whites are in cluster 1 and most reds are in cluster 2.
@@ -91,7 +96,7 @@ summary(mkt)
 ```
 
 Next, from the below correlation plot, there are 8 or 9 highly-correlated groups.  
-```{r corr plot, fig.height=8, fig.width=8}
+```{r corr plot, fig.height=7, fig.width=7}
 ggcorrplot::ggcorrplot(cor(mkt), hc.order = TRUE)
 ```
 
@@ -111,7 +116,7 @@ mkt <- mkt |>
   rename(cluster = "kmeans_res1$cluster")
 ```
 
-I compare the average interests of all categories of two clusters. All interests for cluster 1 are higher than those for cluster 2, meaning users in cluster 1 are more active on Twitter.
+I compare the average interests of all categories of two clusters. All interests for cluster 1 are higher than those for cluster 2, meaning users in cluster 1 are more active on Twitter. The company can focus on cluster 1 to have more active response.
 ```{r kmeans mean}
 mkt |>
   group_by(cluster) |>
@@ -121,7 +126,7 @@ mkt |>
 ```
 
 Below is the number of users in each cluster:
-```{r}
+```{r count}
 mkt |>
   group_by(cluster) |>
   count() |>
@@ -130,20 +135,48 @@ mkt |>
 ```
 
 ## Association rules for grocery purchases
-```{r}
+I want to find association rules for customers' groceries shopping basket. That is to find associated groceries that customers are likely to buy, if they buy a grocery. I preprocess the data to fit into "arules" package.  
+```{r arules preprocess}
+groc <- read.csv("groceries.txt", header = FALSE)
 
+# Add customer + Wide to long + Drop empty string
+groc_df <- groc |>
+  mutate(customer = row_number()) |>
+  pivot_longer(cols = -customer,
+               names_to = "name",
+               values_to = "item") |>
+  filter(item != "") |>
+  select(-name)
+
+# Factor
+groc_df$customer <- factor(groc_df$customer)
+
+# Split data into a list of items for each customer
+groc_list <- split(x = groc_df$item, f = groc_df$customer)
+
+# Convert to a special arules "transactions" class
+groc_trans <- as(groc_list, "transactions")
 ```
 
+When finding association rules, I choose the minimum *support* as 0.005 and the minimum *confidence* as 0.25. So *lift* = *confidence* / *support* = 50.  
+- *Support* is the probability (proportion) of buying each grocery among all purchases. I choose a relatively low threshold to include more potential groceries.
+- *Confidence* is the conditional probability of buying a grocery, given buying another grocery. I choose a relatively high threshold to focus on major associations.
+- *Lift* measures the increased probability of buying a grocery, given buying another grocery.
+For example, a toothbrush is purchased 5% of the time in general, and 40% of the time when customers purchase a toothpaste. Then the *support* for toothbrush is 5%, the *confidence* is 40%, the *lift* is 8.  
+```{r create association rules, results='hide'}
+groc_rules <- apriori(groc_trans, 
+	parameter = list(support = .005, confidence = .25, maxlen = 4))
+```
 
+Below shows the distribution of *support*, *confidence*, and *lift* of 23 rules.  
+```{r plot rules dist}
+plot(groc_rules)
+```
 
+Below shows the network. *whole milk* and *other vegetables* are at the center. Dairy products are associated with *whole milk*, and meats are associated with *other vegetables*.  
+```{r plot network}
+plot(groc_rules, method = "graph")
+```
 
-
-
-
-
-
-
-
-
-
-
+## Association rules for grocery purchases
+See Jupyter Notebook

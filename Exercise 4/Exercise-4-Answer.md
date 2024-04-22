@@ -5,7 +5,7 @@ red or white; 2. the quality of a wine. I first standardize 11 variables
 (chemical properties).
 
 Remember in unsupervised learning, there is no features (x) and outcomes
-(y), no right or wrong, no accuracy.
+(y), no prediction, no right or wrong, no accuracy.
 
 ### Clustering
 
@@ -170,7 +170,8 @@ on their business problems.
 
 I compare the average interests of all categories of two clusters. All
 interests for cluster 1 are higher than those for cluster 2, meaning
-users in cluster 1 are more active on Twitter.
+users in cluster 1 are more active on Twitter. The company can focus on
+cluster 1 to have more active response.
 
 <table>
 <colgroup>
@@ -357,3 +358,34 @@ Below is the number of users in each cluster:
 </table>
 
 ## Association rules for grocery purchases
+
+I want to find association rules for customers’ groceries shopping
+basket. That is to find associated groceries that customers are likely
+to buy, if they buy a grocery. I preprocess the data to fit into
+“arules” package.
+
+When finding association rules, I choose the minimum *support* as 0.005
+and the minimum *confidence* as 0.25. So *lift* = *confidence* /
+*support* = 50.  
+- *Support* is the probability (proportion) of buying each grocery among
+all purchases. I choose a relatively low threshold to include more
+potential groceries. - *Confidence* is the conditional probability of
+buying a grocery, given buying another grocery. I choose a relatively
+high threshold to focus on major associations. - *Lift* measures the
+increased probability of buying a grocery, given buying another grocery.
+For example, a toothbrush is purchased 5% of the time in general, and
+40% of the time when customers purchase a toothpaste. Then the *support*
+for toothbrush is 5%, the *confidence* is 40%, the *lift* is 8.
+
+Below shows the distribution of *support*, *confidence*, and *lift* of
+23 rules.  
+![](Exercise-4-Answer_files/figure-markdown_strict/plot%20rules%20dist-1.png)
+
+Below shows the network. *whole milk* and *other vegetables* are at the
+center. Dairy products are associated with *whole milk*, and meats are
+associated with *other vegetables*.  
+![](Exercise-4-Answer_files/figure-markdown_strict/plot%20network-1.png)
+
+## Association rules for grocery purchases
+
+See Jupyter Notebook
