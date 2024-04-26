@@ -16,9 +16,9 @@ predict my life and food patterns in Austin.
 I admit this estimation and prediction is not very extendable, as my
 life pattern is likely to change in one or two years after my study at
 The University of Texas at Austin. But it is still fun to know the
-driving factors of my life and food patterns. I select this topic as it
-allows me to build a real-life data science project from scratch,
-literally mining data and building models.
+driving factors of my life and food patterns during this time. I select
+this topic as it allows me to build a real-life data science project
+from scratch, literally mining data and building models.
 
 When recording meals, there are potential discrepancies and biases due
 to my discretion. For example, if I have a brunch (at 10:00) and an
@@ -265,15 +265,15 @@ any analysis, here is the number of observations in each category:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">108</td>
+<td style="text-align: right;">111</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">243</td>
+<td style="text-align: right;">251</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">90</td>
+<td style="text-align: right;">95</td>
 </tr>
 </tbody>
 </table>
@@ -343,23 +343,23 @@ does that increase mean squared error
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Logistic regression</td>
-<td style="text-align: right;">0.6552</td>
+<td style="text-align: right;">0.7033</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Lasso regularization</td>
-<td style="text-align: right;">0.7126</td>
+<td style="text-align: right;">0.7473</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Naive Bayes</td>
-<td style="text-align: right;">0.6782</td>
+<td style="text-align: right;">0.7033</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">KNN</td>
-<td style="text-align: right;">0.7586</td>
+<td style="text-align: right;">0.7582</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Random forest</td>
-<td style="text-align: right;">0.7471</td>
+<td style="text-align: right;">0.7473</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CatBoost</td>
@@ -394,21 +394,21 @@ Logistic regression:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">3</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">39</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">37</td>
+<td style="text-align: right;">2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">8</td>
+<td style="text-align: right;">12</td>
 </tr>
 </tbody>
 </table>
@@ -427,21 +427,21 @@ Lasso regularization:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">11</td>
-<td style="text-align: right;">1</td>
+<td style="text-align: right;">14</td>
 <td style="text-align: right;">4</td>
+<td style="text-align: right;">5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">44</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">7</td>
+<td style="text-align: right;">11</td>
 </tr>
 </tbody>
 </table>
@@ -460,21 +460,21 @@ Naive Bayes:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">14</td>
-<td style="text-align: right;">6</td>
+<td style="text-align: right;">16</td>
 <td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">37</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">5</td>
+<td style="text-align: right;">4</td>
 <td style="text-align: right;">8</td>
+<td style="text-align: right;">11</td>
 </tr>
 </tbody>
 </table>
@@ -493,20 +493,20 @@ KNN:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">15</td>
+<td style="text-align: right;">17</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">home</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">47</td>
-<td style="text-align: right;">10</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">7</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
+<td style="text-align: right;">2</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
 <td style="text-align: right;">4</td>
 </tr>
 </tbody>
@@ -526,7 +526,7 @@ Random forest:
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: right;">13</td>
+<td style="text-align: right;">15</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">5</td>
 </tr>
@@ -538,9 +538,9 @@ Random forest:
 </tr>
 <tr class="odd">
 <td style="text-align: left;">other</td>
+<td style="text-align: right;">3</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">8</td>
+<td style="text-align: right;">9</td>
 </tr>
 </tbody>
 </table>
