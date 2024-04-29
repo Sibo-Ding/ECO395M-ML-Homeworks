@@ -1,6 +1,7 @@
 ---
 title: "DM&SL Project Food"
 author: "Sibo Ding"
+date: "Spring 2024"
 output: md_document
 ---
 
@@ -12,8 +13,10 @@ knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
 
 library(dplyr)
-library(lubridate)
+library(lubridate)  # Date
 library(tidyr)
+library(rpart)  # Tree
+library(rpart.plot)
 library(caret)
 library(nnet)  # Multinomial logistic regression
 library(e1071)  # Naive Bayes
@@ -126,7 +129,6 @@ df1 <- df |>
 head(df1) |> knitr::kable()
 ```
 
-### Predict my food pattern using classification models
 The outcome variable (y variable) `food_class` is categorical. Before any analysis, here is the number of observations in each category:
 ```{r Summary of outcome variable}
 df1 |>
@@ -136,6 +138,27 @@ df1 |>
   knitr::kable()
 ```
 
+### Driving factors of my food pattern
+I plot a classification tree to understand the driving factors of my food pattern. For ease of interpretation, I exclude `week_of_sem` and all lags of `food_class`. There are other methods to find out important features, such as stepwise selection, variable importance plot, etc. But they are from a prediction perspective so I do not use them to explain the driving factors of my food pattern.  
+```{r Tree plot}
+tree <- rpart(food_class ~ . - week_of_sem - food_class_l1
+              - food_class_l2
+              - food_class_l3 - food_class_l4,
+              data = df1, maxdepth = 5)
+rpart.plot(tree, type = 3, extra = 1, cex = 0.5)
+```
+
+In each leaf node, three numbers represent the number of *canteen*, *home*, and *other* respectively.  
+
+The first split is workdays (Mon to Thu) vs. weekends (Fri to Sun). I ate mostly at home on weekends. From an information gain perspective, this node is quite pure after only one split.  
+
+The other leaf nodes are all on workdays. In the summer semester, I always ate others, because I went to school for class every day and had not perceived canteens yet.  
+
+In spring and fall semesters, going to gym or not distinguished my life pattern. If I went to gym in the fall semester, I would likely eat at canteens. If I did not go to gym on Monday and Wednesday, I would probably eat at home.  
+
+The other leaf nodes are not very pure or dominant.
+
+### Predict my food pattern using classification models
 I do not scale or normalize the data, as all features (x variables) are categorical.  
 
 I set 80% of the observations as training data, and 20% as test data. I fit classification models with training data, predict outcomes on test data, and compare the predicted outcomes to the actual outcomes.  
@@ -206,34 +229,12 @@ rf_pred <- predict(rf, test)
 rf_cm <- confusionMatrix(rf_pred, test$food_class)
 ```
 
-CatBoost is a gradient boosting model for handling categorical features. I include all features in CatBoost.  
+CatBoost is a gradient boosting model for handling categorical features. I include all features in CatBoost. To select (tune) optimal parameters, boosting models are gradient-free and expensive to evaluate, and Bayesian optimization is a common measure. However, my computer is too old to run Bayesian optimization, so I manually tune the CatBoost model.  
 ```{r CatBoost 1, eval=FALSE}
 # Output training and test data and fit CatBoost in Python
 write.csv(train, "train.csv", row.names = FALSE)
 write.csv(test, "test.csv", row.names = FALSE)
 ```
-
-### Driving factors of my food pattern
-Find dominant features among all features and their interactions.
-```{r Tree}
-library(rpart)
-library(rpart.plot)
-tree <- rpart(food_class ~ . - week_of_sem, data = df1, maxdepth = 5)
-rpart.plot(tree, type = 3, extra = 1, cex = 0.5)
-```
-
-Best subset selection
-
-variable importance plot showing when we leave out a variable, how much does that increase mean squared error
-```{r}
-varImpPlot(rf)
-```
-
-
-
-
-
-
 
 ## Results
 ### Overall accuracies of classification models
@@ -252,23 +253,17 @@ data.frame(
     nb_cm$overall[1],
     knn_cm$overall[1],
     rf_cm$overall[1],
-    0.8077) |>
+    0.7582) |>
     round(4)
 ) |>
   knitr::kable()
 ```
 
-Overall accuracy measures the fraction of accurate predictions among outcomes in test data.  
-
-CatBoost
-
-
-
-
-
-
+Overall accuracy measures the fraction of accurate predictions among outcomes in test data. KNN and CatBoost have the highest accuracy 0.7582.
 
 ## Conclusion
+
+
 
 
 
@@ -302,19 +297,12 @@ rf_cm$table |> knitr::kable()
 
 CatBoost:
 ```{r CatBoost 2}
+# Note: sklearn is the transpose of caret
 matrix(c(
   "", "canteen", "home", "other",
-  "canteen", 0, 0, 0,
-  "home", 0, 0, 0,
-  "other", 0, 0, 0),
+  "canteen", 17, 5, 0,
+  "home", 3, 47, 0,
+  "other", 8, 6, 5),
   nrow = 4,
   ncol = 4) |> knitr::kable()
 ```
-
-sklearn is the transpose of caret
-
-
-
-
-
-

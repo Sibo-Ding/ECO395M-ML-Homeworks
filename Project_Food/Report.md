@@ -250,8 +250,6 @@ Here is the data after all processing:
 </tbody>
 </table>
 
-### Predict my food pattern using classification models
-
 The outcome variable (y variable) `food_class` is categorical. Before
 any analysis, here is the number of observations in each category:
 
@@ -277,6 +275,36 @@ any analysis, here is the number of observations in each category:
 </tr>
 </tbody>
 </table>
+
+### Driving factors of my food pattern
+
+I plot a classification tree to understand the driving factors of my
+food pattern. For ease of interpretation, I exclude `week_of_sem` and
+all lags of `food_class`. There are other methods to find out important
+features, such as stepwise selection, variable importance plot, etc. But
+they are from a prediction perspective so I do not use them to explain
+the driving factors of my food pattern.  
+![](Report_files/figure-markdown_strict/Tree%20plot-1.png)
+
+In each leaf node, three numbers represent the number of *canteen*,
+*home*, and *other* respectively.
+
+The first split is workdays (Mon to Thu) vs. weekends (Fri to Sun). I
+ate mostly at home on weekends. From an information gain perspective,
+this node is quite pure after only one split.
+
+The other leaf nodes are all on workdays. In the summer semester, I
+always ate others, because I went to school for class every day and had
+not perceived canteens yet.
+
+In spring and fall semesters, going to gym or not distinguished my life
+pattern. If I went to gym in the fall semester, I would likely eat at
+canteens. If I did not go to gym on Monday and Wednesday, I would
+probably eat at home.
+
+The other leaf nodes are not very pure or dominant.
+
+### Predict my food pattern using classification models
 
 I do not scale or normalize the data, as all features (x variables) are
 categorical.
@@ -316,18 +344,10 @@ training data to find the optimal number of neighbors *k*.
 I include all features in random forest.
 
 CatBoost is a gradient boosting model for handling categorical features.
-I include all features in CatBoost.
-
-### Driving factors of my food pattern
-
-Find dominant features among all features and their interactions.
-![](Report_files/figure-markdown_strict/Tree-1.png)
-
-Best subset selection
-
-variable importance plot showing when we leave out a variable, how much
-does that increase mean squared error
-![](Report_files/figure-markdown_strict/unnamed-chunk-1-1.png)
+I include all features in CatBoost. To select (tune) optimal parameters,
+boosting models are gradient-free and expensive to evaluate, and
+Bayesian optimization is a common measure. However, my computer is too
+old to run Bayesian optimization, so I manually tune the CatBoost model.
 
 ## Results
 
@@ -363,15 +383,14 @@ does that increase mean squared error
 </tr>
 <tr class="even">
 <td style="text-align: left;">CatBoost</td>
-<td style="text-align: right;">0.8077</td>
+<td style="text-align: right;">0.7582</td>
 </tr>
 </tbody>
 </table>
 
 Overall accuracy measures the fraction of accurate predictions among
-outcomes in test data.
-
-CatBoost
+outcomes in test data. KNN and CatBoost have the highest accuracy
+0.7582.
 
 ## Conclusion
 
@@ -557,23 +576,21 @@ CatBoost:
 </tr>
 <tr class="even">
 <td style="text-align: left;">canteen</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">17</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">home</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">47</td>
+<td style="text-align: left;">6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">other</td>
 <td style="text-align: left;">0</td>
 <td style="text-align: left;">0</td>
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">5</td>
 </tr>
 </tbody>
 </table>
-
-sklearn is the transpose of caret
