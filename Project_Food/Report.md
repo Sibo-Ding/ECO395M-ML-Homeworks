@@ -2,6 +2,11 @@
 
 ## Abstract
 
+I want to understand the driving factors of my life and food patterns
+during my study at The University of Texas at Austin. I use data mining
+and machine learning to build a real-life data science project from
+scratch. I get 0.76 predictive accuracy with KNN and CatBoost models.
+
 ## Introduction
 
 I started to record my everyday meals in July 2022 by a very incidental
@@ -291,15 +296,15 @@ In each leaf node, three numbers represent the number of *canteen*,
 
 The first split is workdays (Mon to Thu) vs. weekends (Fri to Sun). I
 ate mostly at home on weekends. From an information gain perspective,
-this node is quite pure after only one split.
+the weekend node is quite pure after only one split.
 
 The other leaf nodes are all on workdays. In the summer semester, I
 always ate others, because I went to school for class every day and had
 not perceived canteens yet.
 
-In spring and fall semesters, going to gym or not distinguished my life
-pattern. If I went to gym in the fall semester, I would likely eat at
-canteens. If I did not go to gym on Monday and Wednesday, I would
+In spring and fall semesters, going to gyms or not distinguished my life
+pattern. If I went to gyms in the fall semester, I would likely eat at
+canteens. If I did not go to gyms on Monday and Wednesday, I would
 probably eat at home.
 
 The other leaf nodes are not very pure or dominant.
@@ -390,9 +395,28 @@ old to run Bayesian optimization, so I manually tune the CatBoost model.
 
 Overall accuracy measures the fraction of accurate predictions among
 outcomes in test data. KNN and CatBoost have the highest accuracy
-0.7582.
+0.7582. The corresponding confusion matrices are in the appendix.
+
+From the summary table in [Data mining](#Data%20mining) section, there
+are 251 *home* (54.92%). The predictive accuracy 0.7582 is improved a
+lot compared to guessing all observations as the mode *home*.
 
 ## Conclusion
+
+During my first-year at The University of Texas at Austin, my life and
+food patterns heavily depend on whether a day is workday or weekend.
+Also, my patterns at the summer semester were different as I just
+started to acclimate. Furthermore, going to gyms or not implicates my
+patterns.
+
+KNN and CatBoost have 0.76 predictive accuracy. Meaning I have 3/4
+confidence to know my food selection each morning. This accuracy is
+improved a lot compared to guessing all observations as the mode *home*.
+
+Throughout this project, I have a better understanding of my food and
+life patterns. I admit this topic is not very interesting or extendable
+with deep business insights. However, I have a better understanding of
+how to explore (or mine) data to solve a real-life data science problem.
 
 ## Appendix
 
