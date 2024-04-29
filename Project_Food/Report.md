@@ -397,7 +397,7 @@ Overall accuracy measures the fraction of accurate predictions among
 outcomes in test data. KNN and CatBoost have the highest accuracy
 0.7582. The corresponding confusion matrices are in the appendix.
 
-From the summary table in [Data mining](#Data%20mining) section, there
+From the summary table in [Data mining](###Data%20mining) section, there
 are 251 *home* (54.92%). The predictive accuracy 0.7582 is improved a
 lot compared to guessing all observations as the mode *home*.
 
